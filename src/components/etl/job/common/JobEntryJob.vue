@@ -1,0 +1,278 @@
+<template>
+  <div style="width: 100%;">
+    <q-form class="q-gutter-md">
+      <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
+              narrow-indicator>
+        <q-tab name="main" label="主选项"/>
+        <q-tab name="result" label="结果参数"/>
+        <q-tab name="names" label="命名参数"/>
+      </q-tabs>
+      <q-tab-panels v-model="tab" animated>
+        <q-tab-panel name="main">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="作业名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.shellName" label="作业">
+            <template v-slot:append>
+              <q-btn round dense flat icon="search" text-color="cyan-8" @click="openShellSelectDialog"/>
+            </template>
+          </q-input>
+          <br/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeEachRow" label="执行每一行输入"/>
+          <br/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.passingExport" label="将作业执行结果发送到服务器上"/>
+          <br/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.expandRemoteOnSlave" label="允许监控子任务或子转换"/>
+          <br/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.waitRemoteFinished" label="等待远程转换执行结束"/>
+          <br/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.followingAbortRemotely" label="本地转换终止时远程转换也通知终止"/>
+          <br/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.parallel" label="后续节点并行进行"/>
+        </q-tab-panel>
+        <q-tab-panel name="result">
+          <q-table :data="form.resultArguments" title="结果参数" :columns="resultArgumentsColumns" :rows-per-page-options="[0]"
+                   row-key="name" separator="cell" hide-bottom>
+            <template v-slot:top-right>
+              <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addResultArguments"/>
+            </template>
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key="operate" :props="props">
+                  <q-btn size="xs" round outline color="negative" icon="remove"
+                         @click="deleteResultArguments(props)"></q-btn>
+                </q-td>
+                <q-td key="argument" :props="props">
+                  {{ props.row.argument }}
+                  <q-popup-edit v-model="props.row.argument" :auto-save=true>
+                    <q-input text-color="cyan-8" color="cyan-8" label-color="cyan-8" autofocus v-model="props.row.argument"/>
+                  </q-popup-edit>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-tab-panel>
+        <q-tab-panel name="names">
+          <q-table :data="form.nameArguments" title="命名参数" :columns="nameArgumentsColumns" :rows-per-page-options="[0]"
+                   row-key="name" separator="cell" hide-bottom>
+            <template v-slot:top-right>
+              <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addNameArguments"/>
+            </template>
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key="operate" :props="props">
+                  <q-btn size="xs" outline round color="negative" icon="remove"
+                         @click="deleteNameArguments(props)"></q-btn>
+                </q-td>
+                <q-td key="name" :props="props">
+                  {{ props.row.name }}
+                  <q-popup-edit v-model="props.row.name" :auto-save=true>
+                    <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.name"/>
+                  </q-popup-edit>
+                </q-td>
+                <q-td key="field" :props="props">
+                  {{ props.row.field }}
+                  <q-popup-edit v-model="props.row.field" :auto-save=true>
+                    <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.field"/>
+                  </q-popup-edit>
+                </q-td>
+                <q-td key="value" :props="props">
+                  {{ props.row.value }}
+                  <q-popup-edit v-model="props.row.value" :auto-save=true>
+                    <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.value"/>
+                  </q-popup-edit>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-tab-panel>
+      </q-tab-panels>
+      <q-dialog v-model="selectShellDialog.state">
+        <q-card style="min-height: 45vh; min-width: 25vw;">
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6">转换选择</div>
+            <q-space />
+            <q-btn icon="close" flat round dense v-close-popup />
+          </q-card-section>
+          <q-separator/>
+          <q-card-section class="row items-center q-pb-none">
+            <q-tree ref="shellTree" :nodes="selectShellDialog.shells" node-key="id" selected-color="cyan-8" :selected.sync="form.shellId" @update:selected="selectShell" no-nodes-label="没有数据">
+              <template v-slot:default-header="prop">
+                <div class="row items-center">
+                  <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
+                  {{ prop.node.label }}
+                </div>
+              </template>
+            </q-tree>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+    </q-form>
+  </div>
+</template>
+
+<script>
+
+import { fetchAllShell } from 'src/service/ShellService'
+
+export default {
+  name: 'JobEntryJob',
+  data () {
+    return {
+      tab: 'main',
+      form: {
+        name: null,
+        shellId: null,
+        shellName: null,
+        executeEachRow: false,
+        passingExport: false,
+        expandRemoteOnSlave: false,
+        waitRemoteFinished: true,
+        followingAbortRemotely: false,
+        resultArguments: [],
+        nameArguments: [],
+        parallel: false
+      },
+      resultArgumentsColumns: [
+        {
+          name: 'operate',
+          label: '操作',
+          filed: 'operate',
+          align: 'right',
+          headerStyle: 'width: 20px'
+        },
+        {
+          name: 'argument',
+          label: '参数',
+          field: 'argument',
+          align: 'left',
+          headerStyle: 'width: 100px;'
+        }
+      ],
+      nameArgumentsColumns: [
+        {
+          name: 'operate',
+          label: '操作',
+          filed: 'operate',
+          align: 'right',
+          headerStyle: 'width: 20px'
+        },
+        {
+          name: 'name',
+          label: '命名参数',
+          field: 'name',
+          align: 'left',
+          headerStyle: 'width: 100px;'
+        },
+        {
+          name: 'field',
+          label: '流列名',
+          field: 'field',
+          align: 'left',
+          headerStyle: 'width: 100px;'
+        },
+        {
+          name: 'value',
+          label: '值',
+          field: 'value',
+          align: 'left',
+          headerStyle: 'width: 100px;'
+        }
+      ],
+      selectShellDialog: {
+        id: null,
+        state: false,
+        projectId: null,
+        shells: [{
+          id: 0,
+          label: '任务',
+          children: [],
+          selectable: false,
+          icon: 'folder_open',
+          category: '0'
+        }]
+      }
+    }
+  },
+  methods: {
+    openShellSelectDialog () {
+      const vm = this
+      vm.selectShellDialog.state = true
+      fetchAllShell(vm.selectShellDialog.projectId).then(res => {
+        const array = []
+        res.data.forEach((ele, index) => {
+          if (ele.category === '0') {
+            ele.icon = 'folder_open'
+            ele.color = 'cyan-8'
+            ele.selectable = false
+            array.push(ele)
+          } else if (ele.category === '1' && ele.id !== vm.selectShellDialog.id) {
+            ele.icon = 'fullscreen'
+            ele.color = 'orange'
+            array.push(ele)
+          }
+        })
+        vm.selectShellDialog.shells[0].children = vm.buildTree(array, 0)
+      })
+    },
+    selectShell (target) {
+      if (target) {
+        const vm = this
+        const selected = vm.$refs.shellTree.getNodeByKey(target)
+        if (selected.category === '1') {
+          vm.form.shellId = target
+          vm.form.shellName = selected.label
+          vm.selectShellDialog.state = false
+        }
+      }
+    },
+    addResultArguments () {
+      this.form.resultArguments.push({
+        argument: null
+      })
+    },
+    deleteResultArguments (props) {
+      this.form.resultArguments.splice(props.rowIndex, 1)
+    },
+    addNameArguments () {
+      this.form.nameArguments.push({
+        name: null,
+        filed: null,
+        value: null
+      })
+    },
+    deleteNameArguments (props) {
+      this.form.nameArguments.splice(props.rowIndex, 1)
+    },
+    submitForm (e) {
+      this.$emit('propertiesForm', {
+        state: true,
+        mxCellProperties: this.form
+      })
+    },
+    buildTree (nodes, parentId) {
+      const vm = this
+      return nodes
+        .filter((node) => node.parentId === parentId)
+        .reduce(
+          (tree, node) => [
+            ...tree,
+            {
+              ...node,
+              children: vm.buildTree(nodes, node.id)
+            }
+          ],
+          []
+        )
+    }
+  },
+  mounted () {
+    const vm = this
+    const mxCellValue = vm.$store.getters['etl/getMxCellForm']
+    const root = vm.$store.getters['etl/getRoot']
+    if (mxCellValue) {
+      vm.form = Object.assign(vm.form, mxCellValue)
+    }
+    vm.selectShellDialog.id = root.id
+    vm.selectShellDialog.projectId = root.projectId
+  }
+}
+</script>

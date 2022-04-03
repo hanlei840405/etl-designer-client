@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= productName %></title>
+
+    <meta charset="utf-8">
+    <meta name="description" content="<%= productDescription %>">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@1.15.5/dist/quasar.min.css" rel="stylesheet" type="text/css">
+    <link rel="icon" type="image/png" sizes="128x128" href="icons/nxin128.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="icons/nxin96.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/nxin32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/nxin16.png">
+    <link rel="icon" type="image/ico" href="nxin.ico">
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@^2.6.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.1/dist/vue-router.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@1.15.5/dist/quasar.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/dist/build.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.27.2/dist/apexcharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts@1.6.1/dist/vue-apexcharts.min.js"></script>
+    <!-- DO NOT touch the following DIV -->
+    <div id="q-app"></div>
+  </body>
+</html>

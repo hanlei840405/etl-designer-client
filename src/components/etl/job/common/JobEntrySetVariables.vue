@@ -1,0 +1,139 @@
+<template>
+  <div style="width: 100%;">
+    <q-form class="q-gutter-md">
+      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="名称" lazy-rules
+               :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+      <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
+               separator="cell" hide-bottom title="变量">
+        <template v-slot:top-right>
+          <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
+        </template>
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="operate" :props="props">
+              <q-btn size="xs" outline round color="negative" icon="remove"
+                     @click="deleteParameter(props)"></q-btn>
+            </q-td>
+            <q-td key="name" :props="props">
+              {{ props.row.name }}
+              <q-popup-edit v-model="props.row.name" :auto-save=true>
+                <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.name"/>
+              </q-popup-edit>
+            </q-td>
+            <q-td key="value" :props="props">
+              {{ props.row.value }}
+              <q-popup-edit v-model="props.row.value" :auto-save=true>
+                <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.value"/>
+              </q-popup-edit>
+            </q-td>
+            <q-td key="scope" :props="props">
+              {{ getLabel(props.row.scope) }}
+              <q-popup-edit v-model="props.row.scope" :auto-save=true>
+                <q-select autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" outlined v-model="props.row.scope" emit-value map-options :options="scopes"/>
+              </q-popup-edit>
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
+      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.replaceVars" label="变量替换"/>
+      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.parallel" label="后续节点并行进行"/>
+    </q-form>
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: 'JobEntrySetVariables',
+  data () {
+    return {
+      tab: 'main',
+      form: {
+        name: null,
+        parameters: [],
+        parallel: false,
+        replaceVars: true
+      },
+      scopeMapping: {
+        JVM: 'Valid in the Java Virtual Machine',
+        CURRENT_JOB: 'Valid in the current job',
+        PARENT_JOB: 'Valid in the parent job',
+        ROOT_JOB: 'Valid in the root job'
+      },
+      scopes: [{
+        value: 'JVM',
+        label: 'Valid in the Java Virtual Machine'
+      }, {
+        value: 'CURRENT_JOB',
+        label: 'Valid in the current job'
+      }, {
+        value: 'PARENT_JOB',
+        label: 'Valid in the parent job'
+      }, {
+        value: 'ROOT_JOB',
+        label: 'Valid in the root job'
+      }],
+      parameterColumns: [
+        {
+          name: 'operate',
+          label: '操作',
+          filed: 'operate',
+          align: 'right',
+          headerStyle: 'width: 20px'
+        },
+        {
+          name: 'name',
+          label: '字段名',
+          field: 'name',
+          align: 'left',
+          headerStyle: 'width: 100px;'
+        },
+        {
+          name: 'value',
+          label: '值',
+          field: 'value',
+          align: 'left',
+          headerStyle: 'width: 100px;'
+        },
+        {
+          name: 'scope',
+          label: '作用范围',
+          field: 'scope',
+          align: 'left',
+          headerStyle: 'width: 100px;'
+        }
+      ]
+    }
+  },
+  methods: {
+    getLabel (val) {
+      return this.scopeMapping[val]
+    },
+    addParameter () {
+      this.form.parameters.push({
+        field: null,
+        variable: null,
+        scope: null,
+        defaultValue: null
+      })
+    },
+    deleteParameter (props) {
+      this.form.parameters.splice(props.rowIndex, 1)
+    },
+    submitForm (e) {
+      this.$emit('propertiesForm', {
+        state: true,
+        mxCellProperties: this.form,
+        ext: { sourceFields: this.form.parameters.map(ele => ele.name) }
+      })
+    }
+  },
+  mounted () {
+    const vm = this
+    const mxCellValue = vm.$store.getters['etl/getMxCellForm']
+    if (mxCellValue) {
+      vm.form = Object.assign(vm.form, mxCellValue)
+    }
+  }
+}
+</script>
