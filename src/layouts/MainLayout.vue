@@ -233,7 +233,7 @@
             </q-item>
           </q-expansion-item>
           <q-separator />
-          <q-expansion-item label="在线报表" group="menu" :default-opened="$route.path.startsWith('/analisis-')">
+          <q-expansion-item label="在线报表" group="menu" :default-opened="$route.path.startsWith('/analysis-')">
             <q-item
               active-class="tab-active"
               to="/analysis-model"

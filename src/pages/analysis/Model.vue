@@ -290,16 +290,16 @@ export default {
         columnCategories: Constant.METADATA_CATEGORIES.mysql,
         frequencies: [{
           value: 'day',
-          label: '每天0点0分执行'
+          label: '每天'
         }, {
           value: 'week',
-          label: '每周一0点0分执行'
+          label: '每周'
         }, {
           value: 'month',
-          label: '每月一号0点0分执行'
+          label: '每月'
         }, {
           value: 'year',
-          label: '每年一月一号0点0分执行'
+          label: '每年'
         }, {
           value: 'manual',
           label: '手动执行'
