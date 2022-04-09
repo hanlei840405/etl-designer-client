@@ -329,6 +329,7 @@
               </q-item-section>
             </q-item>
           </q-expansion-item>
+          <q-separator />
           <q-expansion-item label="数据大屏">
             <q-item
               active-class="tab-active"

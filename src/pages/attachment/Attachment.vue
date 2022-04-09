@@ -1,38 +1,41 @@
 <template>
   <div class="row">
-    <q-list padding class="col-md-4">
-      <q-expansion-item group="project" expand-separator @before-show="(ele) => loadShell(ele, link)" v-for="link in projects" :key="link.id">
-        <template v-slot:header>
-          <q-item-section avatar>
-            <q-avatar size="24px" text-color="white" color="cyan-8">{{ link.name.substring(0,1) }}</q-avatar>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label class="text-cyan-8">{{ link.name }}</q-item-label>
-          </q-item-section>
-        </template>
-        <q-card>
-          <q-card-section class="col q-pt-none">
-            <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
-                    selected-color="cyan-8"
-                    :selected.sync="selectedShellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
-              <template v-slot:default-header="prop">
-                <div class="row items-center">
-                  <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
-                  {{ prop.node.label }}
-                </div>
-              </template>
-            </q-tree>
-          </q-card-section>
-        </q-card>
-      </q-expansion-item>
-    </q-list>
-    <div class="col-md-8">
+    <div class="col-md-3">
+      <q-list padding class="col-md-4">
+        <q-expansion-item group="project" expand-separator @before-show="(ele) => loadShell(ele, link)" v-for="link in projects" :key="link.id">
+          <template v-slot:header>
+            <q-item-section avatar>
+              <q-avatar size="24px" text-color="white" color="cyan-8">{{ link.name.substring(0,1) }}</q-avatar>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-cyan-8">{{ link.name }}</q-item-label>
+            </q-item-section>
+          </template>
+          <q-card>
+            <q-card-section class="col q-pt-none">
+              <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
+                      selected-color="cyan-8"
+                      :selected.sync="selectedShellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
+                <template v-slot:default-header="prop">
+                  <div class="row items-center">
+                    <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
+                    {{ prop.node.label }}
+                  </div>
+                </template>
+              </q-tree>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+      </q-list>
+    </div>
+    <div class="col-md-9">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
         <q-tab name="design" label="开发环境" class="text-black"/>
         <q-tab name="prod" label="生产环境" class="text-black"/>
       </q-tabs>
       <q-table
+        color="cyan-8"
         :data="filenames"
         :columns="filenameColumns"
         :loading="loading"

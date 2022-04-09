@@ -83,7 +83,6 @@
               </q-item>
             </template>
           </q-select>
-          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="editModelDialog.model.frequency" emit-value map-options :options="editModelDialog.frequencies" label="建表频次" clearable lazy-rules :rules="[ val => (val != null) || 'frequency is invalid' ]"/>
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="textarea" rows="2" v-model="editModelDialog.model.description" label="描述" hint="描述"/>
           <q-table :data="editModelDialog.model.metadataList" :columns="editModelDialog.metadataColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom title="字段">
             <template v-slot:top-right>
@@ -222,7 +221,6 @@ export default {
           id: null,
           code: null,
           name: null,
-          frequency: 'manual',
           description: null,
           status: null,
           project: {},
@@ -287,23 +285,7 @@ export default {
           }
         ],
         datasourceList: [],
-        columnCategories: Constant.METADATA_CATEGORIES.mysql,
-        frequencies: [{
-          value: 'day',
-          label: '每天'
-        }, {
-          value: 'week',
-          label: '每周'
-        }, {
-          value: 'month',
-          label: '每月'
-        }, {
-          value: 'year',
-          label: '每年'
-        }, {
-          value: 'manual',
-          label: '手动执行'
-        }]
+        columnCategories: Constant.METADATA_CATEGORIES.mysql
       },
       METADATA_CATEGORIES: Constant.METADATA_CATEGORIES
     }
@@ -374,7 +356,6 @@ export default {
             id: res.data.id,
             code: res.data.code,
             name: res.data.name,
-            frequency: res.data.frequency,
             description: res.data.description,
             resourceCode: res.data.resourceCode,
             status: res.data.status,
@@ -414,7 +395,6 @@ export default {
           id: null,
           code: null,
           name: null,
-          frequency: 'manual',
           description: null,
           resourceCode: result,
           status: null,
@@ -444,7 +424,6 @@ export default {
             id: null,
             code: null,
             name: null,
-            frequency: 'manual',
             description: null,
             resourceCode: null,
             status: null,
@@ -533,7 +512,6 @@ export default {
               id: null,
               code: null,
               name: null,
-              frequency: 'manual',
               description: null,
               resourceCode: null,
               status: null,

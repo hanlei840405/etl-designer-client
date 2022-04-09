@@ -1,119 +1,122 @@
 <template>
   <div class="row">
-    <q-list padding class="col-md-4">
-      <q-expansion-item group="project" @before-show="(ele) => loadShell(ele, link)" v-for="link in projects" :key="link.id">
-        <template v-slot:header>
-          <q-item-section avatar>
-            <q-avatar size="24px" text-color="white" color="cyan-8">{{ link.name.substring(0,1) }}</q-avatar>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label class="text-cyan-8">{{ link.name }}</q-item-label>
-          </q-item-section>
+    <div class="col-md-3 col-sm-4">
+      <q-list padding>
+        <q-expansion-item group="project" @before-show="(ele) => loadShell(ele, link)" v-for="link in projects" :key="link.id">
+          <template v-slot:header>
+            <q-item-section avatar>
+              <q-avatar size="24px" text-color="white" color="cyan-8">{{ link.name.substring(0,1) }}</q-avatar>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-cyan-8">{{ link.name }}</q-item-label>
+            </q-item-section>
+          </template>
+          <q-card>
+            <q-card-section class="col q-pt-none">
+              <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
+                      selected-color="cyan-8"
+                      :selected.sync="project.shellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
+                <template v-slot:default-header="prop">
+                  <div class="row items-center">
+                    <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
+                    {{ prop.node.label }}
+                  </div>
+                </template>
+              </q-tree>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+      </q-list>
+    </div>
+    <div class="col-md-8">
+      <q-table
+        color="cyan-8"
+        :data="publishes"
+        :columns="columns"
+        row-key="id"
+        :loading="loading"
+        separator="cell"
+        no-data-label="无数据"
+        @request="requestPublishes"
+        :pagination.sync="pagination"
+      >
+        <template v-slot:body-cell-prod="props">
+          <q-td>
+            {{ boolFormat(props.row.prod) }}
+          </q-td>
         </template>
+        <template v-slot:body-cell-createTime="props">
+          <q-td>
+            {{ dateFormat(props.row.createTime) }}
+          </q-td>
+        </template>
+        <template v-slot:body-cell-operate="props">
+          <q-td>
+            <q-btn size="small" outline text-color="cyan-8" :icon="taskIcon" @click="deploy(props.row)" label="部署"/>
+          </q-td>
+        </template>
+      </q-table>
+      <q-dialog v-model="deployDialog.state">
         <q-card>
-          <q-card-section class="col q-pt-none">
-            <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
-                    selected-color="cyan-8"
-                    :selected.sync="project.shellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
-              <template v-slot:default-header="prop">
-                <div class="row items-center">
-                  <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
-                  {{ prop.node.label }}
-                </div>
-              </template>
-            </q-tree>
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6">关联脚本</div>
+            <q-space/>
+            <q-btn icon="close" flat round dense v-close-popup/>
           </q-card-section>
-        </q-card>
-      </q-expansion-item>
-    </q-list>
-    <q-table
-      class="col-md-8"
-      color="cyan-8"
-      :data="publishes"
-      :columns="columns"
-      row-key="id"
-      :loading="loading"
-      separator="cell"
-      no-data-label="无数据"
-      @request="requestPublishes"
-      :pagination.sync="pagination"
-    >
-      <template v-slot:body-cell-prod="props">
-        <q-td>
-          {{ boolFormat(props.row.prod) }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-createTime="props">
-        <q-td>
-          {{ dateFormat(props.row.createTime) }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-operate="props">
-        <q-td>
-          <q-btn size="small" outline text-color="cyan-8" :icon="taskIcon" @click="deploy(props.row)" label="部署"/>
-        </q-td>
-      </template>
-    </q-table>
-    <q-dialog v-model="deployDialog.state">
-      <q-card>
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">关联脚本</div>
-          <q-space/>
-          <q-btn icon="close" flat round dense v-close-popup/>
-        </q-card-section>
 
-        <q-card-section>
-          <q-table
-            color="cyan-8"
-            :data="deployDialog.references"
-            :columns="deployDialog.referenceColumns"
-            row-key="id"
-            separator="cell"
-            no-data-label="无数据"
-            hide-bottom
-            :rows-per-page-options="[0]"
-          >
-            <template v-slot:body-cell-createTime="props">
-              <q-td style="padding: 1px;">
-                {{ dateFormat(props.row.createTime) }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-operate="props">
-              <q-td>
-                <q-btn-group>
-                  <q-btn size="small" outline color="cyan-8" icon="visibility" label="预览" @click="view(props.row)"></q-btn>
-                </q-btn-group>
-              </q-td>
-            </template>
-          </q-table>
-        </q-card-section>
-        <q-card-section>
-          <div>预览</div>
-          <mx-graph-canvas :content="deployDialog.content"/>
-        </q-card-section>
-        <q-card-section v-if="'0' === deployDialog.streaming">
-          <q-select
-            v-model="deployDialog.form.misfire"
-            outlined
-            label="调度重试策略"
-            :options="deployDialog.misfireOptions"
-            map-options
-            emit-value
-            use-input
-            clearable
-            color="cyan-8"
-            label-color="cyan-8"
-          >
-          </q-select>
-        </q-card-section>
-        <q-card-section class="col q-pt-none" v-if="'0' === deployDialog.streaming">
-          <q-input outlined color="cyan-8" v-model="deployDialog.form.cron" label="cron表达式(六位长度：0 0 0 * * ?)" :rules="[val => !!val || 'Field is required', val => validate(val) || 'cron is invalid']"/>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn outline color="cyan-8" label="部署" :icon="saveIcon" @click="done"/>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+          <q-card-section>
+            <q-table
+              color="cyan-8"
+              :data="deployDialog.references"
+              :columns="deployDialog.referenceColumns"
+              row-key="id"
+              separator="cell"
+              no-data-label="无数据"
+              hide-bottom
+              :rows-per-page-options="[0]"
+            >
+              <template v-slot:body-cell-createTime="props">
+                <q-td style="padding: 1px;">
+                  {{ dateFormat(props.row.createTime) }}
+                </q-td>
+              </template>
+              <template v-slot:body-cell-operate="props">
+                <q-td>
+                  <q-btn-group>
+                    <q-btn size="small" outline color="cyan-8" icon="visibility" label="预览" @click="view(props.row)"></q-btn>
+                  </q-btn-group>
+                </q-td>
+              </template>
+            </q-table>
+          </q-card-section>
+          <q-card-section>
+            <div>预览</div>
+            <mx-graph-canvas :content="deployDialog.content"/>
+          </q-card-section>
+          <q-card-section v-if="'0' === deployDialog.streaming">
+            <q-select
+              v-model="deployDialog.form.misfire"
+              outlined
+              label="调度重试策略"
+              :options="deployDialog.misfireOptions"
+              map-options
+              emit-value
+              use-input
+              clearable
+              color="cyan-8"
+              label-color="cyan-8"
+            >
+            </q-select>
+          </q-card-section>
+          <q-card-section class="col q-pt-none" v-if="'0' === deployDialog.streaming">
+            <q-input outlined color="cyan-8" v-model="deployDialog.form.cron" label="cron表达式(六位长度：0 0 0 * * ?)" :rules="[val => !!val || 'Field is required', val => validate(val) || 'cron is invalid']"/>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn outline color="cyan-8" label="部署" :icon="saveIcon" @click="done"/>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
   </div>
 </template>
 
