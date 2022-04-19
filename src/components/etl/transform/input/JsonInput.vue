@@ -2,19 +2,19 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-        <q-tab name="file" label="文件"/>
-        <q-tab name="content" label="内容"/>
-        <q-tab name="field" label="字段"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="file" :label="$t('tab-file')"/>
+        <q-tab name="content" :label="$t('tab-content')"/>
+        <q-tab name="field" :label="$t('tab-field')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="file">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.inFields" label="源定义在一个字段里?" />
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.inFields" :label="$t('form-source-from-previous-step')" />
           <br/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.valueField" :options="sourceFields" label="从步骤插入数据" @clear="form.executeEachInputRow = false" :disable="!form.inFields"/>
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.valueField" :options="sourceFields" :label="$t('form-source-from-field')" @clear="form.executeEachInputRow = false" :disable="!form.inFields"/>
           <br/>
-          <q-table :data="form.sourceFileData" :columns="sourceFileColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom title="从文件中读取">
+          <q-table :data="form.sourceFileData" :columns="sourceFileColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('table-title-use-field-as-file')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addSourceFile" :disable="form.inFields"/>
             </template>
@@ -59,22 +59,22 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="content">
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.ignoreEmptyFile" label="忽略空文件" />
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.ignoreEmptyFile" :label="$t('form-ignore-empty-file')" />
           <br/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.notFailIfNoFile" label="如果没有文件不进行报错" />
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.notFailIfNoFile" :label="$t('form-no-file-no-error')" />
           <br/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.ignoreMissingPath" label="忽略不完整的路径" />
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.ignoreMissingPath" :label="$t('form-ignore-missing-path')" />
           <br/>
           <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.defaultPathLeafToNull" label="Default path leaf to null" />
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.rowLimit" label="限制"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.rowLimit" :label="$t('form-limit')"/>
           <br/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.includeFilename" label="在输出中包含文件名" /> <q-input outlined v-model="form.filenameField" label="包含文件的字段名"/>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.includeFilename" :label="$t('form-include-filename-output')" /> <q-input outlined v-model="form.filenameField" :label="$t('form-filename-field')"/>
           <br/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.includeRowNumber" label="在输出中包含行数" /> <q-input outlined v-model="form.rowNumberField" label="包含行数的字段名"/>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.includeRowNumber" :label="$t('form-rownum-in-output')" /> <q-input outlined v-model="form.rowNumberField" :label="$t('form-rownum-field')"/>
         </q-tab-panel>
         <q-tab-panel name="field">
-          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="field" separator="cell" hide-bottom title="字段">
+          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="field" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
             </template>
@@ -143,18 +143,18 @@
                     <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.removeBlank" :options="removeBlanks"/>
                   </q-popup-edit>
                 </q-td>
-                <q-td key="distinct" :props="props">
-                  {{ props.row.distinct }}
-                  <q-popup-edit v-model="props.row.distinct" :auto-save="true">
-                    <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.distinct" :options="yesOrNo"/>
+                <q-td key="repeat" :props="props">
+                  {{ props.row.repeat }}
+                  <q-popup-edit v-model="props.row.repeat" :auto-save="true">
+                    <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.repeat" :options="yesOrNo"/>
                   </q-popup-edit>
                 </q-td>
               </q-tr>
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -198,42 +198,42 @@ export default {
       sourceFileColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'path',
-          label: '文件路径',
+          label: this.$t('column-file-path'),
           field: 'path',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'wildcard',
-          label: '通配符',
+          label: this.$t('column-wildcard'),
           field: 'wildcard',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'excludeWildcard',
-          label: '通配符(排除)',
+          label: this.$t('column-exclude-wildcard'),
           field: 'excludeWildcard',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'required',
-          label: '要求',
+          label: this.$t('column-required'),
           field: 'required',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'includeChildrenFolder',
-          label: '包含子目录',
+          label: this.$t('column-include-sub-folder'),
           field: 'includeChildrenFolder',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -242,85 +242,85 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '名称',
+          label: this.$t('column-name'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'path',
-          label: '路径',
+          label: this.$t('column-file-path'),
           field: 'path',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'formatValue',
-          label: '格式',
+          label: this.$t('column-format'),
           field: 'formatValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'currency',
-          label: '货币',
+          label: this.$t('column-currency'),
           field: 'currency',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'decimal',
-          label: '十进制',
+          label: this.$t('column-decimal-system'),
           field: 'decimal',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'groupBy',
-          label: '组',
+          label: this.$t('column-group'),
           field: 'decimal',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'removeBlank',
-          label: '去除空格类型',
+          label: this.$t('column-remove-blank'),
           field: 'removeBlank',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
-          name: 'distinct',
-          label: '重复',
-          field: 'distinct',
+          name: 'repeat',
+          label: this.$t('column-repeat'),
+          field: 'repeat',
           align: 'left',
           headerStyle: 'width: 100px;'
         }
@@ -359,7 +359,7 @@ export default {
         currency: null,
         decimal: null,
         removeBlank: null,
-        distinct: null
+        repeat: null
       })
     },
     deleteParameter (props) {
@@ -404,8 +404,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

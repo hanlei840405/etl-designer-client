@@ -1,12 +1,12 @@
 <template>
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
-        <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+        <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                  :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-        <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.limit" label="限制" />
+        <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.limit" :label="$t('form-limit')" />
         <br/>
           <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="自定义字段">
+                   separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
             </template>
@@ -97,77 +97,77 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '名称',
+          label: this.$t('column-name'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'value',
-          label: '值',
+          label: this.$t('column-value'),
           field: 'value',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'emptyValue',
-          label: '设为空串',
+          label: this.$t('column-empty'),
           field: 'emptyValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'formatValue',
-          label: '格式',
+          label: this.$t('column-format'),
           field: 'formatValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'currency',
-          label: '货币格式',
+          label: this.$t('column-currency-format'),
           field: 'currency',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'decimal',
-          label: '小数',
+          label: this.$t('column-decimal'),
           field: 'decimal',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'groupBy',
-          label: '分组',
+          label: this.$t('column-group'),
           field: 'groupBy',
           align: 'left',
           headerStyle: 'width: 100px;'

@@ -91,14 +91,14 @@ const routes = [
         component: () => import('pages/metrics/Metrics.vue')
       },
       {
-        path: '/system-member',
+        path: '/workspace-member',
         component: () => import('pages/project/Member.vue'),
         meta: {
           authorities: ['MEMBER', 'ROOT']
         }
       },
       {
-        path: '/system-setting',
+        path: '/user-setting',
         meta: {
           authorities: ['SETTING', 'ROOT']
         },

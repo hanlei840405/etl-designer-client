@@ -14,14 +14,29 @@
         <q-avatar>
           <img src="/logo.png">
         </q-avatar>
-        <q-btn-dropdown auto-close stretch flat size="md" label="新恩数造" no-caps>
+        <q-btn-dropdown auto-close stretch flat size="md" :label="$t('language')" no-caps>
+          <q-list>
+            <q-item clickable @click="$i18n.locale = 'en-us'" v-ripple>
+              <q-item-section>
+              {{ $t('en') }}
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item clickable @click="$i18n.locale = 'zh-cn'" v-ripple>
+              <q-item-section>
+              {{ $t('zh') }}
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+        <q-btn-dropdown auto-close stretch flat size="md" :label="$t('app')" no-caps>
           <q-list>
             <q-item clickable @click="showDoc" v-ripple>
               <q-item-section avatar>
                 <q-avatar text-color="cyan-8" icon="help_outline" />
               </q-item-section>
               <q-item-section>
-                帮助文档
+                {{ $t('document') }}
               </q-item-section>
             </q-item>
             <q-separator />
@@ -30,7 +45,7 @@
                 <q-avatar text-color="cyan-8" icon="mail_outline" />
               </q-item-section>
               <q-item-section>
-                消息通知
+                {{ $t('notice') }}
               </q-item-section>
             </q-item>
             <q-separator />
@@ -39,7 +54,7 @@
                 <q-avatar text-color="cyan-8" :icon="passwordIcon" />
               </q-item-section>
               <q-item-section>
-                修改密码
+                {{ $t('modify-password') }}
               </q-item-section>
             </q-item>
             <q-separator />
@@ -47,14 +62,18 @@
               <q-item-section avatar>
                 <q-avatar text-color="cyan-8" icon="phone" />
               </q-item-section>
-              <q-item-section>联系作者</q-item-section>
+              <q-item-section>
+                {{ $t('contact') }}
+              </q-item-section>
             </q-item>
             <q-separator />
             <q-item clickable @click="logout" v-ripple>
               <q-item-section avatar>
                 <q-avatar text-color="cyan-8" icon="logout" />
               </q-item-section>
-              <q-item-section>退出</q-item-section>
+              <q-item-section>
+                {{ $t('logout') }}
+              </q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
@@ -63,7 +82,6 @@
     <q-drawer
         v-model="drawer"
         show-if-above
-        :width="200"
         :breakpoint="400"
       >
       <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
@@ -81,11 +99,11 @@
             </q-item-section>
 
             <q-item-section>
-              首页
+              {{ $t('home') }}
             </q-item-section>
           </q-item>
           <q-separator />
-          <q-expansion-item label="基础数据管理" :default-opened="$route.path.startsWith('/basic-')" group="menu">
+          <q-expansion-item :label="$t('basic-data-management')" :default-opened="$route.path.startsWith('/basic-')" group="menu">
             <q-item
               active-class="tab-active"
               to="/basic-project"
@@ -98,7 +116,7 @@
               </q-item-section>
 
               <q-item-section>
-                工作区管理
+                {{ $t('workspace') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -113,7 +131,7 @@
               </q-item-section>
 
               <q-item-section>
-                数据源管理
+                {{ $t('datasource') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -128,12 +146,12 @@
               </q-item-section>
 
               <q-item-section>
-                下载中心
+                {{ $t('download') }}
               </q-item-section>
             </q-item>
           </q-expansion-item>
           <q-separator />
-          <q-expansion-item label="ETL管理" group="menu" :default-opened="$route.path.startsWith('/etl-')">
+          <q-expansion-item :label="$t('etl-management')" group="menu" :default-opened="$route.path.startsWith('/etl-')">
             <q-item
               active-class="tab-active"
               to="/etl-designer"
@@ -146,7 +164,7 @@
               </q-item-section>
 
               <q-item-section>
-                在线设计
+                {{ $t('online-design') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -161,12 +179,12 @@
               </q-item-section>
 
               <q-item-section>
-              脚本发布
+              {{ $t('etl-publish') }}
               </q-item-section>
             </q-item>
           </q-expansion-item>
           <q-separator />
-          <q-expansion-item label="任务管理" group="menu" :default-opened="$route.path.startsWith('/task-')">
+          <q-expansion-item :label="$t('task-management')" group="menu" :default-opened="$route.path.startsWith('/task-')">
             <q-item
               active-class="tab-active"
               to="/task-batch"
@@ -180,7 +198,7 @@
               </q-item-section>
 
               <q-item-section>
-                批处理任务
+              {{ $t('batch-task') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -196,7 +214,7 @@
               </q-item-section>
 
               <q-item-section>
-                流处理任务
+              {{ $t('streaming-task') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -212,7 +230,7 @@
               </q-item-section>
 
               <q-item-section>
-                进程管理
+              {{ $t('task-process') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -228,12 +246,12 @@
               </q-item-section>
 
               <q-item-section>
-                日志跟踪
+              {{ $t('log-server') }}
               </q-item-section>
             </q-item>
           </q-expansion-item>
           <q-separator />
-          <q-expansion-item label="在线报表" group="menu" :default-opened="$route.path.startsWith('/analysis-')">
+          <q-expansion-item :label="$t('bi-management')" group="menu" :default-opened="$route.path.startsWith('/analysis-')">
             <q-item
               active-class="tab-active"
               to="/analysis-model"
@@ -246,7 +264,7 @@
               </q-item-section>
 
               <q-item-section>
-                模型设计
+              {{ $t('model-design') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -261,7 +279,7 @@
               </q-item-section>
 
               <q-item-section>
-                统计设置
+              {{ $t('report-setting') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -276,15 +294,15 @@
               </q-item-section>
 
               <q-item-section>
-                布局设置
+              {{ $t('layout-setting') }}
               </q-item-section>
             </q-item>
           </q-expansion-item>
           <q-separator />
-          <q-expansion-item label="系统配置" group="menu" :default-opened="$route.path.startsWith('/system-')">
+          <q-expansion-item :label="$t('system-setting')" group="menu" :default-opened="$route.path.startsWith('/system-')">
             <q-item
               active-class="tab-active"
-              to="/system-member"
+              to="/workspace-member"
               class="navigation-item text-right"
               clickable
               v-ripple
@@ -294,12 +312,12 @@
               </q-item-section>
 
               <q-item-section>
-                成员管理
+              {{ $t('workspace-member') }}
               </q-item-section>
             </q-item>
             <q-item
               active-class="tab-active"
-              to="/system-setting"
+              to="/user-setting"
               class="navigation-item text-right"
               clickable
               v-ripple
@@ -309,7 +327,7 @@
               </q-item-section>
 
               <q-item-section>
-                用户管理
+              {{ $t('user-setting') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -325,12 +343,12 @@
               </q-item-section>
 
               <q-item-section>
-                集群性能
+              {{ $t('system-metrics') }}
               </q-item-section>
             </q-item>
           </q-expansion-item>
           <q-separator />
-          <q-expansion-item label="数据大屏">
+          <q-expansion-item :label="$t('dashboard')">
             <q-item
               active-class="tab-active"
               :to="'/screen/' + layout.id"
@@ -444,6 +462,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.$i18n)
     me().then(res => {
       this.me = Object.assign({
         name: '',

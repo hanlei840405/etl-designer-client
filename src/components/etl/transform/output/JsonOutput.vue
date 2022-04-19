@@ -2,71 +2,63 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-        <q-tab name="main" label="一般"/>
-        <q-tab name="field" label="字段"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-basic')"/>
+        <q-tab name="field" :label="$t('tab-field')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.targetMode" :options="targetModes" emit-value map-options label="操作" @clear="form.executeEachInputRow = false"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.targetMode" :options="targetModes" emit-value map-options :label="$t('form-output')" @clear="form.executeEachInputRow = false"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.jsonName" label="Json条目名称"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.jsonName" :label="$t('form-json-bloc-name')"/>
           <br/>
-          <q-input type="number" min="0" outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.rowNumber" label="一个数据条目的数据行数">
+          <q-input type="number" min="0" outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.rowNumber" :label="$t('form-br-rows-in-bloc')">
             <template v-slot:append>
               <q-icon name="help_outline" >
                 <q-tooltip>
-                  1、等于0时，所有数据都写入同一个文件<br/>
-                  2、大于0时，数据将按照配置的数量写入文件，会产生多个文件
+                  1、{{ $t('form-zero-save-file') }}<br/>
+                  2、{{ $t('form-greater-then-zero-save-file') }}
                 </q-tooltip>
               </q-icon>
             </template>
           </q-input>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.outputValue" label="输出值" :disable="form.targetMode === '1'"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.filename" label="文件名" :disable="form.targetMode === '0'">
-            <template v-slot:append>
-              <q-icon name="help_outline" >
-                <q-tooltip>
-                  文件名：相对路径，系统会根据主体信息动态分配存储位置
-                </q-tooltip>
-              </q-icon>
-            </template>
-          </q-input>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.outputValue" :label="$t('form-output-value')" :disable="form.targetMode === '1'"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.filename" :label="$t('form-file-name')" :disable="form.targetMode === '0'"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.suffix" label="扩展名" :disable="form.targetMode === '0'"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.suffix" :label="$('form-suffix-name')" :disable="form.targetMode === '0'"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.compatibleMode" label="兼容模式"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.compatibleMode" :label="$('form-compatible-mode')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.append" label="追加方式"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.append" :label="$t('form-append')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.makeDir" label="启动时不创建文件"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.makeDir" :label="$t('form-not-create')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.servlet" label="发送结果到servlet"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.servlet" :label="$t('form-pass-output-servlet')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.appendDate" label="添加日期到文件名"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.appendDate" :label="$t('form-include-date-filename')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.addendTime" label="添加时间到文件名"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.addendTime" :label="$t('form-include-time-filename')"/>
         </q-tab-panel>
         <q-tab-panel name="field">
-          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"  separator="cell" hide-bottom title="字段">
+          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"  separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addParameter">
                 <q-list>
                   <q-item clickable v-close-popup @click="appendDiffParameter">
                     <q-item-section>
-                      <q-item-label>增加新的</q-item-label>
+                      <q-item-label>{{ $t('btn-append') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="addAllParameter">
                     <q-item-section>
-                      <q-item-label>增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="clearAndAddParameter">
                     <q-item-section>
-                      <q-item-label>清除并增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -94,8 +86,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -130,27 +122,27 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '字段名称',
+          label: this.$t('column-source-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'element',
-          label: '元素名称',
+          label: this.$t('form-element-name'),
           field: 'element',
           align: 'left',
           headerStyle: 'width: 100px;'
         }
       ],
-      targetModes: [{ value: '0', label: '输出流' }, { value: '1', label: '写到文件' }, { value: '2', label: '输出流并且写到文件' }],
+      targetModes: [{ value: '0', label: this.$t('form-output-value') }, { value: '1', label: this.$t('form-output-file') }, { value: '2', label: this.$t('form-output-value-file') }],
       sourceFields: [],
       forbiddenParallel: false
     }
@@ -233,8 +225,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

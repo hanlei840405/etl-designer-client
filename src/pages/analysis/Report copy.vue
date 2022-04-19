@@ -68,7 +68,7 @@
 
         <q-card-section>
           <q-chip square text-color="cyan-8" icon="bookmark" style="width: 100%; margin: 0px;">
-            {{ $t('dialog-bottom-limit', [20]) }}
+            预览数据最多显示10条
           </q-chip>
           <q-table
             color="cyan-8"
@@ -107,37 +107,34 @@
         </q-card-section>
         <q-card-section>
             <q-tabs v-model="editReportDialog.tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-              <q-tab name="main" :label="$t('tab-main')"/>
-              <q-tab name="reportDimension" :label="$t('tab-dimension')" :disable="dimensionState"/>
+              <q-tab name="report" label="报表信息"/>
+              <q-tab name="reportDimension" label="统计维度" :disable="dimensionState"/>
             </q-tabs>
             <q-separator/>
             <q-tab-panels v-model="editReportDialog.tab" animated>
-              <q-tab-panel name="main">
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.code" :label="$t('form-code')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-                <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="editReportDialog.report.model.id" emit-value map-options option-value="id" :options="editReportDialog.modelList" :label="$t('form-reference-model')" clearable lazy-rules :rules="[ val => (val != null) || 'model is invalid' ]" @input="selectedModel">
+              <q-tab-panel name="report">
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.code" label="报表编码 *" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.name" label="报表名称 *" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+                <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="editReportDialog.report.model.id" emit-value map-options option-value="id" :options="editReportDialog.modelList" label="依赖模型 *" clearable lazy-rules :rules="[ val => (val != null) || 'model is invalid' ]" @input="selectedModel">
                 </q-select>
-                <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.chart" :options="editReportDialog.charts" emit-value map-options :label="$t('form-chart')" clearable lazy-rules :rules="[ val => (val != null) || 'chart is invalid' ]">
+                <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.chart" :options="editReportDialog.charts" emit-value map-options label="展现形式 *" clearable lazy-rules :rules="[ val => (val != null) || 'chart is invalid' ]">
                 </q-select>
+                <q-radio text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.mode" val="auto" label="标准模式">
+                  <q-tooltip>
+                    标准模式：<br/>统计维度中所有项均由依赖模型给出，不支持自定义统计项，适用于模型与维度高度吻合的场景
+                  </q-tooltip>
+                </q-radio>
+                <q-radio text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.mode" val="manual" label="自定义模式">
+                  <q-tooltip>
+                    自定义模式：<br/>统计维度中所有项均支持自定义，更倾向于灵活统计，支持用户自定义SQL，<br/>适用于模型无法直接转换为报表，需要业务人员通过脚本转换的场景
+                  </q-tooltip>
+                </q-radio>
                 <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="textarea" rows="2" v-model="editReportDialog.report.description" :label="$t('form-description')"/>
               </q-tab-panel>
               <q-tab-panel name="reportDimension">
-                <q-table :data="editReportDialog.indexDimensions" :columns="editReportDialog.indexDimensionColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('table-title-statistical-dimension')">
+                <q-table :data="editReportDialog.indexDimensions" :columns="editReportDialog.indexDimensionColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom title="统计维度">
                   <template v-slot:top-right>
-                    <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addIndexDimension(true)" :disable="editReportDialog.indexDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].index">
-                      <q-list>
-                        <q-item clickable v-close-popup @click="addIndexDimension(true)" :disable="editReportDialog.indexDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].index">
-                          <q-item-section>
-                            <q-item-label>{{ $t('btn-add-standard-selection') }}</q-item-label>
-                          </q-item-section>
-                        </q-item>
-                        <q-item clickable v-close-popup @click="addIndexDimension(false)" :disable="editReportDialog.indexDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].index">
-                          <q-item-section>
-                            <q-item-label>{{ $t('btn-add-custom-input') }}</q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </q-list>
-                    </q-btn-dropdown>
+                    <q-btn split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addIndexDimension" :disable="editReportDialog.indexDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].index"/>
                   </template>
                   <template v-slot:body="props">
                     <q-tr :props="props">
@@ -148,13 +145,13 @@
                       <q-td key="code" :props="props">
                         {{ props.row.code }}
                         <q-popup-edit v-model="props.row.code" :auto-save=true>
-                          <q-select v-if="props.row.standard" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" emit-value map-options v-model="props.row.code" :options="editReportDialog.metadataList" @input="(e) => selectedMetadata (e, props.row)"/>
-                          <q-input v-if="!props.row.standard" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.code"/>
+                          <q-select v-if="editReportDialog.report.mode === 'auto'" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" emit-value map-options v-model="props.row.code" :options="editReportDialog.selectedModel.metadataList" @input="(e) => selectedMetadata (e, props.row)"/>
+                          <q-input v-if="editReportDialog.report.mode === 'manual'" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.code"/>
                         </q-popup-edit>
                       </q-td>
                       <q-td key="name" :props="props">
                         {{ props.row.name }}
-                        <q-popup-edit v-if="!props.row.standard" v-model="props.row.name" :auto-save=true>
+                        <q-popup-edit v-if="editReportDialog.report.mode === 'manual'" v-model="props.row.name" :auto-save=true>
                           <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.name"/>
                         </q-popup-edit>
                       </q-td>
@@ -169,22 +166,10 @@
                 </q-table>
                 <br/>
                 <q-separator color="cyan-8" size="2px"/>
-                <q-table :data="editReportDialog.subjectDimensions" :columns="editReportDialog.subjectDimensionColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('table-title-statistical-object')">
+                <br/>
+                <q-table :data="editReportDialog.subjectDimensions" :columns="editReportDialog.subjectDimensionColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom title="统计对象">
                   <template v-slot:top-right>
-                    <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addSubjectDimension(true)" :disable="editReportDialog.subjectDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].subject">
-                      <q-list>
-                        <q-item clickable v-close-popup @click="addSubjectDimension(true)" :disable="editReportDialog.subjectDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].subject">
-                          <q-item-section>
-                            <q-item-label>{{ $t('btn-add-standard-selection') }}</q-item-label>
-                          </q-item-section>
-                        </q-item>
-                        <q-item clickable v-close-popup @click="addSubjectDimension(false)" :disable="editReportDialog.subjectDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].subject">
-                          <q-item-section>
-                            <q-item-label>{{ $t('btn-add-custom-input') }}</q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </q-list>
-                    </q-btn-dropdown>
+                    <q-btn split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addSubjectDimension" :disable="editReportDialog.subjectDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].subject"/>
                   </template>
                   <template v-slot:body="props">
                     <q-tr :props="props">
@@ -195,13 +180,13 @@
                       <q-td key="code" :props="props">
                         {{ props.row.code }}
                         <q-popup-edit v-model="props.row.code" :auto-save=true>
-                          <q-select v-if="props.row.standard" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" emit-value map-options v-model="props.row.code" :options="editReportDialog.metadataList" @input="(e) => selectedMetadata (e, props.row)"/>
-                          <q-input v-if="!props.row.standard" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.code"/>
+                          <q-select v-if="editReportDialog.report.mode === 'auto'" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" emit-value map-options v-model="props.row.code" :options="editReportDialog.selectedModel.metadataList" @input="(e) => selectedMetadata (e, props.row)"/>
+                          <q-input v-if="editReportDialog.report.mode === 'manual'" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.code"/>
                         </q-popup-edit>
                       </q-td>
                       <q-td key="name" :props="props">
                         {{ props.row.name }}
-                        <q-popup-edit v-if="!props.row.standard" v-model="props.row.name" :auto-save=true>
+                        <q-popup-edit v-if="editReportDialog.report.mode === 'manual'" v-model="props.row.name" :auto-save=true>
                           <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.name"/>
                         </q-popup-edit>
                       </q-td>
@@ -216,79 +201,84 @@
                 </q-table>
                 <br/>
                 <q-separator color="cyan-8" size="2px"/>
-                <q-table :data="editReportDialog.amountDimensions" :columns="editReportDialog.amountDimensionColumns" :visible-columns="editReportDialog.visibleAmountDimensionColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('table-title-statistical-data')">
+                <br/>
+                <q-table :data="editReportDialog.amountDimensions" :columns="editReportDialog.amountDimensionColumns" :visible-columns="editReportDialog.visibleAmountDimensionColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom title="统计数据">
                   <template v-slot:top-right>
-                    <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addAmountDimension(true)" :disable="editReportDialog.amountDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].amount">
+                    <q-btn v-if="editReportDialog.report.mode === 'manual'" split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addAmountDimension(true)" :disable="editReportDialog.amountDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].amount"/>
+                    <q-btn-dropdown v-if="editReportDialog.report.mode === 'auto'" split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addAmountDimension(true)" :disable="editReportDialog.amountDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].amount">
                       <q-list>
-                        <q-item clickable v-close-popup @click="addAmountDimension(true)" :disable="editReportDialog.amountDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].amount">
+                        <q-item clickable v-close-popup @click="addAmountDimension(true)">
                           <q-item-section>
-                            <q-item-label>{{ $t('btn-add-standard-selection') }}</q-item-label>
+                            <q-item-label>增加标准项</q-item-label>
                           </q-item-section>
                         </q-item>
-                        <q-item clickable v-close-popup @click="addAmountDimension(false)" :disable="editReportDialog.amountDimensions.length >= editReportDialog.limit[editReportDialog.report.chart].amount">
+                        <q-item clickable v-close-popup @click="addAmountDimension(false)">
                           <q-item-section>
-                            <q-item-label>{{ $t('btn-add-custom-input') }}</q-item-label>
+                            <q-item-label>增加自定义项</q-item-label>
                           </q-item-section>
                         </q-item>
                       </q-list>
                     </q-btn-dropdown>
                   </template>
                   <template v-slot:top-row v-if="editReportDialog.report.chart === 'kLineChart'">
-                  <q-tr>
-                    <q-td colspan="100%" style="color: red;">
-                      {{ $t('table-title-report-order') }}
-                    </q-td>
-                  </q-tr>
-                </template>
-                <template v-slot:body="props">
-                  <q-tr :props="props">
-                    <q-td key="operate" :props="props">
-                      <q-btn size="xs" outline round color="negative" icon="remove"
-                            @click="deleteAmountDimension(props)"></q-btn>
-                    </q-td>
-                    <q-td key="code" :props="props">
-                      {{ props.row.code }}
-                      <q-popup-edit v-model="props.row.code" :auto-save=true>
-                        <q-select v-if="props.row.standard" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" emit-value map-options v-model="props.row.code" :options="editReportDialog.metadataList" @input="(e) => selectedMetadata (e, props.row)"/>
-                        <q-input v-if="!props.row.standard" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.code"/>
-                      </q-popup-edit>
-                    </q-td>
-                    <q-td key="name" :props="props">
-                      {{ props.row.name }}
-                      <q-popup-edit v-if="!props.row.standard" v-model="props.row.name" :auto-save=true>
-                        <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.name"/>
-                      </q-popup-edit>
-                    </q-td>
-                    <q-td key="description" :props="props">
-                      {{ props.row.description }}
-                      <q-popup-edit v-model="props.row.description" :auto-save=true>
-                        <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.description"/>
-                      </q-popup-edit>
-                    </q-td>
-                    <q-td key="graph" :props="props">
-                      {{ editReportDialog.graphMapping[props.row.graph] }}
-                      <q-popup-edit v-model="props.row.graph" :auto-save=true>
-                        <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.graph" emit-value map-options :options="editReportDialog.graphList"/>
-                      </q-popup-edit>
-                    </q-td>
-                    <q-td key="anchor" :props="props">
-                      {{ props.row.anchor }}
-                      <q-popup-edit v-model="props.row.anchor" :auto-save=true>
-                        <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.anchor" emit-value map-options option-value="code" option-label="code" :options="editReportDialog.amountDimensions"/>
-                      </q-popup-edit>
-                    </q-td>
-                  </q-tr>
-                </template>
+                    <q-tr>
+                      <q-td colspan="100%" style="color: red;">
+                        请按照开始，最高，最低，结束的顺序填写统计数据定义
+                      </q-td>
+                    </q-tr>
+                  </template>
+                  <template v-slot:body="props">
+                    <q-tr :props="props">
+                      <q-td key="operate" :props="props">
+                        <q-btn size="xs" outline round color="negative" icon="remove"
+                              @click="deleteAmountDimension(props)"></q-btn>
+                      </q-td>
+                      <q-td key="code" :props="props">
+                        {{ props.row.code }}
+                        <q-popup-edit v-model="props.row.code" :auto-save=true>
+                          <q-select v-if="editReportDialog.report.mode === 'auto' && editReportDialog.custom" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" emit-value map-options v-model="props.row.code" :options="editReportDialog.selectedModel.metadataList" @input="(e) => selectedMetadata (e, props.row)"/>
+                          <q-input v-if="editReportDialog.report.mode === 'manual' || !editReportDialog.custom" autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.code"/>
+                        </q-popup-edit>
+                      </q-td>
+                      <q-td key="name" :props="props">
+                        {{ props.row.name }}
+                        <q-popup-edit v-if="editReportDialog.report.mode === 'manual' || !editReportDialog.custom" v-model="props.row.name" :auto-save=true>
+                          <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.name"/>
+                        </q-popup-edit>
+                      </q-td>
+                      <q-td key="graph" :props="props">
+                        {{ editReportDialog.graphMapping[props.row.graph] }}
+                        <q-popup-edit v-model="props.row.graph" :auto-save=true>
+                          <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.graph" emit-value map-options :options="editReportDialog.graphList"/>
+                        </q-popup-edit>
+                      </q-td>
+                      <q-td key="anchor" :props="props">
+                        {{ props.row.anchor }}
+                        <q-popup-edit v-model="props.row.anchor" :auto-save=true>
+                          <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.anchor" emit-value map-options option-value="code" option-label="code" :options="editReportDialog.amountDimensions"/>
+                        </q-popup-edit>
+                      </q-td>
+                      <q-td key="description" :props="props">
+                        {{ props.row.description }}
+                        <q-popup-edit v-model="props.row.description" :auto-save=true>
+                          <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.description"/>
+                        </q-popup-edit>
+                      </q-td>
+                    </q-tr>
+                  </template>
                 </q-table>
+                <div v-if="editReportDialog.report.mode === 'manual'">
                 <br/>
                 <q-separator color="cyan-8" size="2px"/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.script" type="textarea" rows="6" label="SQL" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
+                <br/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editReportDialog.report.script" type="textarea" rows="3" label="自定义查询SQL" placeholder="SELECT <values> FROM <table name> WHERE <conditions>" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
                   <template v-slot:append>
                     <div style="margin-top: 2vh;">
                       <q-btn round dense flat text-color="cyan-8" icon="visibility" @click="preview" :disable="editReportDialog.previewBtnDisable"/>
                     </div>
                   </template>
                 </q-input>
+                </div>
               </q-tab-panel>
             </q-tab-panels>
         </q-card-section>
@@ -356,13 +346,13 @@ export default {
         columns: [
           {
             name: 'code',
-            label: this.$t('column-code'),
+            label: '报表编码',
             field: 'code',
             align: 'left'
           },
           {
             name: 'name',
-            label: this.$t('column-name'),
+            label: '报表名称',
             field: 'name',
             align: 'left'
           },
@@ -405,14 +395,15 @@ export default {
         state: false,
         position: 'right',
         title: this.$t('form-title-edit'),
-        tab: 'main',
+        tab: 'report',
         report: {
           id: null,
           code: null,
           name: null,
-          script: '',
+          script: null,
           description: null,
           chart: null,
+          mode: 'auto',
           status: null,
           project: {},
           model: {},
@@ -428,7 +419,7 @@ export default {
           },
           {
             name: 'code',
-            label: this.$t('column-code'),
+            label: '编码',
             field: 'code',
             align: 'left'
           },
@@ -455,33 +446,7 @@ export default {
           },
           {
             name: 'code',
-            label: this.$t('column-code'),
-            field: 'code',
-            align: 'left'
-          },
-          {
-            name: 'name',
-            label: this.$t('column-name'),
-            field: 'name',
-            align: 'left'
-          },
-          {
-            name: 'description',
-            label: this.$t('column-description'),
-            align: 'left'
-          }
-        ],
-        amountDimensionColumns: [
-          {
-            name: 'operate',
-            label: this.$t('column-operate'),
-            field: 'operate',
-            align: 'right',
-            headerStyle: 'width: 20px'
-          },
-          {
-            name: 'code',
-            label: this.$t('column-code'),
+            label: '编码',
             field: 'code',
             align: 'left'
           },
@@ -496,17 +461,44 @@ export default {
             label: this.$t('column-description'),
             field: 'description',
             align: 'left'
+          }
+        ],
+        amountDimensionColumns: [
+          {
+            name: 'operate',
+            label: this.$t('column-operate'),
+            field: 'operate',
+            align: 'right',
+            headerStyle: 'width: 20px'
+          },
+          {
+            name: 'code',
+            label: '编码',
+            field: 'code',
+            align: 'left'
+          },
+          {
+            name: 'name',
+            label: this.$t('column-name'),
+            field: 'name',
+            align: 'left'
           },
           {
             name: 'graph',
-            label: this.$t('column-graph'),
+            label: '形状',
             field: 'graph',
             align: 'left'
           },
           {
             name: 'anchor',
-            label: this.$t('column-anchor'),
+            label: '锚定度量',
             field: 'anchor',
+            align: 'left'
+          },
+          {
+            name: 'description',
+            label: this.$t('column-description'),
+            field: 'description',
             align: 'left'
           }
         ],
@@ -515,18 +507,18 @@ export default {
         previewBtnDisable: false,
         datasource: {},
         charts: [
-          { value: 'lineChart', label: this.$t('form-chart-line') },
-          { value: 'pieChart', label: this.$t('form-chart-pie') },
-          { value: 'verticalBarChart', label: this.$t('form-chart-vertical-bar') },
-          { value: 'verticalStackedBarChart', label: this.$t('form-chart-vertical-stacked-bar') },
-          { value: 'verticalStackedPercentBarChart', label: this.$t('form-chart-vertical-stacked-percent-bar') },
-          { value: 'horizontalBarChart', label: this.$t('form-chart-horizontal-bar') },
-          { value: 'horizontalStackedBarChart', label: this.$t('form-chart-horizontal-stacked-bar') },
-          { value: 'horizontalStackedPercentBarChart', label: this.$t('form-chart-horizontal-stacked-percent-bar') },
-          { value: 'areaChart', label: this.$t('form-chart-area') },
-          { value: 'radarChart', label: this.$t('form-chart-radar') },
-          { value: 'mixChart', label: this.$t('form-chart-mix') },
-          { value: 'kLineChart', label: this.$t('form-chart-kLine') }
+          { value: 'lineChart', label: '折线图' },
+          { value: 'pieChart', label: '饼图' },
+          { value: 'verticalBarChart', label: '垂直柱状图' },
+          { value: 'verticalStackedBarChart', label: '垂直堆叠柱状图' },
+          { value: 'verticalStackedPercentBarChart', label: '垂直堆叠百分比柱状图' },
+          { value: 'horizontalBarChart', label: '水平柱状图' },
+          { value: 'horizontalStackedBarChart', label: '水平堆叠柱状图' },
+          { value: 'horizontalStackedPercentBarChart', label: '水平堆叠百分比柱状图' },
+          { value: 'areaChart', label: '堆叠面积图' },
+          { value: 'radarChart', label: '雷达图' },
+          { value: 'mixChart', label: '混合图(折线、面积、柱状图)' },
+          { value: 'kLineChart', label: 'K线图' }
 
         ],
         indexDimensions: [],
@@ -595,17 +587,18 @@ export default {
           }
         },
         graphList: [
-          { value: 'line', label: this.$t('column-line') },
-          { value: 'column', label: this.$t('column-column') }
+          { value: 'line', label: '线性' },
+          { value: 'column', label: '柱形' }
         ],
         anchorList: [],
         graphMapping: {
-          line: this.$t('column-line'),
-          column: this.$t('column-column'),
+          line: '线性',
+          column: '柱形',
           null: ''
         },
         metadata: {},
-        metadataList: []
+        custom: true,
+        selectedModel: {}
       }
     }
   },
@@ -672,7 +665,10 @@ export default {
             code: res.data.code,
             name: res.data.name,
             script: res.data.script,
-            chart: res.data.chart || 'lineChart',
+            chart: res.data.chart,
+            background: res.data.background,
+            mode: res.data.mode,
+            color: res.data.color,
             description: res.data.description,
             status: res.data.status,
             project: res.data.project,
@@ -696,7 +692,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: vm.$t('response-error-10002'),
+            message: '未授权的报表!',
             position: 'top',
             color: 'negative'
           })
@@ -712,7 +708,8 @@ export default {
     selectedModel (val) {
       const vm = this
       fetchModel(val).then(res => {
-        vm.editReportDialog.metadataList = []
+        vm.editReportDialog.selectedModel = res.data
+        vm.editReportDialog.selectedModel.metadataList = []
         res.data.metadataList.forEach(item => {
           vm.editReportDialog.metadataList.push({
             value: item.columnCode,
@@ -723,7 +720,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: vm.$t('response-error-10002'),
+            message: '未授权的报表!',
             position: 'top',
             color: 'negative'
           })
@@ -773,7 +770,7 @@ export default {
       }).catch(() => {
         vm.$q.notify({
           position: 'top',
-          message: vm.$t('response-error-grammer'),
+          message: 'SQL语法错误或存在特殊字符等，请仔细检查',
           color: 'negative'
         })
       })
@@ -781,10 +778,25 @@ export default {
     priviewChart () {
       const vm = this
       vm.previewChartDialog.comp = vm.editReportDialog.report.chart
+      let sql
+      if (vm.editReportDialog.mode === 'auto') {
+        // 拼装自动sql
+        sql = 'select '
+        const fields = []
+        vm.editReportDialog.report.reportDimensions.forEach(item => {
+          fields.push(item.code)
+        })
+        sql += fields.join(',') + ' from '
+        if (vm.editReportDialog.selectedModel.frequency === 'manual') {
+          sql += vm.editReportDialog.selectedModel.code
+        }
+      } else {
+        sql = vm.editReportDialog.report.script
+      }
       preview({
         category: 'sql',
         datasourceId: vm.editReportDialog.datasource[vm.editReportDialog.report.model.id],
-        sql: vm.editReportDialog.report.script
+        sql: sql
       }).then(res => {
         vm.previewChartDialog.config.name = vm.editReportDialog.report.name
         vm.previewChartDialog.config.indexDimensions = vm.editReportDialog.indexDimensions
@@ -805,8 +817,11 @@ export default {
           id: null,
           code: null,
           name: null,
-          script: '',
+          script: null,
           chart: 'lineChart',
+          background: null,
+          mode: 'auto',
+          color: null,
           description: null,
           status: null,
           project: { id: vm.table.project.id },
@@ -826,8 +841,11 @@ export default {
             id: null,
             code: null,
             name: null,
-            script: '',
+            script: null,
             chart: 'lineChart',
+            background: null,
+            mode: 'auto',
+            color: null,
             description: null,
             status: null,
             project: {},
@@ -849,7 +867,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: vm.$t('confirm-delete'),
+        message: '确定删除报表?',
         cancel: {
           textColor: 'orange',
           outline: true,
@@ -870,8 +888,11 @@ export default {
               id: null,
               code: null,
               name: null,
-              script: '',
+              script: null,
               chart: 'lineChart',
+              background: null,
+              mode: 'auto',
+              color: null,
               description: null,
               status: null,
               project: {},
@@ -885,33 +906,31 @@ export default {
         })
       })
     },
-    addIndexDimension (standard) {
+    addIndexDimension () {
       this.editReportDialog.indexDimensions.push({
         code: '',
         name: '',
-        description: '',
         category: 'index',
-        standard: standard
+        description: ''
       })
     },
-    addSubjectDimension (standard) {
+    addSubjectDimension () {
       this.editReportDialog.subjectDimensions.push({
         code: '',
         name: '',
-        description: '',
         category: 'subject',
-        standard: standard
+        description: ''
       })
     },
-    addAmountDimension (standard) {
+    addAmountDimension (custom) {
+      this.editReportDialog.custom = custom
       this.editReportDialog.amountDimensions.push({
         code: '',
         name: '',
-        description: '',
         category: 'amount',
         anchor: '',
         graph: '',
-        standard: standard
+        description: ''
       })
     },
     deleteIndexDimension (props) {

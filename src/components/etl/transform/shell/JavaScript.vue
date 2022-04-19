@@ -3,22 +3,22 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.script" type="textarea" rows="12" label="脚本">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.script" type="textarea" rows="12" :label="$t('form-script')">
             <template v-slot:prepend>
               <q-btn round dense flat icon="search" @click="loadHelps"/>
             </template>
           </q-input>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.compatible" label="兼容模式"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="number" v-model.number="form.level" label="优化级别"></q-input>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.compatible" :label="$t('form-compatible')"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="number" v-model.number="form.level" :label="$t('form-optimization-vevel')"></q-input>
           <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="输出字段">
+                   separator="cell" hide-bottom :title="$t('table-title-outut-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
             </template>
@@ -68,8 +68,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="helpDialog.mode">
@@ -81,9 +81,9 @@
         </q-card-section>
         <q-card-section class="items-center q-pb-none">
           <q-tabs v-model="helpDialog.tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-            <q-tab name="constant" label="内置常量"/>
-            <q-tab name="function" label="内置函数"/>
-            <q-tab name="input" label="输入参数"/>
+            <q-tab name="constant" :label="$t('tab-constant')"/>
+            <q-tab name="function" :label="$t('tab-function')"/>
+            <q-tab name="input" :label="$t('tab-input-parameter')"/>
           </q-tabs>
           <q-separator />
           <q-tab-panels v-model="helpDialog.tab" animated>
@@ -139,49 +139,49 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '参数',
+          label: this.$t('column-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'name',
-          label: '改名为',
+          label: this.$t('column-name'),
           field: 'name',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'rename',
-          label: '替换输入的值',
+          label: this.$t('column-rename'),
           field: 'rename',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -380,8 +380,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

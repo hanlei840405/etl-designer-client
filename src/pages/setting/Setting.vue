@@ -6,7 +6,7 @@
         <q-input borderless dense debounce="300" v-model="table.filter" placeholder="Search">
           <template v-slot:append>
             <q-icon name="search"/>
-            <q-btn outline text-color="cyan-8" label="新建" @click="newUser"/>
+            <q-btn outline text-color="cyan-8" :label="$t('btn-new')" @click="newUser"/>
           </template>
         </q-input>
       </template>
@@ -46,20 +46,18 @@
           align="left"
           narrow-indicator
         >
-          <q-tab name="basic" label="基础信息"/>
-          <q-tab name="privilege" label="权限授予" :disable="editUserDialog.tabDisable"/>
+          <q-tab name="main" :label="$t('tab-main')"/>
+          <q-tab name="privilege" :label="$t('tab-grant-privilege')" :disable="editUserDialog.tabDisable"/>
         </q-tabs>
         <q-tab-panels v-model="editUserDialog.tab" animated>
-          <q-tab-panel name="basic">
-            <div class="text-h6">基础信息</div>
+          <q-tab-panel name="main">
             <q-card-section>
               <q-form @submit="saveUser" class="q-gutter-md">
                 <q-input
                   outlined
                   color="cyan-8"
                   v-model="editUserDialog.user.name"
-                  label="姓名 *"
-                  hint="姓名"
+                  :label="$t('form-name')"
                   lazy-rules
                   :rules="[ val => val && val.length > 0 || 'Please type something']"
                 />
@@ -67,8 +65,8 @@
                   outlined
                   color="cyan-8"
                   v-model="editUserDialog.user.email"
-                  label="邮箱 *"
-                  hint="邮箱"
+                  :label="$t('form-email')"
+                  :hint="$t('form-username')"
                   lazy-rules
                   :rules="[ val => val && val.length > 0 || 'Please type something']"
                 />
@@ -77,13 +75,12 @@
               </q-form>
             </q-card-section>
             <q-card-actions align="right">
-              <q-btn label="保存" outline text-color="cyan-8" @click="saveUser"/>
-              <q-btn label="删除" outline text-color="negative" @click="deleteUser"/>
+              <q-btn :label="$t('btn-save')" outline text-color="cyan-8" @click="saveUser"/>
+              <q-btn :label="$t('btn-delete')" outline text-color="negative" @click="deleteUser"/>
             </q-card-actions>
           </q-tab-panel>
 
           <q-tab-panel name="privilege">
-            <div class="text-h6">权限授予</div>
             <q-card-section>
               <template v-for="(v, k) in editUserDialog.resources">
                 <q-chip :key="k">
@@ -97,7 +94,7 @@
               </template>
             </q-card-section>
             <q-card-actions align="right">
-              <q-btn label="授权" outline text-color="cyan-8" @click="grant"/>
+              <q-btn :label="$t('btn-grant')" outline text-color="cyan-8" @click="grant"/>
             </q-card-actions>
           </q-tab-panel>
         </q-tab-panels>
@@ -132,23 +129,23 @@ export default {
         columns: [
           {
             name: 'name',
-            label: '姓名',
+            label: this.$t('column-name'),
             field: 'name',
             align: 'left'
           },
           {
             name: 'email',
-            label: '邮箱',
+            label: this.$t('column-email'),
             field: 'email',
             align: 'left'
           },
           {
             name: 'status',
-            label: '状态',
+            label: this.$t('column-status'),
             field: 'status',
             align: 'left',
             format: (val, row) => {
-              return val === '1' ? '有效' : '无效'
+              return val === '1' ? this.$t('column-status-active') : this.$t('column-status-inactive')
             }
           }
         ]
@@ -156,8 +153,8 @@ export default {
       editUserDialog: {
         state: false,
         position: 'right',
-        title: '编辑',
-        tab: 'basic',
+        title: this.$t('form-title-edit'),
+        tab: 'main',
         tabDisable: true,
         user: {
           id: null,
@@ -191,7 +188,7 @@ export default {
       fetchUser(props.key).then(res => {
         vm.editUserDialog = Object.assign(vm.editUserDialog, {
           state: true,
-          tab: 'basic',
+          tab: 'main',
           user: {
             id: res.data.id,
             name: res.data.name,
@@ -212,7 +209,7 @@ export default {
       const vm = this
       vm.editUserDialog = Object.assign(vm.editUserDialog, {
         state: true,
-        tab: 'basic',
+        tab: 'main',
         user: {
           id: null,
           name: null,
@@ -240,7 +237,7 @@ export default {
           tabDisable: false
         })
         vm.$q.notify({
-          message: '保存成功!',
+          message: this.$t('response-save-success'),
           position: 'top',
           color: 'teal'
         })
@@ -248,7 +245,7 @@ export default {
         if (err.status === 10006) {
           vm.$q.notify({
             position: 'top',
-            message: '该邮箱已存在',
+            message: vm.$t('response-error-10006'),
             color: 'negative'
           })
         } else {
@@ -264,7 +261,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除用户?',
+        message: this.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,
@@ -284,7 +281,7 @@ export default {
           })
           vm.editUserDialog = Object.assign(vm.editUserDialog, {
             state: false,
-            tab: 'basic',
+            tab: 'main',
             user: {
               id: null,
               name: null,
@@ -310,7 +307,7 @@ export default {
         resources: vm.editUserDialog.grantedResources
       }).then(res => {
         vm.$q.notify({
-          message: '授权成功!',
+          message: vm.$t('response-grant-success'),
           position: 'top',
           color: 'teal'
         })

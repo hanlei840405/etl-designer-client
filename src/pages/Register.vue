@@ -6,7 +6,7 @@
           <q-avatar>
             <img src="/logo.png">
           </q-avatar>
-          新恩数造</div>
+          {{ $t('app') }}</div>
         <div class="text-subtitle1 text-right text-bold">BY NXIN</div>
       </q-card-section>
       <q-card-section>
@@ -15,7 +15,7 @@
             filled
             v-model="registerForm.company"
             color="cyan-8"
-            label="组织 *"
+            :label="$t('form-tenant')"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
           />
@@ -23,7 +23,7 @@
             filled
             v-model="registerForm.name"
             color="cyan-8"
-            label="姓名 *"
+            :label="$t('form-name')"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
           />
@@ -31,7 +31,8 @@
             filled
             v-model="registerForm.email"
             color="cyan-8"
-            label="邮箱 *"
+            :label="$t('form-email')"
+            :hint="$t('form-username')"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
           />
@@ -40,12 +41,12 @@
             type="password"
             color="cyan-8"
             v-model="registerForm.password"
-            label="密码 *"
+            :label="$t('form-password')"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
           />
-          <q-btn type="submit" unelevated size="lg" color="cyan-8" class="full-width text-white" label="注册" />
-          <p class="text-right"><a href="#/login" class="text-grey-6">已有账号</a></p>
+          <q-btn type="submit" unelevated size="lg" color="cyan-8" class="full-width text-white" :label="$t('btn-register')" />
+          <p class="text-right"><a href="#/login" class="text-grey-6">{{ $t('btn-back') }}</a></p>
         </q-form>
       </q-card-section>
     </q-card>
@@ -76,7 +77,7 @@ export default {
       }).catch(err => {
         if (err.status === 10006) {
           vm.$q.notify({
-            message: '邮箱已被占用!',
+            message: vm.$t('response-error-10006'),
             position: 'top',
             color: 'negative'
           })

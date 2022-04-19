@@ -30,7 +30,7 @@
                 <q-item-section side>
                   <q-btn class="text-cyan-8 gt-xs" size="12px" flat dense round icon="logout"
                          @click="quitCurrentProject(link.id)">
-                    <q-tooltip>退出当前工程</q-tooltip>
+                    <q-tooltip>{{ $t('btn-quit') }}</q-tooltip>
                   </q-btn>
                 </q-item-section>
               </template>
@@ -38,7 +38,7 @@
                 <q-card-section class="col q-pt-none">
                   <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
                           selected-color="cyan-8"
-                          :selected.sync="project.shellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
+                          :selected.sync="project.shellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
                     <template v-slot:default-header="prop">
                       <div class="row items-center">
                         <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
@@ -61,16 +61,16 @@
           icon="keyboard_arrow_up"
           direction="up"
         >
-          <q-fab-action square class="bg-cyan-8" @click="removeShell" label="删除" v-show="project.shellId"/>
-          <q-fab-action square class="bg-cyan-8" @click="editShell" label="编辑" v-show="project.shellId"/>
-          <q-fab-action square class="bg-cyan-8" @click="newShell" label="新增"/>
+          <q-fab-action square class="bg-cyan-8" @click="removeShell" :label="$t('btn-delete')" v-show="project.shellId"/>
+          <q-fab-action square class="bg-cyan-8" @click="editShell" :label="$t('btn-edit')" v-show="project.shellId"/>
+          <q-fab-action square class="bg-cyan-8" @click="newShell" :label="$t('btn-new')"/>
         </q-fab>
       </q-page-sticky>
       <q-dialog v-model="shellDialog.state">
         <q-card style="width: 100%">
           <q-form @submit="submitShell" class="q-gutter-md">
             <q-card-section class="row items-center q-pb-none">
-              <div class="text-h6">编辑</div>
+              <div class="text-h6">{{ $t('form-title-edit') }}</div>
               <q-space/>
               <q-btn icon="close" flat round dense v-close-popup/>
             </q-card-section>
@@ -85,7 +85,7 @@
                 hide-selected
                 fill-input
                 input-debounce="0"
-                label="选择工作区分支"
+                :label="$t('select-workspace')"
                 :options="projects"
                 emit-value
                 map-options
@@ -105,16 +105,16 @@
               </q-select>
               <q-tree :nodes="shellDialog.shells" node-key="id" selected-color="cyan-8" ref="shellDialogTree"
                       :selected.sync="shellDialog.shell.shell.id" default-expand-all
-                      no-nodes-label="暂无目录，请先选择工作区分支"/>
+                       :no-nodes-label="$t('table-empty')"/>
               <q-select outlined color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.category" :options="shellDialog.categories" emit-value
-                        map-options option-value="id" option-label="name" label="类型" lazy-rules
+                        map-options option-value="id" option-label="name"  :label="$t('form-category')" lazy-rules
                         :rules="[ val => !!val || 'Please type something']"/>
-              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.name" label="名称"
+              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.name" :label="$t('form-name')"
                        :rules="[val => !!val || 'Field is required']"/>
-              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.description" label="描述"/>
+              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.description" :label="$t('form-description')"/>
             </q-card-section>
             <q-card-actions align="right">
-              <q-btn outline text-color="cyan-8" color="cyan-8" label="保存" icon="save" type="submit"/>
+              <q-btn outline text-color="cyan-8" color="cyan-8" :label="$t('btn-save')" icon="save" type="submit"/>
             </q-card-actions>
           </q-form>
         </q-card>
@@ -183,7 +183,7 @@
             row-key="id"
             :loading="publishDialog.loading"
             separator="cell"
-            no-data-label="无数据"
+            :no-data-label="$t('table-empty')"
             @request="requestPublishes"
             :pagination.sync="publishDialog.pagination"
           >
@@ -285,21 +285,21 @@ export default {
         columns: [
           {
             name: 'createTime',
-            label: '发布时间',
+            label: this.$t('column-deploy-time'),
             field: 'createTime',
             align: 'left',
             headerStyle: 'width: 200px'
           },
           {
             name: 'description',
-            label: '描述',
+            label: this.$t('column-description'),
             field: 'description',
             align: 'left',
             headerStyle: 'width: 300px'
           },
           {
             name: 'operate',
-            label: '操作',
+            label: this.$t('column-operate'),
             field: 'operate',
             align: 'right',
             headerStyle: 'width: 20px'
@@ -501,7 +501,7 @@ export default {
       if (selected.children.length === 0) {
         this.$q.dialog({
           title: '删除',
-          message: '确定删除',
+          message: this.$t('confirm-delete'),
           cancel: true,
           persistent: true
         }).onOk(() => {
@@ -509,7 +509,7 @@ export default {
             vm.closeTab(selected.id)
             vm.loadShell(null, { id: vm.project.id })
             this.$q.notify({
-              message: '删除成功!',
+              message: vm.$t('response-delete-success'),
               position: 'top',
               color: 'green-10'
             })

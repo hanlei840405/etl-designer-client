@@ -3,18 +3,18 @@
     <q-form class="q-gutter-md">
     <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
             narrow-indicator>
-      <q-tab name="main" label="主选项"/>
-      <q-tab name="parameter" label="运行参数"/>
+      <q-tab name="main" :label="$t('tab-main')"/>
+      <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
     </q-tabs>
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="main">
         <q-card-section class="col q-pt-none">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
         </q-card-section>
       </q-tab-panel>
-      <q-tab-panel name="parameter">
-        <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+      <q-tab-panel name="runningConfig">
+        <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
       </q-tab-panel>
     </q-tab-panels>
   </q-form>

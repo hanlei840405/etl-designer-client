@@ -1,7 +1,7 @@
 <template>
   <q-page style="width: 100%; min-height: calc(100vh - 120px); margin-left: 0px;">
     <q-btn-group>
-      <q-btn label="组件" icon="keyboard_arrow_down">
+      <q-btn :label="$t('btn-component')" icon="keyboard_arrow_down">
         <q-menu>
           <q-list bordered v-show="shell.category === '1'">
             <q-item clickable v-for="(value,key) in toolbar.job" v-bind:key="key">
@@ -45,12 +45,12 @@
           </q-list>
         </q-menu>
       </q-btn>
-      <q-btn :label="executing ? '终止' : '运行'" :icon="executing ? pauseIcon : runIcon" @click="execute"/>
-      <q-btn label="保存" :icon="saveIcon" @click="submitForm"/>
-      <q-btn label="删除" :icon="deleteIcon" @click="confirmDeleteSelectedVertex"/>
-      <q-btn label="轮询" icon="rule" @click="roundRobin"/>
-      <q-btn label="放大" icon="zoom_in" @click="graph.zoomIn()"/>
-      <q-btn label="缩小" icon="zoom_out" @click="graph.zoomOut()"/>
+      <q-btn :label="executing ? $t('btn-shutdown') : $t('btn-execute')" :icon="executing ? pauseIcon : runIcon" @click="execute"/>
+      <q-btn :label="$t('btn-save')" :icon="saveIcon" @click="submitForm"/>
+      <q-btn :label="$t('btn-delete')" :icon="deleteIcon" @click="confirmDeleteSelectedVertex"/>
+      <q-btn :label="$t('btn-zoom-in')" icon="zoom_in" @click="graph.zoomIn()"/>
+      <q-btn :label="$t('btn-zoom-out')" icon="zoom_out" @click="graph.zoomOut()"/>
+      <q-btn :label="$t('btn-robin')" icon="rule" @click="roundRobin"/>
     </q-btn-group>
     <div ref="graphContainer" style="height: calc(100vh - 125px);"></div>
     <div ref="outlineContainer" style="z-index:1;position:absolute;overflow:hidden;bottom:0px;right:0px;width:160px;height:120px;background:transparent;border-style:solid;border-color:lightgray;"/>
@@ -66,7 +66,7 @@
         <component ref="step" :is="propertiesDialog.propertiesDialogCmp" @propertiesForm="closePropertiesDialog"></component>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn outline text-color="cyan-8" label="保存" icon="save" @click="$refs.step.submitForm()"/>
+        <q-btn outline text-color="cyan-8" :label="$t('btn-save')" icon="save" @click="$refs.step.submitForm()"/>
       </q-card-actions>
     </q-card>
     </q-dialog>
@@ -250,250 +250,250 @@ export default {
         transform: {
           stepInput: [{
             img: '/images/etl/TIP.svg',
-            name: '表输入',
+            name: this.$t('component-category-input-table'),
             type: 'TableInputMeta'
           }, {
             img: '/images/etl/GNR.svg',
-            name: '自定义常量数据',
+            name: this.$t('component-category-input-datagrid'),
             type: 'DataGridMeta'
           }, {
             img: '/images/etl/GEN.svg',
-            name: '生成记录',
+            name: this.$t('component-category-input-row-generator'),
             type: 'RowGeneratorMeta'
           }, {
             img: '/images/etl/JSI.svg',
-            name: 'JSON输入',
+            name: this.$t('component-category-input-json'),
             type: 'JsonInputMeta'
           }, {
             img: '/images/etl/RVA.svg',
-            name: '生成随机数',
+            name: this.$t('component-category-input-random'),
             type: 'RandomValueMeta'
           }],
           stepOutput: [{
             img: '/images/etl/Delete.svg',
-            name: '删除',
+            name: this.$t('component-category-output-delete'),
             type: 'DeleteMeta'
           }, {
             img: '/images/etl/INU.svg',
-            name: '插入/更新',
+            name: this.$t('component-category-output-upsert'),
             type: 'InsertUpdateMeta'
           }, {
             img: '/images/etl/UPD.svg',
-            name: '更新',
+            name: this.$t('component-category-output-update'),
             type: 'UpdateMeta'
           }, {
             img: '/images/etl/TOP.svg',
-            name: '表输出',
+            name: this.$t('component-category-output-table'),
             type: 'TableOutputMeta'
           }, {
             img: '/images/etl/JSO.svg',
-            name: 'JSON输出',
+            name: this.$t('component-category-output-json'),
             type: 'JsonOutputMeta'
           }, {
             img: '/images/etl/XWS.svg',
-            name: 'EXCEL输出',
+            name: this.$t('component-category-output-excel'),
             type: 'ExcelWriterStepMeta'
           }, {
             img: '/images/etl/ESB.svg',
-            name: 'elastic search输出',
+            name: this.$t('component-category-output-es'),
             type: 'ElasticSearchBulkMeta'
           }, {
             img: '/images/etl/MongoDB.svg',
-            name: 'mongoDB输出',
+            name: this.$t('component-category-output-mongo'),
             type: 'MongoDbOutputMeta'
           }],
           streaming: [{
             img: '/images/etl/get-records-from-stream.svg',
-            name: '读取流',
+            name: this.$t('component-category-streaming-records-from'),
             type: 'RecordsFromStreamMeta'
           }, {
             img: '/images/etl/KafkaProducerOutput.svg',
-            name: 'Kafka推送',
+            name: this.$t('component-category-streaming-kafka-producer'),
             type: 'KafkaProducerOutputMeta'
           }, {
             img: '/images/etl/KafkaConsumerInput.svg',
-            name: 'Kafka消费',
+            name: this.$t('component-category-streaming-kafka-consumer'),
             type: 'KafkaConsumerInputMeta'
           }],
           stepConvert: [{
             img: '/images/etl/VMAP.svg',
-            name: '值映射',
+            name: this.$t('component-category-convert-value-mapper'),
             type: 'ValueMapperMeta'
           }, {
             img: '/images/etl/SFtR.svg',
-            name: '列拆分为多行',
+            name: this.$t('component-category-convert-split-field-to-rows'),
             type: 'SplitFieldToRowsMeta'
           }, {
             img: '/images/etl/UNP.svg',
-            name: '列转行',
+            name: this.$t('component-category-convert-denormaliser'),
             type: 'DenormaliserMeta'
           }, {
             img: '/images/etl/SRC.svg',
-            name: '剪切字符串',
+            name: this.$t('component-category-convert-string-cut'),
             type: 'StringCutMeta'
           }, {
             img: '/images/etl/UNQ.svg',
-            name: '去除重复记录',
+            name: this.$t('component-category-convert-unique-rows'),
             type: 'UniqueRowsMeta'
           }, {
             img: '/images/etl/URH.svg',
-            name: '唯一行(哈希值)',
+            name: this.$t('component-category-convert-unique-rows-by-hash'),
             type: 'UniqueRowsByHashSetMeta'
           }, {
             img: '/images/etl/CST.svg',
-            name: '增加常量',
+            name: this.$t('component-category-convert-constant'),
             type: 'ConstantMeta'
           }, {
             img: '/images/etl/SEL.svg',
-            name: '字段选择',
+            name: this.$t('component-category-convert-select-values'),
             type: 'SelectValuesMeta'
           }, {
             img: '/images/etl/RST.svg',
-            name: '字符串替换',
+            name: this.$t('component-category-convert-replace-string'),
             type: 'ReplaceStringMeta'
           }, {
             img: '/images/etl/SPL.svg',
-            name: '拆分字段',
+            name: this.$t('component-category-convert-field-splitter'),
             type: 'FieldSplitterMeta'
           }, {
             img: '/images/etl/FLA.svg',
-            name: '行扁平化',
+            name: this.$t('component-category-convert-flattener'),
             type: 'FlattenerMeta'
           }, {
             img: '/images/etl/NRM.svg',
-            name: '行转列',
+            name: this.$t('component-category-convert-normaliser'),
             type: 'NormaliserMeta'
           }, {
             img: '/images/etl/ConcatFields.svg',
-            name: '合并字段',
+            name: this.$t('component-category-convert-concat-fields'),
             type: 'ConcatFieldsMeta'
           }, {
             img: '/images/etl/SVF.svg',
-            name: '设置字段值',
+            name: this.$t('component-category-convert-set-value-field'),
             type: 'SetValueFieldMeta'
           }],
-          stepShell: [{
+          stepScript: [{
             img: '/images/etl/janino.svg',
-            name: 'Java代码',
+            name: this.$t('component-category-script-java'),
             type: 'UserDefinedJavaClassMeta'
           }, {
             img: '/images/etl/SCR_mod.svg',
-            name: 'JavaScript代码',
+            name: this.$t('component-category-script-javaScript'),
             type: 'JavaScriptMeta'
           }, {
             img: '/images/etl/SQL.svg',
-            name: '执行SQL脚本',
+            name: this.$t('component-category-script-exec-sql'),
             type: 'ExecSQLMeta'
           }, {
             img: '/images/etl/SVA.svg',
-            name: '设置变量',
+            name: this.$t('component-category-script-set-variable'),
             type: 'SetVariableMeta'
           }, {
             img: '/images/etl/GVA.svg',
-            name: '获取变量',
+            name: this.$t('component-category-script-get-variable'),
             type: 'GetVariableMeta'
           }, {
             img: '/images/etl/TCH.svg',
-            name: '复制记录到结果',
+            name: this.$t('component-category-script-rows-to-result'),
             type: 'RowsToResultMeta'
           }, {
             img: '/images/etl/FCH.svg',
-            name: '从结果获取记录',
+            name: this.$t('component-category-script-rows-from-result'),
             type: 'RowsFromResultMeta'
           }],
           stepLookup: [{
             img: '/images/etl/DLU.svg',
-            name: '数据库查询',
+            name: this.$t('component-category-lookup-database-lookup'),
             type: 'DatabaseLookupMeta'
           }, {
             img: '/images/etl/DBJ.svg',
-            name: '数据库连接',
+            name: this.$t('component-category-lookup-database-join'),
             type: 'DatabaseJoinMeta'
           }, {
             img: '/images/etl/REST.svg',
-            name: 'Rest请求',
+            name: this.$t('component-category-lookup-rest'),
             type: 'RestMeta'
           }],
-          stepProcess: [{
+          stepWorkflow: [{
             img: '/images/etl/SWC.svg',
-            name: 'Switch / case',
+            name: this.$t('component-category-workflow-switch-case'),
             type: 'SwitchCaseMeta'
           }, {
             img: '/images/etl/DUM.svg',
-            name: '空操作',
+            name: this.$t('component-category-workflow-dummy'),
             type: 'DummyTransMeta'
           }, {
             img: '/images/etl/MAIL.svg',
-            name: '邮件',
+            name: this.$t('component-category-workflow-mail'),
             type: 'MailMeta'
           }, {
             img: '/images/etl/EMS.svg',
-            name: '检测空流',
+            name: this.$t('component-category-workflow-detect-empty-stream'),
             type: 'DetectEmptyStreamMeta'
           }, {
             img: '/images/etl/DLR.svg',
-            name: '识别流的最后一行',
+            name: this.$t('component-category-workflow-detect-last-row'),
             type: 'DetectLastRowMeta'
           }, {
             img: '/images/etl/WTL.svg',
-            name: '写日志',
+            name: this.$t('component-category-workflow-write-to-log'),
             type: 'WriteToLogMeta'
           }]
         },
         job: {
           entryCommon: [{
             img: '/images/etl/STR.svg',
-            name: '开始',
+            name: this.$t('component-category-common-job-entry-special'),
             type: 'JobEntrySpecial'
           }, {
             img: '/images/etl/TRN.svg',
-            name: '转换',
+            name: this.$t('component-category-common-job-entry-trans'),
             type: 'JobEntryTrans'
           }, {
             img: '/images/etl/SUC.svg',
-            name: '成功',
+            name: this.$t('component-category-common-job-entry-success'),
             type: 'JobEntrySuccess'
           }, {
             img: '/images/etl/DUM.svg',
-            name: '空操作',
+            name: this.$t('component-category-workflow-dummy'),
             type: 'JobEntryDummy'
           }, {
             img: '/images/etl/SVA.svg',
-            name: '设置变量',
+            name: this.$t('component-category-script-set-variable'),
             type: 'JobEntrySetVariables'
           }, {
             img: '/images/etl/JOB.svg',
-            name: '作业',
+            name: this.$t('component-category-common-job-entry-job'),
             type: 'JobEntryJob'
           }],
-          entryShell: [
+          entryScript: [
             {
               img: '/images/etl/SCR_mod.svg',
-              name: 'JavaScript代码',
+              name: this.$t('component-category-script-javaScript'),
               type: 'JobEntryEval'
             }
           ],
           conditionShell: [
             {
               img: '/images/etl/SEV.svg',
-              name: '检查字段值',
+              name: this.$t('component-category-job-simple-eval'),
               type: 'JobEntrySimpleEval'
             }
           ]
         }
       },
       toolbarName: {
-        stepInput: '输入',
-        stepOutput: '输出',
-        streaming: '流处理',
-        stepConvert: '转换',
-        stepShell: '脚本',
-        stepLookup: '查询',
-        stepProcess: '流程',
-        entryCommon: '通用',
-        entryMail: '邮件',
-        entryShell: '脚本',
-        conditionShell: '条件'
+        stepInput: this.$t('component-category-input'),
+        stepOutput: this.$t('component-category-output'),
+        streaming: this.$t('component-category-streaming'),
+        stepConvert: this.$t('component-category-convert'),
+        stepScript: this.$t('component-category-script'),
+        stepLookup: this.$t('component-category-lookup'),
+        stepWorkflow: this.$t('component-category-process'),
+        entryCommon: this.$t('component-category-common'),
+        entryMail: this.$t('component-category-mail'),
+        entryScript: this.$t('component-category-script'),
+        conditionShell: this.$t('component-category-condition')
       },
       propertiesDialog: {
         state: false,
@@ -503,7 +503,7 @@ export default {
       },
       logDialog: {
         state: false,
-        title: '日志',
+        title: this.$t('dialog-title-log'),
         tabOption: 'trans',
         showProcessing: true,
         log: null,
@@ -511,59 +511,59 @@ export default {
         transStepLogColumns: [
           {
             name: 'name',
-            label: '名称',
+            label: this.$t('column-name'),
             field: 'name'
           },
           {
             name: 'logDate',
-            label: '记录时间',
+            label: this.$t('column-logDate'),
             field: 'logDate'
           },
           {
             name: 'stepCopy',
-            label: '副本数',
+            label: this.$t('column-stepCopy'),
             field: 'stepCopy',
             align: 'left'
           },
           {
             name: 'read',
-            label: '读进数',
+            label: this.$t('column-read'),
             field: 'read',
             align: 'left'
           },
           {
             name: 'written',
-            label: '写入数',
+            label: this.$t('column-written'),
             field: 'written',
             align: 'left'
           },
           {
             name: 'updated',
-            label: '更新数',
+            label: this.$t('column-updated'),
             field: 'updated',
             align: 'left'
           },
           {
             name: 'input',
-            label: '输入数',
+            label: this.$t('column-input'),
             field: 'input',
             align: 'left'
           },
           {
             name: 'output',
-            label: '输出数',
+            label: this.$t('column-output'),
             field: 'output',
             align: 'left'
           },
           {
             name: 'rejected',
-            label: '拒绝数',
+            label: this.$t('column-rejected'),
             field: 'rejected',
             align: 'left'
           },
           {
             name: 'errors',
-            label: '错误数',
+            label: this.$t('column-errors'),
             field: 'errors',
             align: 'left'
           }
@@ -580,7 +580,7 @@ export default {
     execute () {
       const vm = this
       if (vm.executing) {
-        vm.cancel('取消执行运行中的脚本')
+        vm.cancel(vm.$t('message-cancel-running-etl'))
         stop({
           id: vm.shell.id,
           payload: vm.uuid
@@ -594,25 +594,25 @@ export default {
           vm.executing = false
           if (err.status === 10001) {
             vm.$q.dialog({
-              title: '错误',
+              title: vm.$t('dialog-title-error'),
               ok: {
                 color: 'negative'
               },
               html: true,
-              message: '未找到运行中的脚本'
+              message: vm.$t('dialog-message-not-found')
             })
           } else if (err.status === 10002) {
             vm.$q.dialog({
-              title: '错误',
+              title: vm.$t('dialog-title-error'),
               ok: {
                 color: 'negative'
               },
               html: true,
-              message: '未授权，禁止操作'
+              message: vm.$t('response-error-10002')
             })
           } else {
             vm.$q.dialog({
-              title: '错误',
+              title: vm.$t('dialog-title-error'),
               ok: {
                 color: 'negative'
               },
@@ -661,7 +661,7 @@ export default {
             vm.logDialog.logData = err.data.steps
           } else {
             vm.$q.dialog({
-              title: '错误',
+              title: vm.$t('dialog-title-error'),
               ok: {
                 color: 'negative'
               },
@@ -676,7 +676,7 @@ export default {
       if (this.graph.getSelectionCells().length > 0) {
         this.$q.dialog({
           title: 'Confirm',
-          message: '确定删除选定的组件?',
+          message: this.$t('confirm-delete'),
           cancel: {
             textColor: 'orange',
             outline: true,
@@ -694,7 +694,7 @@ export default {
       } else {
         this.$q.notify({
           position: 'top',
-          message: '未选定任何组件',
+          message: this.$t('message-no-component-selected'),
           color: 'negative'
         })
       }
@@ -708,13 +708,13 @@ export default {
         if (form.distribute) {
           this.$q.notify({
             position: 'top',
-            message: '当前组件已经为轮询模式',
+            message: this.$t('message-robin-mode'),
             color: 'negative'
           })
         } else {
           this.$q.dialog({
             title: 'Confirm',
-            message: '确定将组件输出设为轮询模式?',
+            message: this.$t('confirm-robin-mode'),
             cancel: {
               textColor: 'orange',
               outline: true,
@@ -749,7 +749,7 @@ export default {
       } else {
         this.$q.notify({
           position: 'top',
-          message: '请选择一个组件',
+          message: this.$t('message-select-component'),
           color: 'negative'
         })
       }
@@ -840,7 +840,7 @@ export default {
     },
     submitForm () {
       this.$q.loading.show({
-        message: '保存中...'
+        message: this.$t('message-loading-save')
       })
       const MxCodec = mxgraph.mxCodec
       const encoder = new MxCodec()
@@ -854,7 +854,7 @@ export default {
         this.$q.loading.hide()
         vm.$q.notify({
           position: 'top',
-          message: '<span>文件【' + vm.shell.name + '】保存成功 </span><span class="material-icons">check_circle</span>',
+          message: vm.$t('response-save-success-file', [vm.shell.name]),
           color: 'green-10',
           html: true
         })
@@ -863,13 +863,13 @@ export default {
         if (err.data.code === 400) {
           vm.$q.notify({
             position: 'top',
-            message: '文件名异常，请检查是否重复或有特殊字符',
+            message: vm.$t('response-check-error-file'),
             color: 'negative'
           })
         } else {
           vm.$q.notify({
             position: 'top',
-            message: '<span>文件【' + vm.shell.name + '】保存失败，请检查相关配置 </span><span class="material-icons">error</span>',
+            message: vm.$t('response-save-error-file', [vm.shell.name]),
             color: 'negative',
             html: true
           })
@@ -1040,7 +1040,7 @@ export default {
         if (!vm.stompClient || !vm.stompClient.connected) {
           if (vm.timer) {
             vm.$q.notify({
-              message: '与后台日志服务失去连接，尝试重连!',
+              message: this.$t('message-reconnect-server'),
               position: 'top',
               color: 'negative'
             })
@@ -1049,12 +1049,10 @@ export default {
           vm.stompClient = Stomp.over(vm.socket)
           vm.stompClient.connect({}, () => {
             vm.$q.notify({
-              message: '与后台日志服务连接成功!',
+              message: this.$t('message-connected-server'),
               position: 'top',
               color: 'green-10'
             })
-          }, () => {
-            setTimeout(() => fn(), 5000)
           })
         }
       }
@@ -1195,18 +1193,18 @@ export default {
       if (vm.shell.category === '2' && source.style !== 'SwitchCaseMeta' && target && vm.graph.getModel().getOutgoingEdges(source).length > 1) {
         const form = JSON.parse(data.getAttribute('form'))
         vm.$q.dialog({
-          title: '选择输出形式',
+          title: vm.$t('confirm-title-output-mode'),
           ok: {
             outline: true,
             textColor: 'white',
             color: 'teal',
-            label: '轮询'
+            label: vm.$t('confirm-output-robin-mode')
           },
           cancel: {
             outline: true,
             textColor: 'white',
             color: 'negative',
-            label: '复制'
+            label: vm.$t('confirm-output-copy-mode')
           },
           persistent: true
         }).onOk(() => {
@@ -1245,21 +1243,21 @@ export default {
         const link = data.getAttribute('link') ? JSON.parse(data.getAttribute('link')) : {}
         if (source.style !== 'JobEntrySpecial') {
           vm.$q.dialog({
-            title: '选择输出类型',
+            title: vm.$t('confirm-title-output-condition'),
             options: {
               type: 'radio',
               model: outgoings.length > 0 ? 2 : 1,
               items: [
                 {
-                  label: '无条件的',
+                  label: vm.$t('confirm-output-unconditional'),
                   value: 0
                 },
                 {
-                  label: '结果为真时',
+                  label: vm.$t('confirm-output-true'),
                   value: 1
                 },
                 {
-                  label: '结果为假时',
+                  label: vm.$t('confirm-output-false'),
                   value: 2
                 }
               ]
@@ -1304,23 +1302,23 @@ export default {
         if (node) {
           vm.$q.notify({
             position: 'top',
-            message: '禁止出现闭环调用',
+            message: vm.$t('message-loop-call-prohibited'),
             color: 'negative'
           })
         } else if (hasErrorPortCompArray.indexOf(source.style) > -1) {
           vm.$q.dialog({
-            title: '选择输出类型',
+            title: vm.$t('confirm-title-output-mode'),
             ok: {
               outline: true,
               color: 'teal',
               textLine: 'teal',
-              label: '正常输出'
+              label: vm.$t('confirm-output-normal')
             },
             cancel: {
               outline: true,
               textLine: 'negative',
               color: 'negative',
-              label: '异常输出'
+              label: vm.$t('confirm-output-abnormal')
             },
             persistent: true
           }).onOk(() => {
@@ -1341,18 +1339,18 @@ export default {
           })
         } else if (hasCaseCompArray.indexOf(source.style) > -1) {
           vm.$q.dialog({
-            title: '选择输出类型',
+            title: vm.$t('confirm-title-output-mode'),
             ok: {
               outline: true,
               textColor: 'teal',
               color: 'teal',
-              label: '默认的'
+              label: vm.$t('confirm-output-defalut')
             },
             cancel: {
               outline: true,
               textColor: 'negative',
               color: 'negative',
-              label: '有条件的'
+              label: vm.$t('confirm-output-conditional')
             },
             persistent: true
           }).onOk(() => {
@@ -1636,11 +1634,11 @@ export default {
     vm.graph.popupMenuHandler.factoryMethod = function (menu, cell, evt) {
       const popFn = function (graph, menu, cell, evt) {
         if (cell != null) {
-          menu.addItem('删除', null, function () {
+          menu.addItem(vm.$t('btn-delete'), null, function () {
             vm.deleteSelectedVertex()
           })
           if (vm.shell.category === '2' && cell.isVertex()) {
-            menu.addItem('设为轮询', null, function () {
+            menu.addItem(vm.$t('btn-robin'), null, function () {
               graph.getModel().getOutgoingEdges(cell).forEach(edge => {
                 const error = cell.getAttribute('error') ? JSON.parse(cell.getAttribute('error')) : {}
                 if (error[edge.target.id]) {
@@ -1709,12 +1707,12 @@ export default {
     }).catch(err => {
       if (err !== 'incorrect header check') {
         vm.$q.dialog({
-          title: '错误',
+          title: vm.$t('dialog-title-error'),
           ok: {
             color: 'negative'
           },
           html: true,
-          message: err.data ? err.data.error : '连接服务器异常'
+          message: err.data ? err.data.error : vm.$t('response-error-connect')
         })
       }
     })
@@ -1723,7 +1721,7 @@ export default {
   },
   destroyed () {
     const vm = this
-    if (vm.timer && vm.stompClient.connected) {
+    if (vm.timer) {
       clearInterval(vm.timer)
       if (vm.stompClient.connected) {
         vm.stompClient.disconnect(() => {

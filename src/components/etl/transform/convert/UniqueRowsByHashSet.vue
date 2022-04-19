@@ -3,35 +3,35 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.useStorageValue" label="使用存储的记录值进行比较"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.useRedirect" label="重定向重复记录"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.error" label="错误描述" :disable="!form.useRedirect"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.useStorageValue" :label="$t('form-compare-store-row')"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.useRedirect" :label="$t('form-redirect-duplicate-row')"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.error" :label="$t('form-error-description')" :disable="!form.useRedirect"/>
           <br/>
           <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="用来比较的字段">
+                   separator="cell" hide-bottom :title="$t('table-title-field-compare')">
             <template v-slot:top-right>
               <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addParameter">
                 <q-list>
                   <q-item clickable v-close-popup @click="appendDiffParameter">
                     <q-item-section>
-                      <q-item-label>增加新的</q-item-label>
+                      <q-item-label>{{ $t('btn-append') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="addAllParameter">
                     <q-item-section>
-                      <q-item-label>增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="clearAndAddParameter">
                     <q-item-section>
-                      <q-item-label>清除并增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -54,8 +54,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1"
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1"
                    :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
@@ -82,14 +82,14 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '字段名称',
+          label: this.$t('column-source-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -172,8 +172,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

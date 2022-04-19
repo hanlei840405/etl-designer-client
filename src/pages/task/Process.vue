@@ -9,12 +9,12 @@
              :separator="table.separator"
              @request="request"
              :rows-per-page-options="[20, 50, 100]"
-             no-data-label="无数据">
+             :no-data-label="$t('table-empty')">
       <template v-slot:body-cell-operate="props">
         <q-td>
           <q-btn-group unelevated outlined>
-            <q-btn size="small" outline text-color="negative" icon="settings_power" label="中断" @click="remove(props.row)"></q-btn>
-            <q-btn size="small" outline text-color="cyan-8" icon="visibility" label="预览" @click="view(props.row)"></q-btn>
+            <q-btn size="small" outline text-color="negative" icon="settings_power" :label="$t('btn-pause')" @click="remove(props.row)"></q-btn>
+            <q-btn size="small" outline text-color="cyan-8" icon="visibility" :label="$t('btn-preview')" @click="view(props.row)"></q-btn>
           </q-btn-group>
         </q-td>
       </template>
@@ -22,7 +22,7 @@
     <q-dialog v-model="viewDialog.state">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">预览</div>
+          <div class="text-h6">{{ $t('dialog-title-preview') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
           <mx-graph-canvas :content="viewDialog.content"/>
@@ -53,13 +53,13 @@ export default {
           rowsPerPage: 20
         },
         columns: [
-          { name: 'project', label: '工作区', field: 'project', align: 'left' },
-          { name: 'shell', label: '业务', field: 'shell', align: 'left' },
-          { name: 'category', label: '类型', field: 'category', align: 'left' },
-          { name: 'createTime', label: '启动时间', field: 'createTime', align: 'left' },
-          { name: 'owner', label: '来源', field: 'owner', align: 'left' },
-          { name: 'prod', label: '生产环境', field: 'prod', align: 'left' },
-          { name: 'operate', label: '操作', filed: 'operate', align: 'left' }
+          { name: 'project', label: this.$t('column-workspace'), field: 'project', align: 'left' },
+          { name: 'shell', label: this.$t('column-job'), field: 'shell', align: 'left' },
+          { name: 'category', label: this.$t('column-type'), field: 'category', align: 'left' },
+          { name: 'createTime', label: this.$t('column-create-time'), field: 'createTime', align: 'left' },
+          { name: 'owner', label: this.$t('column-create-by'), field: 'owner', align: 'left' },
+          { name: 'prod', label: this.$t('column-prod-env'), field: 'prod', align: 'left' },
+          { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'left' }
         ]
       },
       viewDialog: {
@@ -84,9 +84,9 @@ export default {
             id: item.id,
             project: item.prod === '1' ? item.shellPublish.shell.project.name : item.shell.project.name,
             shell: item.prod === '1' ? item.shellPublish.shell.name : item.shell.name,
-            category: item.category === '1' ? '任务' : '转换',
-            prod: item.prod === '1' ? '是' : '否',
-            owner: item.owner === 'designer' ? '设计器' : '定时任务',
+            category: item.category === '1' ? vm.$t('column-job') : vm.$t('column-transformation'),
+            prod: item.prod === '1' ? vm.$t('column-yes') : vm.$t('column-no'),
+            owner: item.owner === 'designer' ? vm.$t('column-designer') : vm.$t('column-task'),
             content: item.prod === '1' ? item.shellPublish.content : item.shell.content,
             createTime: vm.dateFormat(item.createTime)
           })
@@ -99,7 +99,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除进程?',
+        message: this.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,
@@ -115,20 +115,20 @@ export default {
         shutdownRunningProcess(row.id).then(res => {
           vm.request(vm.table.pagination)
           vm.$q.notify({
-            message: '中断成功!',
+            message: vm.$t('response-shutdown-success'),
             position: 'top',
             color: 'teal'
           })
         }).catch(err => {
           let msg
           if (err.status === 10001) {
-            msg = '任务添加调度异常，请联系管理员'
+            msg = vm.$t('dialog-message-not-found')
           } else if (err.status === 10002) {
-            msg = '未授权，禁止操作'
+            msg = vm.$t('response-error-10002')
           } else if (err.status === 10012) {
-            msg = '任务添加调度异常，请联系管理员'
+            msg = vm.$t('response-error-10012')
           } else {
-            msg = '系统异常，请联系管理员'
+            msg = vm.$t('response-error-system')
           }
           this.$q.notify({
             message: msg,

@@ -3,16 +3,16 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-separator/>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-select outlined text-color="cyan-8" color="cyan-8" v-model="form.datasource" emit-value map-options option-value="id" :options="datasource"
-                    label="数据库连接" clearable>
+                    :label="$t('form-select-datasource')" clearable>
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                 <q-item-section>
@@ -27,13 +27,13 @@
             </template>
           </q-select>
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.sql" type="textarea" rows="12" label="SQL"/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeEachInputRow" label="执行每一行"/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeInOneStatement" label="在同一个statement中执行"/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.variableReplace" label="变量替换"/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.bindParameters" label="绑定参数" :disable="!form.executeEachInputRow"/>
-          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.quoteString" label="转为String" :disable="!form.executeEachInputRow"/>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeEachInputRow" :label="$t('form-execute-each-row')"/>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeInOneStatement" :label="$t('form-execute-single-statement')"/>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.variableReplace" :label="$t('form-replace-variable')"/>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.bindParameters" :label="$t('form-bind-parameter')" :disable="!form.executeEachInputRow"/>
+          <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.quoteString" :label="$t('form-quote-string')" :disable="!form.executeEachInputRow"/>
           <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="字段">
+                   separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
             </template>
@@ -53,8 +53,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -97,14 +97,14 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'parameter',
-          label: '参数',
+          label: this.$t('column-field'),
           field: 'parameter',
           align: 'left',
           headerStyle: 'width: 150px;'
@@ -197,8 +197,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

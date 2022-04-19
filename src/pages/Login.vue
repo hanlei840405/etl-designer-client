@@ -6,7 +6,7 @@
           <q-avatar>
             <img src="/logo.png">
           </q-avatar>
-          新恩数造</div>
+          {{ $t('app') }}</div>
         <div class="text-subtitle1 text-right text-bold">BY NXIN</div>
       </q-card-section>
       <q-card-section>
@@ -15,7 +15,7 @@
             filled
             v-model="loginForm.username"
             color="cyan-8"
-            label="邮箱 *"
+            :label="$t('form-email')"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
           />
@@ -24,12 +24,29 @@
             type="password"
             color="cyan-8"
             v-model="loginForm.password"
-            label="密码 *"
+            :label="$t('form-password')"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
           />
-          <q-btn type="submit" unelevated size="lg" color="cyan-8" class="full-width text-white" label="登录" />
-          <p class="text-right"><a href="#/forgot" class="text-grey-6">找回密码</a><a href="#/register" class="text-grey-6" style="margin-left: 10px;">注册账号</a></p>
+          <q-btn type="submit" unelevated size="lg" color="cyan-8" class="full-width text-white" :label="$t('btn-login')" />
+          <div class=" text-right">
+            <a href="#/forgot" class="text-grey-6">{{ $t('btn-forgot-password') }}</a><a href="#/register" class="text-grey-6" style="margin-left: 10px;">{{ $t('btn-register') }}</a>
+            <q-btn-dropdown class="text-grey-6" auto-close stretch flat size="md" :label="$t('language')" no-caps>
+              <q-list>
+                <q-item clickable @click="$i18n.locale = 'en-us'" v-ripple>
+                  <q-item-section>
+                  {{ $t('en') }}
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable @click="$i18n.locale = 'zh-cn'" v-ripple>
+                  <q-item-section>
+                  {{ $t('zh') }}
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </div>
         </q-form>
       </q-card-section>
     </q-card>

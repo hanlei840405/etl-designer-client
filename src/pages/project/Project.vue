@@ -1,12 +1,12 @@
 <template>
   <div>
     <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" :filter="table.filter" @request="searchProjects" hide-header
-             no-data-label="无数据" :rows-per-page-options="[0]" hide-bottom>
+             :no-data-label="$t('table-empty')" :rows-per-page-options="[0]" hide-bottom>
       <template v-slot:top-right>
         <q-input borderless dense debounce="300" v-model="table.filter" placeholder="Search">
           <template v-slot:append>
             <q-icon name="search"/>
-            <q-btn text-color="cyan-8" outline label="新建" @click="newProject"/>
+            <q-btn text-color="cyan-8" outline :label="$t('btn-new')" @click="newProject"/>
           </template>
         </q-input>
       </template>
@@ -39,13 +39,13 @@
         </q-card-section>
         <q-card-section>
           <q-form class="q-gutter-md">
-            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editProjectDialog.project.name" label="名称 *" hint="名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="textarea" v-model="editProjectDialog.project.description" label="描述" hint="描述"/>
+            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editProjectDialog.project.name" :label="$t('form-name-require')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="textarea" v-model="editProjectDialog.project.description" :label="$t('form-description')"/>
           </q-form>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="保存" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveProject"/>
-          <q-btn label="删除" outline text-color="negative" :icon="table.deleteIcon" @click="deleteProject"/>
+          <q-btn :label="$t('btn-save')" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveProject"/>
+          <q-btn :label="$t('btn-delete')" outline text-color="negative" :icon="table.deleteIcon" @click="deleteProject"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -73,31 +73,22 @@ export default {
         columns: [
           {
             name: 'name',
-            label: '名称',
+            label: this.$t('column-name'),
             field: 'name',
             align: 'left'
           },
           {
-            name: 'scope',
-            label: '可见范围',
-            field: 'scope',
-            align: 'left',
-            format: (val, row) => {
-              return val === '0' ? '全员可见' : '工作区成员可见'
-            }
-          },
-          {
             name: 'status',
-            label: '状态',
+            label: this.$t('column-status'),
             field: 'status',
             align: 'left',
             format: (val, row) => {
-              return val === '1' ? '有效' : '无效'
+              return val === '1' ? this.$t('column-status-active') : this.$t('column-status-inactive')
             }
           },
           {
             name: 'description',
-            label: '描述',
+            label: this.$t('column-description'),
             field: 'description',
             align: 'left'
           }
@@ -106,7 +97,7 @@ export default {
       editProjectDialog: {
         state: false,
         position: 'right',
-        title: '编辑',
+        title: this.$t('form-title-edit'),
         project: {
           id: null,
           name: null,
@@ -150,7 +141,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: '未授权工作区!',
+            message: this.$t('response-error-10002'),
             position: 'top',
             color: 'negative'
           })
@@ -194,7 +185,7 @@ export default {
           }
         })
         vm.$q.notify({
-          message: '保存成功!',
+          message: this.$t('response-save-success'),
           position: 'top',
           color: 'teal'
         })
@@ -204,7 +195,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除分支?',
+        message: this.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,

@@ -9,13 +9,13 @@
              :separator="table.separator"
              @request="request"
              :rows-per-page-options="[20, 50, 100]"
-             no-data-label="无数据">
+             :no-data-label="$t('table-empty')">
       <template v-slot:body-cell-operate="props">
         <q-td>
           <q-btn-group unelevated outlined>
-            <q-btn size="small" outline text-color="negative" icon="settings_power" label="中断" @click="remove(props.row)"></q-btn>
-            <q-btn size="small" outline text-color="blue-grey-5" :icon="table.logIcon" @click="log(props.row)" label="日志"></q-btn>
-            <q-btn size="small" outline text-color="primary" icon="visibility" label="预览" @click="view(props.row)"></q-btn>
+            <q-btn size="small" outline text-color="negative" icon="settings_power" :label="$t('btn-pause')" @click="remove(props.row)"></q-btn>
+            <q-btn size="small" outline text-color="blue-grey-5" :icon="table.logIcon" @click="log(props.row)" :label="$('btn-show-log')"></q-btn>
+            <q-btn size="small" outline text-color="primary" icon="visibility" :label="$t('btn-preview')" @click="view(props.row)"></q-btn>
           </q-btn-group>
         </q-td>
       </template>
@@ -23,7 +23,7 @@
     <q-dialog v-model="viewDialog.state">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">预览</div>
+          <div class="text-h6">{{ $t('dialog-title-preview') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
@@ -36,7 +36,7 @@
     <q-dialog v-model="detailDialog.state" transition-show="scale" transition-hide="scale">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">详情</div>
+          <div class="text-h6">{{ $t('dialog-title-detail') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
           <pre>{{detailDialog.detail}}</pre>
@@ -68,11 +68,11 @@ export default {
           rowsPerPage: 20
         },
         columns: [
-          { name: 'project', label: '所属工作区', field: 'project', align: 'left' },
-          { name: 'description', label: '描述', field: 'description', align: 'left' },
-          { name: 'name', label: '业务', field: 'name', align: 'left' },
-          { name: 'deployTime', label: '部署时间', field: 'deployTime', align: 'left' },
-          { name: 'operate', label: '操作', filed: 'operate', align: 'left', headerStyle: 'width: 23vw' }
+          { name: 'project', label: this.$t('column-workspace'), field: 'project', align: 'left' },
+          { name: 'description', label: this.$t('column-description'), field: 'description', align: 'left' },
+          { name: 'name', label: this.$t('column-job'), field: 'name', align: 'left' },
+          { name: 'deployTime', label: this.$t('column-deploy-time'), field: 'deployTime', align: 'left' },
+          { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'left', headerStyle: 'width: 23vw' }
         ],
         logIcon: mdiTextBoxOutline,
         deleteIcon: mdiTrashCanOutline
@@ -118,7 +118,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除任务?',
+        message: this.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,
@@ -133,7 +133,7 @@ export default {
       }).onOk(() => {
         remove(row.id).then(res => {
           vm.$q.notify({
-            message: '删除成功!',
+            message: vm.$t('response-delete-success'),
             position: 'top',
             color: 'teal'
           })
@@ -141,11 +141,11 @@ export default {
         }).catch(err => {
           let msg
           if (err.status === 10002) {
-            msg = '未授权，禁止操作'
+            msg = vm.$t('response-error-10002')
           } else if (err.status === 10012) {
-            msg = '任务添加调度异常，请联系管理员'
+            msg = vm.$t('response-error-10012')
           } else {
-            msg = '系统异常，请联系管理员'
+            msg = vm.$t('response-error-system')
           }
           this.$q.notify({
             message: msg,
@@ -168,7 +168,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: '未授权的工作区!',
+            message: vm.$t('response-error-10002'),
             position: 'top',
             color: 'negative'
           })

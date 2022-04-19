@@ -15,7 +15,7 @@
             <q-card-section class="col q-pt-none">
               <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
                       selected-color="cyan-8"
-                      :selected.sync="project.shellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
+                      :selected.sync="project.shellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
                 <template v-slot:default-header="prop">
                   <div class="row items-center">
                     <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
@@ -36,13 +36,13 @@
         row-key="id"
         :loading="loading"
         separator="cell"
-        no-data-label="无数据"
+        :no-data-label="$t('table-empty')"
         @request="requestPublishes"
         :pagination.sync="pagination"
       >
         <template v-slot:body-cell-prod="props">
           <q-td>
-            {{ boolFormat(props.row.prod) }}
+            {{ props.row.prod === '1' ? $t('column-yes') : $t('column-no') }}
           </q-td>
         </template>
         <template v-slot:body-cell-createTime="props">
@@ -52,14 +52,14 @@
         </template>
         <template v-slot:body-cell-operate="props">
           <q-td>
-            <q-btn size="small" outline text-color="cyan-8" :icon="taskIcon" @click="deploy(props.row)" label="部署"/>
+            <q-btn size="small" outline text-color="cyan-8" :icon="taskIcon" @click="deploy(props.row)" :label="$t('btn-deploy')"/>
           </q-td>
         </template>
       </q-table>
       <q-dialog v-model="deployDialog.state">
         <q-card>
           <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6">关联脚本</div>
+            <div class="text-h6">{{ $t('dialog-title-reference-file') }}</div>
             <q-space/>
             <q-btn icon="close" flat round dense v-close-popup/>
           </q-card-section>
@@ -71,7 +71,7 @@
               :columns="deployDialog.referenceColumns"
               row-key="id"
               separator="cell"
-              no-data-label="无数据"
+              :no-data-label="$t('table-empty')"
               hide-bottom
               :rows-per-page-options="[0]"
             >
@@ -83,21 +83,21 @@
               <template v-slot:body-cell-operate="props">
                 <q-td>
                   <q-btn-group>
-                    <q-btn size="small" outline color="cyan-8" icon="visibility" label="预览" @click="view(props.row)"></q-btn>
+                    <q-btn size="small" outline color="cyan-8" icon="visibility" :label="$t('btn-preview')" @click="view(props.row)"></q-btn>
                   </q-btn-group>
                 </q-td>
               </template>
             </q-table>
           </q-card-section>
           <q-card-section>
-            <div>预览</div>
+          <div class="text-h6">{{ $t('dialog-title-preview') }}</div>
             <mx-graph-canvas :content="deployDialog.content"/>
           </q-card-section>
           <q-card-section v-if="'0' === deployDialog.streaming">
             <q-select
               v-model="deployDialog.form.misfire"
               outlined
-              label="调度重试策略"
+              :label="$t('form-quartz-misfire-option')"
               :options="deployDialog.misfireOptions"
               map-options
               emit-value
@@ -109,10 +109,10 @@
             </q-select>
           </q-card-section>
           <q-card-section class="col q-pt-none" v-if="'0' === deployDialog.streaming">
-            <q-input outlined color="cyan-8" v-model="deployDialog.form.cron" label="cron表达式(六位长度：0 0 0 * * ?)" :rules="[val => !!val || 'Field is required', val => validate(val) || 'cron is invalid']"/>
+            <q-input outlined color="cyan-8" v-model="deployDialog.form.cron" :label="$t('form-quartz-cron')" :rules="[val => !!val || 'Field is required', val => validate(val) || 'cron is invalid']"/>
           </q-card-section>
           <q-card-actions align="right">
-            <q-btn outline color="cyan-8" label="部署" :icon="saveIcon" @click="done"/>
+            <q-btn outline color="cyan-8" :label="$t('btn-deploy')" :icon="saveIcon" @click="done"/>
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -155,28 +155,28 @@ export default {
       columns: [
         {
           name: 'prod',
-          label: '已部署',
+          label: this.$t('column-deployed'),
           field: 'prod',
           align: 'left',
           headerStyle: 'width: 200px'
         },
         {
           name: 'createTime',
-          label: '发布时间',
+          label: this.$t('column-deploy-time'),
           field: 'createTime',
           align: 'left',
           headerStyle: 'width: 200px'
         },
         {
           name: 'description',
-          label: '描述',
+          label: this.$t('column-description'),
           field: 'description',
           align: 'left',
           headerStyle: 'width: 300px'
         },
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'left',
           headerStyle: 'width: 6vw'
@@ -195,32 +195,32 @@ export default {
         referenceColumns: [
           {
             name: 'name',
-            label: '关联脚本',
+            label: this.$t('column-reference-file'),
             field: 'name',
             align: 'left',
             headerStyle: 'width: 200px'
           },
           {
             name: 'category',
-            label: '类型',
+            label: this.$t('column-type'),
             field: 'category',
             align: 'left'
           },
           {
             name: 'createTime',
-            label: '发布时间',
+            label: this.$t('column-deploy-time'),
             field: 'createTime',
             align: 'left'
           },
           {
             name: 'description',
-            label: '描述',
+            label: this.$t('column-description'),
             field: 'description',
             align: 'left'
           },
           {
             name: 'operate',
-            label: '操作',
+            label: this.$t('column-operate'),
             filed: 'operate',
             align: 'left',
             headerStyle: 'width: 15vw'
@@ -228,9 +228,9 @@ export default {
         ],
         content: null,
         misfireOptions: [
-          { value: 2, label: '不触发立即执行' },
-          { value: -1, label: '以错过的第一个频率时间立刻开始执行' },
-          { value: 1, label: '以当前时间为触发频率立刻触发一次执行' }
+          { value: 2, label: this.$t('form-quartz-misfire2') },
+          { value: -1, label: this.$t('form-quartz-misfire-1') },
+          { value: 1, label: this.$t('form-quartz-misfire1') }
         ]
       }
     }
@@ -331,7 +331,7 @@ export default {
           vm.deployDialog.references.push({
             id: item.id,
             name: item.shell.name,
-            category: item.shell.category === '1' ? '任务' : '转换',
+            category: item.shell.category === '1' ? vm.$t('form-job') : vm.$t('form-transformation'),
             createTime: item.createTime,
             description: item.description,
             content: item.content
@@ -358,7 +358,7 @@ export default {
         vm.requestPublishes()
         vm.$q.loading.hide()
         vm.$q.notify({
-          message: '部署成功!',
+          message: vm.$t('response-deploy-success'),
           position: 'top',
           color: 'teal'
         })
@@ -366,13 +366,13 @@ export default {
         vm.$q.loading.hide()
         let msg
         if (err.status === 10010) {
-          msg = '数据异常，请检查脚本'
+          msg = vm.$t('response-error-10010')
         } else if (err.status === 10009) {
-          msg = '任务脚本语法异常，请检查脚本'
+          msg = vm.$t('response-error-10009')
         } else if (err.status === 10012) {
-          msg = '任务添加调度异常，请联系管理员'
+          msg = vm.$t('response-error-10012')
         } else {
-          msg = '系统异常，请联系管理员'
+          msg = vm.$t('response-error-system')
         }
         this.$q.notify({
           message: msg,
@@ -380,9 +380,6 @@ export default {
           color: 'negative'
         })
       })
-    },
-    boolFormat (value) {
-      return value === '1' ? '是' : '否'
     },
     dateFormat (value) {
       return date.formatDate(value, 'YYYY-MM-DD HH:mm:ss')

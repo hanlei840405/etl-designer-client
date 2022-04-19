@@ -15,7 +15,7 @@
             <q-card-section class="col q-pt-none">
               <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
                       selected-color="cyan-8"
-                      :selected.sync="selectedShellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
+                      :selected.sync="selectedShellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
                 <template v-slot:default-header="prop">
                   <div class="row items-center">
                     <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
@@ -31,8 +31,8 @@
     <div class="col-md-9">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="design" label="开发环境" class="text-black"/>
-        <q-tab name="prod" label="生产环境" class="text-black"/>
+        <q-tab name="design" :label="$t('tab-development')" class="text-black"/>
+        <q-tab name="prod" :label="$t('tab-production')" class="text-black"/>
       </q-tabs>
       <q-table
         color="cyan-8"
@@ -43,12 +43,12 @@
         :separator="separator"
         :rows-per-page-options="[0]"
         hide-bottom
-        no-data-label="无数据">
+        :no-data-label="$t('table-empty')">
         <template v-slot:body-cell-operate="props">
           <q-td>
             <q-btn-group>
-              <q-btn size="small" outline color="cyan-8" icon="download" label="下载" @click="download(props.row.name)"></q-btn>
-              <q-btn size="small" outline color="negative" :icon="deleteIcon" label="删除" @click="deleteAttachment(props.row.name)"></q-btn>
+              <q-btn size="small" outline color="cyan-8" icon="download" :label="$t('btn-download')" @click="download(props.row.name)"></q-btn>
+              <q-btn size="small" outline color="negative" :icon="deleteIcon" :label="$t('btn-delete')" @click="deleteAttachment(props.row.name)"></q-btn>
             </q-btn-group>
           </q-td>
         </template>
@@ -82,9 +82,9 @@ export default {
       separator: 'cell',
       filenames: [],
       filenameColumns: [
-        { name: 'name', label: '文件名', field: 'name', align: 'left' },
-        { name: 'lastModified', label: '最后更新时间', field: 'lastModified', align: 'left' },
-        { name: 'operate', label: '操作', filed: 'operate', align: 'left' }
+        { name: 'name', label: this.$t('column-name'), field: 'name', align: 'left' },
+        { name: 'lastModified', label: this.$t('column-last-updated'), field: 'lastModified', align: 'left' },
+        { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'left' }
       ]
     }
   },
@@ -168,9 +168,9 @@ export default {
         }).catch(err => {
           let msg
           if (err.status === 10002) {
-            msg = '未授权，禁止操作'
+            msg = this.$t('response-error-10002')
           } else {
-            msg = '系统异常，请联系管理员'
+            msg = this.$t('response-error-system')
           }
           this.$q.notify({
             message: msg,
@@ -203,7 +203,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除文件?',
+        message: this.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,

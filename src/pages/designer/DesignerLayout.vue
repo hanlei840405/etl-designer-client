@@ -14,7 +14,7 @@
             <q-item-section side>
               <q-btn class="text-cyan-8 gt-xs" size="12px" flat dense round icon="logout"
                       @click="quitCurrentProject(link.id)">
-                <q-tooltip>退出当前工程</q-tooltip>
+                <q-tooltip>{{ $t('btn-quit') }}</q-tooltip>
               </q-btn>
             </q-item-section>
           </template>
@@ -22,7 +22,7 @@
             <q-card-section class="col q-pt-none">
               <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
                       selected-color="cyan-8"
-                      :selected.sync="project.shellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
+                      :selected.sync="project.shellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
                 <template v-slot:default-header="prop">
                   <div class="row items-center">
                     <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
@@ -43,16 +43,16 @@
           icon="keyboard_arrow_up"
           direction="up"
         >
-          <q-fab-action square class="bg-cyan-8" @click="removeShell" label="删除" v-show="project.shellId"/>
-          <q-fab-action square class="bg-cyan-8" @click="editShell" label="编辑" v-show="project.shellId"/>
-          <q-fab-action square class="bg-cyan-8" @click="newShell" label="新增"/>
+          <q-fab-action square class="bg-cyan-8" @click="removeShell" :label="$t('btn-delete')" v-show="project.shellId"/>
+          <q-fab-action square class="bg-cyan-8" @click="editShell" :label="$t('btn-edit')" v-show="project.shellId"/>
+          <q-fab-action square class="bg-cyan-8" @click="newShell" :label="$t('btn-new')"/>
         </q-fab>
       </q-page-sticky>
       <q-dialog v-model="shellDialog.state">
         <q-card style="width: 100%">
           <q-form @submit="submitShell" class="q-gutter-md">
             <q-card-section class="row items-center q-pb-none">
-              <div class="text-h6">编辑</div>
+              <div class="text-h6">{{ $t('form-title-edit') }}</div>
               <q-space/>
               <q-btn icon="close" flat round dense v-close-popup/>
             </q-card-section>
@@ -67,7 +67,8 @@
                 hide-selected
                 fill-input
                 input-debounce="0"
-                label="选择工作区分支"
+                :label="$t('select-workspace')"
+                :no-data-label="$t('table-empty')"
                 :options="projects"
                 emit-value
                 map-options
@@ -77,26 +78,19 @@
                 lazy-rules
                 :rules="[ val => !!val || 'Please type something']"
               >
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-cyan-8">
-                      无数据
-                    </q-item-section>
-                  </q-item>
-                </template>
               </q-select>
               <q-tree :nodes="shellDialog.shells" node-key="id" selected-color="cyan-8" ref="shellDialogTree"
                       :selected.sync="shellDialog.shell.shell.id" default-expand-all
-                      no-nodes-label="暂无目录，请先选择工作区分支"/>
+                       :no-nodes-label="$t('table-empty')"/>
               <q-select outlined color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.category" :options="shellDialog.categories" emit-value
-                        map-options option-value="id" option-label="name" label="类型" lazy-rules
+                        map-options option-value="id" option-label="name"  :label="$t('form-category')" lazy-rules
                         :rules="[ val => !!val || 'Please type something']"/>
-              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.name" label="名称"
+              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.name" :label="$t('form-name')"
                         :rules="[val => !!val || 'Field is required']"/>
-              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.description" label="描述"/>
+              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.description" :label="$t('form-description')"/>
             </q-card-section>
             <q-card-actions align="right">
-              <q-btn outline text-color="cyan-8" color="cyan-8" label="保存" icon="save" type="submit"/>
+              <q-btn outline text-color="cyan-8" color="cyan-8" :label="$t('btn-save')" icon="save" type="submit"/>
             </q-card-actions>
           </q-form>
         </q-card>
@@ -116,18 +110,18 @@
           <q-btn style="left: 10px;" round size="xs" icon="history" flat @click.stop="requestPublishes"
                 v-show="selectedTabId === designer.id">
             <q-tooltip>
-              历史
+              {{ $t('btn-history') }}
             </q-tooltip>
           </q-btn>
           <q-btn style="left: 10px;" round size="xs" :icon="archiveIcon" flat @click.stop="publish(designer.id)"
                 v-show="selectedTabId === designer.id">
             <q-tooltip>
-              发布
+              {{ $t('btn-publish') }}
             </q-tooltip>
           </q-btn>
           <q-btn style="left: 10px;" round size="xs" icon="close" flat @click.stop="closeTab(designer.id)">
             <q-tooltip>
-              关闭
+              {{ $t('btn-close') }}
             </q-tooltip>
           </q-btn>
         </q-tab>
@@ -141,7 +135,7 @@
       <q-dialog v-model="publishDialog.state">
         <q-card>
           <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6">发布数据</div>
+            <div class="text-h6">{{ $t('form-title-history') }}</div>
             <q-space/>
             <q-btn icon="close" flat round dense v-close-popup/>
           </q-card-section>
@@ -157,7 +151,7 @@
               row-key="id"
               :loading="publishDialog.loading"
               separator="cell"
-              no-data-label="无数据"
+              :no-data-label="$t('table-empty')"
               @request="requestPublishes"
               :pagination.sync="publishDialog.pagination"
             >
@@ -171,7 +165,7 @@
                   <q-btn-group>
                     <q-btn size="xs" color="negative" icon="undo" @click="recover(props.row)">
                       <q-tooltip>
-                        覆盖当前
+                        {{ $t('btn-cover') }}
                       </q-tooltip>
                     </q-btn>
                   </q-btn-group>
@@ -231,15 +225,15 @@ export default {
         categories: [
           {
             id: '0',
-            name: '目录'
+            name: this.$t('form-directory')
           },
           {
             id: '1',
-            name: '任务'
+            name: this.$t('form-job')
           },
           {
             id: '2',
-            name: '转换'
+            name: this.$t('form-transform')
           }
         ]
       },
@@ -256,21 +250,21 @@ export default {
         columns: [
           {
             name: 'createTime',
-            label: '发布时间',
+            label: this.$t('form-create-time'),
             field: 'createTime',
             align: 'left',
             headerStyle: 'width: 200px'
           },
           {
             name: 'description',
-            label: '描述',
+            label: this.$t('column-description'),
             field: 'description',
             align: 'left',
             headerStyle: 'width: 300px'
           },
           {
             name: 'operate',
-            label: '操作',
+            label: this.$t('column-operate'),
             field: 'operate',
             align: 'right',
             headerStyle: 'width: 20px'
@@ -316,7 +310,7 @@ export default {
       const vm = this
       vm.$q.dialog({
         title: 'Confirm',
-        message: '确定退出该工作区吗?',
+        message: this.$t('confirm-quit'),
         cancel: {
           textColor: 'orange',
           outline: true,
@@ -377,7 +371,7 @@ export default {
         if (selected.category !== '0') {
           if (vm.designerTabs.length > 10) {
             vm.$q.notify({
-              message: '只允许同时打开10张脚本!',
+              message: vm.$t('warning-limit-10'),
               position: 'top',
               color: 'negative'
             })
@@ -465,8 +459,8 @@ export default {
       const selected = vm.$refs.shellTree[0].getNodeByKey(vm.project.shellId)
       if (selected.children.length === 0) {
         this.$q.dialog({
-          title: '删除',
-          message: '确定删除',
+          title: this.$t('confirm-title-delete'),
+          message: this.$t('confirm-delete'),
           cancel: true,
           persistent: true
         }).onOk(() => {
@@ -474,7 +468,7 @@ export default {
             vm.closeTab(selected.id)
             vm.loadShell(null, { id: vm.project.id })
             this.$q.notify({
-              message: '删除成功!',
+              message: this.$t('response-delete-success'),
               position: 'top',
               color: 'green-10'
             })
@@ -488,7 +482,7 @@ export default {
         })
       } else {
         this.$q.notify({
-          message: '存在下级节点，禁止删除',
+          message: this.$t('warning-has-children'),
           position: 'top',
           color: 'negative'
         })
@@ -497,11 +491,11 @@ export default {
     publish (tabId) {
       const vm = this
       vm.$q.dialog({
-        title: '发布',
-        message: '发布功能只会对<span class="text-red">已经存储</span>在<span class="text-red">服务器端</span>且能<span class="text-red">正常进行etl的脚本</span>执行发布操作<br/>发布完成后，该脚本及关联脚本可正是用于生产调度',
+        title: this.$t('confirm-title-publish'),
+        message: this.$t('confirm-message-publish'),
         html: true,
         prompt: {
-          model: '描述',
+          model: '',
           isValid: val => val.length > 5,
           type: 'text'
         },
@@ -513,14 +507,14 @@ export default {
           payload: data
         }).then(res => {
           vm.$q.notify({
-            message: '发布成功!',
+            message: this.$t('response-publish-success'),
             position: 'top',
             color: 'green-10'
           })
         }).catch(err => {
           let msg
           if (err.status === 10011) {
-            msg = '该版本所依赖的脚本有未发布的，请将脚本全部发布'
+            msg = this.$t('response-error-10011')
           } else {
             msg = err.data.message
           }
@@ -586,8 +580,8 @@ export default {
     recover (row) {
       const vm = this
       vm.$q.dialog({
-        title: '覆盖',
-        message: '覆盖当前脚本?',
+        title: this.$t('confirm-title-cover'),
+        message: this.$t('confirm-cover'),
         cancel: true,
         persistent: true
       }).onOk(() => {

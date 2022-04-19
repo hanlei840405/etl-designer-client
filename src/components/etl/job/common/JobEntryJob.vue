@@ -3,33 +3,35 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="result" label="结果参数"/>
-        <q-tab name="names" label="命名参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="argument" :label="$t('tab-argument-parameter')"/>
+        <q-tab name="names" :label="$t('tab-name-parameter')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="作业名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.shellName" label="作业">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.shellName" :label="$t('form-job')">
             <template v-slot:append>
               <q-btn round dense flat icon="search" text-color="cyan-8" @click="openShellSelectDialog"/>
             </template>
           </q-input>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeEachRow" label="执行每一行输入"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeEachRow" :label="$t('form-execute-every-input-row')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.passingExport" label="将作业执行结果发送到服务器上"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.passingExport" :label="$t('form-pass-to-server')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.expandRemoteOnSlave" label="允许监控子任务或子转换"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.expandRemoteOnSlave" :label="$t('form-enable-monitor-job-trans')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.waitRemoteFinished" label="等待远程转换执行结束"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.waitRemoteFinished" :label="$t('form-wait-remote-finish')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.followingAbortRemotely" label="本地转换终止时远程转换也通知终止"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.followingAbortRemotely" :label="$t('form-wait-follow-local-abort')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.parallel" label="后续节点并行进行"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.parallel" :label="$t('form-parallel')"/>
         </q-tab-panel>
         <q-tab-panel name="result">
-          <q-table :data="form.resultArguments" title="结果参数" :columns="resultArgumentsColumns" :rows-per-page-options="[0]"
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.paramsFromPrevious" :label="$t('form-copy-previous-result-args')"/>
+          <br/>
+          <q-table :data="form.resultArguments" :title="$t('table-title-argument')" :columns="resultArgumentsColumns" :rows-per-page-options="[0]"
                    row-key="name" separator="cell" hide-bottom>
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addResultArguments"/>
@@ -51,7 +53,11 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="names">
-          <q-table :data="form.nameArguments" title="命名参数" :columns="nameArgumentsColumns" :rows-per-page-options="[0]"
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.argFromPrevious" :label="$t('form-copy-previous-result-parameter')"/>
+          <br/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.passingAllParameters" :label="$t('form-pass-parameter-to-sub')"/>
+          <br/>
+          <q-table :data="form.nameArguments" :title="$t('table-title-name-parameter')" :columns="nameArgumentsColumns" :rows-per-page-options="[0]"
                    row-key="name" separator="cell" hide-bottom>
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addNameArguments"/>
@@ -88,13 +94,13 @@
       <q-dialog v-model="selectShellDialog.state">
         <q-card style="min-height: 45vh; min-width: 25vw;">
           <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6">转换选择</div>
+            <div class="text-h6">{{ $t('dialog-title-job') }}</div>
             <q-space />
             <q-btn icon="close" flat round dense v-close-popup />
           </q-card-section>
           <q-separator/>
           <q-card-section class="row items-center q-pb-none">
-            <q-tree ref="shellTree" :nodes="selectShellDialog.shells" node-key="id" selected-color="cyan-8" :selected.sync="form.shellId" @update:selected="selectShell" no-nodes-label="没有数据">
+            <q-tree ref="shellTree" :nodes="selectShellDialog.shells" node-key="id" selected-color="cyan-8" :selected.sync="form.shellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
               <template v-slot:default-header="prop">
                 <div class="row items-center">
                   <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
@@ -127,21 +133,24 @@ export default {
         expandRemoteOnSlave: false,
         waitRemoteFinished: true,
         followingAbortRemotely: false,
+        paramsFromPrevious: false,
         resultArguments: [],
+        argFromPrevious: false,
+        passingAllParameters: true,
         nameArguments: [],
         parallel: false
       },
       resultArgumentsColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'argument',
-          label: '参数',
+          label: this.$t('column-field'),
           field: 'argument',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -150,28 +159,28 @@ export default {
       nameArgumentsColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'name',
-          label: '命名参数',
+          label: this.$t('column-parameter'),
           field: 'name',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'field',
-          label: '流列名',
+          label: this.$t('column-source-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'value',
-          label: '值',
+          label: this.$t('column-value'),
           field: 'value',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -183,7 +192,7 @@ export default {
         projectId: null,
         shells: [{
           id: 0,
-          label: '任务',
+          label: this.$t('dialog-title-job'),
           children: [],
           selectable: false,
           icon: 'folder_open',

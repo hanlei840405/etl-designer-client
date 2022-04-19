@@ -2,16 +2,16 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-        <q-tab name="main" label="主选项" />
+        <q-tab name="main" :label="$t('tab-main')" />
         <q-tab name="batch" label="批量" />
-        <q-tab name="fields" label="字段" />
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="fields" :label="$t('tab-field')" />
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-separator />
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.shellName" label="转换">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.shellName" :label="$t('form-transformation')">
             <template v-slot:append>
               <q-btn round dense flat icon="search" text-color="cyan-8" @click="openShellSelectDialog"/>
             </template>
@@ -38,7 +38,7 @@
         </q-tab-panel>
         <q-tab-panel name="fields">
           <q-table :data="form.fields" :columns="fieldColumns" :rows-per-page-fields="[0]"
-                   row-key="name" separator="cell" hide-bottom title="字段">
+                   row-key="name" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td key="inputName" :props="props">
@@ -62,20 +62,20 @@
           <br/>
           <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.returnFieldByStepValue" :options="nextSteps" emit-value map-options label="从步骤获取字段信息" @input="setStepName"/>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectShellDialog.state">
       <q-card style="min-height: 45vh; min-width: 25vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">转换选择</div>
+          <div class="text-h6">{{ $t('dialog-title-transformation') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
         <q-separator/>
         <q-card-section class="row items-center q-pb-none">
-          <q-tree ref="shellTree" :nodes="selectShellDialog.shells" node-key="id" selected-color="cyan-8" :selected.sync="form.shellId" @update:selected="selectShell" no-nodes-label="没有数据">
+          <q-tree ref="shellTree" :nodes="selectShellDialog.shells" node-key="id" selected-color="cyan-8" :selected.sync="form.shellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
             <template v-slot:default-header="prop">
               <div class="row items-center">
                 <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
@@ -142,9 +142,9 @@ export default {
         distribute: true
       },
       fieldColumns: [
-        { name: 'inputName', label: '入参', field: 'inputName', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'outputName', label: '出参', field: 'outputName', align: 'left', headerStyle: 'width: 100px;' },
-        { name: 'category', label: '类型', field: 'category', align: 'left', headerStyle: 'width: 100px;' }
+        { name: 'inputName', label: this.$t('column-input'), field: 'inputName', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'outputName', label: this.$t('column-output'), field: 'outputName', align: 'left', headerStyle: 'width: 100px;' },
+        { name: 'category', label: this.$t('column-type'), field: 'category', align: 'left', headerStyle: 'width: 100px;' }
       ],
       categories: ['String', 'Integer', 'Binary', 'Number'],
       nextSteps: [],
@@ -212,7 +212,7 @@ export default {
           }
         }).catch(err => {
           vm.$q.dialog({
-            title: '错误',
+            title: vm.$t('dialog-title-error'),
             ok: {
               color: 'negative'
             },

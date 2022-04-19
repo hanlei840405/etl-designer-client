@@ -3,14 +3,14 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="server" label="服务器配置"/>
-        <q-tab name="mapping" label="字段映射"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="server" :label="$t('tab-server')"/>
+        <q-tab name="mapping" :label="$t('tab-mapping')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.index" label="index"/>
           <br/>
@@ -18,28 +18,28 @@
           <br/>
           <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.batchSize" label="batch size"/>
           <br/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" v-model="form.idField" :options="sourceFields" label="ID字段"/>
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" v-model="form.idField" :options="sourceFields" :label="$t('form-id-field')"/>
           <br/>
           <div class="row">
             <q-input class="col-sm-6" outlined text-color="cyan-8" color="cyan-8" v-model.number="form.time" label="batch timeout"/>
-            <q-select class="col-sm-6" clearable outlined text-color="cyan-8" color="cyan-8" v-model="form.timeUnit" :options="timeUnits" label="时间单位"/>
+            <q-select class="col-sm-6" clearable outlined text-color="cyan-8" color="cyan-8" v-model="form.timeUnit" :options="timeUnits" :label="$t('form-time-uint')"/>
           </div>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.stopOnError" label="出现错误即终止?" />
+          <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.stopOnError" :label="$t('form-stop-on-error')" />
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.overwriteIfExist" label="覆盖重复数据?" />
+          <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.overwriteIfExist" :label="$t('form-overwrite-exist')" />
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.outputRows" label="返回数据?" />
+          <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.outputRows" :label="$t('form-output-rows')" />
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.outputId" label="返回的ID字段" :disable="!form.outputRows"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.outputId" :label="$t('form-id-output-field')" :disable="!form.outputRows"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.fromJson" label="数据来源于JSON?" />
+          <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.fromJson" :label="$t('form-json-input')" />
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.jsonField" label="JSON字段名"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.jsonField" :label="$t('form-json-field')"/>
         </q-tab-panel>
         <q-tab-panel name="server">
           <q-table :data="form.servers" :columns="serverColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="服务器设置">
+                   separator="cell" hide-bottom :title="$t('table-title-server-config')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addServer"/>
             </template>
@@ -65,7 +65,7 @@
             </template>
           </q-table>
           <q-table :data="form.settings" :columns="settingColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="连接参数">
+                   separator="cell" hide-bottom :title="$t('table-title-copnnection-config')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addSetting"/>
             </template>
@@ -91,28 +91,28 @@
             </template>
           </q-table>
           <q-card-actions align="left">
-            <q-btn label="测试" outline text-color="cyan-8" :icon="testBtnIcon" @click="test"/>
+            <q-btn :label="$t('btn-test')" outline text-color="cyan-8" :icon="testBtnIcon" @click="test"/>
           </q-card-actions>
         </q-tab-panel>
         <q-tab-panel name="mapping">
           <q-table :data="form.mappings" :columns="mappingColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="字段">
+                   separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addMapping">
                 <q-list>
                   <q-item clickable v-close-popup @click="appendDiffMapping">
                     <q-item-section>
-                      <q-item-label>增加新的</q-item-label>
+                      <q-item-label>{{ $t('btn-append') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="addAllMapping">
                     <q-item-section>
-                      <q-item-label>增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="clearAndAddMapping">
                     <q-item-section>
-                      <q-item-label>清除并增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -141,8 +141,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     </q-form>
@@ -190,21 +190,21 @@ export default {
       serverColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'address',
-          label: '地址',
+          label: this.$t('column-address'),
           field: 'address',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'port',
-          label: '端口',
+          label: this.$t('column-port'),
           field: 'port',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -213,21 +213,21 @@ export default {
       mappingColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '流中字段',
+          label: this.$t('column-source-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'target',
-          label: '目标字段',
+          label: this.$t('column-target-field'),
           field: 'target',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -236,21 +236,21 @@ export default {
       settingColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'setting',
-          label: '连接参数',
+          label: this.$t('column-setting'),
           field: 'setting',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'value',
-          label: '值',
+          label: this.$t('column-value'),
           field: 'value',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -404,8 +404,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

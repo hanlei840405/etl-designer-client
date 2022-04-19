@@ -1,8 +1,8 @@
 <template>
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
-      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.endName" label="结果字段名" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.endName" :label="$t('form-end-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
   </q-form>
   </div>
 </template>

@@ -1,8 +1,8 @@
 <template>
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
-      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-      <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.datasource" emit-value map-options option-value="id" :options="datasource" label="数据库连接" clearable lazy-rules :rules="[ val => validate(val) || 'datasource is invalid' ]">
+      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+      <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.datasource" emit-value map-options option-value="id" :options="datasource" :label="$t('form-select-datasource')" clearable lazy-rules :rules="[ val => validate(val) || 'datasource is invalid' ]">
         <template v-slot:option="scope">
           <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
             <q-item-section>
@@ -24,22 +24,22 @@
           </div>
         </template>
       </q-input>
-      <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.lookupFromStepValue" :options="previousSteps" emit-value map-options label="从步骤插入数据" @clear="form.executeEachInputRow = false" @input="setLookupFromStepName"/>
-      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.lazyConversionActive" label="允许简易转换" />
-      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.variableReplacementActive" label="替换SQL语句里的变量" />
-      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeEachInputRow" label="执行每一行" :disable="form.lookupFromStepValue === null"/>
-      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.rowLimit" label="记录数量限制"/>
+      <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.lookupFromStepValue" :options="previousSteps" emit-value map-options :label="$t('form-source-from-field')" @clear="form.executeEachInputRow = false" @input="setLookupFromStepName"/>
+      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.lazyConversionActive" :label="$t('form-enable-lazy-conversion')" />
+      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.variableReplacementActive" :label="$t('form-replace-variables-script')" />
+      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.executeEachInputRow" :label="$t('form-execute-each-row')" :disable="form.lookupFromStepValue === null"/>
+      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.rowLimit" :label="$t('form-limit-size')"/>
       <q-dialog v-model="previewDataDialog.mode">
         <q-card>
           <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6">预览</div>
+            <div class="text-h6">{{ $t('dialog-title-preview') }}</div>
             <q-space />
             <q-btn icon="close" flat round dense v-close-popup />
           </q-card-section>
 
           <q-card-section>
             <q-chip square text-color="cyan-8" icon="bookmark" style="width: 100%; margin: 0px;">
-              预览数据最多显示10条
+              {{ $t('dialog-bottom-limit', [20]) }}
             </q-chip>
             <q-table
               color="cyan-8"
@@ -60,7 +60,7 @@
       <q-dialog v-model="selectTables.mode">
         <q-card style="width: 100vw;">
           <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6">数据库信息</div>
+            <div class="text-h6">{{ $t('dialog-title-datasource') }}</div>
             <q-space />
             <q-btn icon="close" flat round dense v-close-popup />
           </q-card-section>
@@ -127,7 +127,7 @@ export default {
       if (!vm.form.datasource) {
         vm.$q.notify({
           position: 'top',
-          message: '请先选择数据源',
+          message: vm.$t('message-select-datasource'),
           color: 'negative'
         })
       } else {
@@ -230,7 +230,7 @@ export default {
       }).catch(() => {
         vm.$q.notify({
           position: 'top',
-          message: 'SQL语法错误或存在特殊字符等，请仔细检查',
+          message: vm.$t('response-error-grammer'),
           color: 'negative'
         })
       })

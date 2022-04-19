@@ -3,24 +3,24 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-separator/>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :options="sourceFields" label="switch字段" clearable v-if="sourceFields.length > 0"></q-select>
-          <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" label="switch字段" v-if="sourceFields.length === 0"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.useStringIn" label="使用字符串包含比较"/>
-          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.category" :options="categories" label="case值数据类型"></q-select>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.mask" label="case值转换掩码"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.decimalSymbol" label="case值小数点符号"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.groupBy" label="case值分组标志"/>
-          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.nextStep" :options="nextSteps" label="默认目标步骤" map-options emit-value clearable lazy-rules :rules="[ val => validate(val) || 'field is invalid' ]"></q-select>
+          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :options="sourceFields" :label="$t('form-switch-field')" clearable v-if="sourceFields.length > 0"></q-select>
+          <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :label="$t('form-switch-field')" v-if="sourceFields.length === 0"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.useStringIn" :label="$t('form-compare-string-contain')"/>
+          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.category" :options="categories" :label="$t('form-case-value-data-type')"></q-select>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.mask" :label="$t('form-case-value-conversion-mask')"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.decimalSymbol" :label="$t('form-case-value-decimal-symbol')"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.groupBy" :label="$t('form-case-value-group-symbol')"/>
+          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.nextStep" :options="nextSteps" :label="$t('form-default-target-step')" map-options emit-value clearable lazy-rules :rules="[ val => validate(val) || 'field is invalid' ]"></q-select>
           <q-table :data="form.cases" :columns="caseColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="条件">
+                   separator="cell" hide-bottom :title="$t('table-title-condition')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addCase"/>
             </template>
@@ -46,8 +46,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -77,21 +77,21 @@ export default {
       caseColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'value',
-          label: '值',
+          label: this.$t('column-value'),
           field: 'value',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'step',
-          label: '步骤',
+          label: this.$t('column-step'),
           field: 'step',
           align: 'left',
           headerStyle: 'width: 150px;'
@@ -178,8 +178,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

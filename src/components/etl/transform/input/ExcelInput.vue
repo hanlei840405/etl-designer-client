@@ -2,13 +2,13 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-        <q-tab name="file" label="文件"/>
-        <q-tab name="content" label="内容"/>
-        <q-tab name="field" label="字段"/>
+        <q-tab name="file" :label="$t('tab-file')"/>
+        <q-tab name="content" :label="$t('tab-content')"/>
+        <q-tab name="field" :label="$t('tab-field')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="file">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-uploader text-color="cyan-8" color="cyan-8" label-color="cyan-8" :factory="upload" @removed="removeFile" @uploaded="uploaded" url="http://localhost:30200/attachment/upload" method="post" field-name="file" label="模板：确保服务器上文件内容与模板一致" auto-upload withCredentials style="width: 100%;"/>
           <br/>
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.reg" label="正则表达式"/>
@@ -44,7 +44,7 @@
           <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.notNull" label="忽略错误" /> <q-checkbox v-model="form.pause" label="跳过错误行" />
         </q-tab-panel>
         <q-tab-panel name="field">
-          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom title="字段">
+          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
             </template>
@@ -159,42 +159,42 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '名称',
+          label: this.$t('column-name'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'removeBlank',
-          label: '去除空格类型',
+          label: this.$t('column-remove-blank'),
           field: 'removeBlank',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -208,28 +208,28 @@ export default {
         },
         {
           name: 'formatValue',
-          label: '格式',
+          label: this.$t('column-format'),
           field: 'formatValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'currency',
-          label: '货币',
+          label: this.$t('column-currency'),
           field: 'currency',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'decimal',
-          label: '小数',
+          label: this.$t('column-decimal'),
           field: 'decimal',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'groupBy',
-          label: '分组',
+          label: this.$t('column-group'),
           field: 'groupBy',
           align: 'left',
           headerStyle: 'width: 100px;'

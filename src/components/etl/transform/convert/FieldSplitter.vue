@@ -3,21 +3,21 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="field" label="字段"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="field" :label="$t('tab-field')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :options="sourceFields" label="需要拆分的字段"></q-select>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.delimiter" label="分隔符"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.enclosure" label="Enclosure"/>
+          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :options="sourceFields" :label="$t('form-field-split')"></q-select>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.delimiter" :label="$t('form-delimiter')"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.enclosure" :label="$t('form-enclosure')"/>
         </q-tab-panel>
         <q-tab-panel name="field">
           <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="新字段">
+                   separator="cell" hide-bottom :title="$t('table-title-new-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
             </template>
@@ -109,8 +109,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1"
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1"
                    :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
@@ -138,14 +138,14 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '名称',
+          label: this.$t('column-name'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -159,56 +159,56 @@ export default {
         },
         {
           name: 'removeId',
-          label: '去除ID',
+          label: this.$t('column-remove-id'),
           field: 'removeId',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'formatValue',
-          label: '格式',
+          label: this.$t('column-format'),
           field: 'formatValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'groupBy',
-          label: '组',
+          label: this.$t('column-group'),
           field: 'groupBy',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'decimal',
-          label: '小数点符号',
+          label: this.$t('column-decimal'),
           field: 'decimal',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'currency',
-          label: '货币符号',
+          label: this.$t('column-currency'),
           field: 'currency',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -222,14 +222,14 @@ export default {
         },
         {
           name: 'emptyValue',
-          label: '缺省',
+          label: this.$t('column-empty'),
           field: 'emptyValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'removeBlank',
-          label: '去除空格类型',
+          label: this.$t('column-remove-blank'),
           field: 'removeBlank',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -303,8 +303,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

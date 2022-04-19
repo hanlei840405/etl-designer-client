@@ -3,18 +3,18 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="field" label="输出字段"/>
-        <q-tab name="javaParams" label="脚本参数"/>
-        <q-tab name="infoStep" label="消息步骤"/>
-        <q-tab name="targetStep" label="目标步骤"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="field" :label="$t('tab-output-filed')"/>
+        <q-tab name="javaParams" :label="$t('tab-parameter')"/>
+        <q-tab name="infoStep" :label="$t('tab-info-step')"/>
+        <q-tab name="targetStep" :label="$t('tab-target-step')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.script" type="textarea" rows="12" label="脚本">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.script" type="textarea" rows="12" :label="$t('form-script')">
             <template v-slot:prepend>
               <q-btn round dense flat icon="search" @click="loadHelps" text-color="cyan-8"/>
             </template>
@@ -22,7 +22,7 @@
         </q-tab-panel>
         <q-tab-panel name="field">
           <q-table :data="form.outputFields" :columns="outputFieldColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="字段">
+                   separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addOutputField"/>
             </template>
@@ -62,7 +62,7 @@
         </q-tab-panel>
         <q-tab-panel name="javaParams">
           <q-table :data="form.javaParams" :columns="javaParamColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="参数">
+                   separator="cell" hide-bottom :title="$t('form-argument')">
             <template v-slot:top-left>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addJavaParam"/>
             </template>
@@ -96,7 +96,7 @@
         </q-tab-panel>
         <q-tab-panel name="infoStep">
           <q-table :data="form.infoSteps" :columns="infoStepColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="消息步骤">
+                   separator="cell" hide-bottom :title="$t('table-title-info-step')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addInfoStep"/>
             </template>
@@ -130,7 +130,7 @@
         </q-tab-panel>
         <q-tab-panel name="targetStep">
           <q-table :data="form.targetSteps" :columns="targetStepColumns" :rows-per-page-options="[0]" row-key="name"
-                   separator="cell" hide-bottom title="目标步骤">
+                   separator="cell" hide-bottom :title="$t('table-title-target-step')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addTargetStep"/>
             </template>
@@ -162,21 +162,21 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="helpDialog.mode" >
       <q-card style="width: 100vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">帮助信息</div>
+          <div class="text-h6">{{ $t('dialog-title-doc') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-card-section class="items-center q-pb-none">
           <q-tabs v-model="helpDialog.tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-            <q-tab name="function" label="内置函数"/>
-            <q-tab name="input" label="输入参数"/>
+            <q-tab name="function" :label="$('tab-constant')"/>
+            <q-tab name="input" :label="$('tab-input-parameter')"/>
           </q-tabs>
           <q-tab-panels v-model="helpDialog.tab" animated>
             <q-tab-panel name="function" class="row q-pa-md q-col-gutter-sm">
@@ -231,35 +231,35 @@ export default {
       outputFieldColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '字段',
+          label: this.$t('column-source-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -268,28 +268,28 @@ export default {
       javaParamColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'tag',
-          label: '标签',
+          label: this.$t('column-tag'),
           field: 'tag',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'value',
-          label: '值',
+          label: this.$t('column-value'),
           field: 'value',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'description',
-          label: '描述',
+          label: this.$t('column-description'),
           field: 'description',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -298,28 +298,28 @@ export default {
       infoStepColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'tag',
-          label: '标签',
+          label: this.$t('column-tag'),
           field: 'tag',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'step',
-          label: '步骤',
+          label: this.$t('column-step'),
           field: 'step',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'description',
-          label: '描述',
+          label: this.$t('column-description'),
           field: 'description',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -328,28 +328,28 @@ export default {
       targetStepColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'tag',
-          label: '标签',
+          label: this.$t('column-tag'),
           field: 'tag',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'step',
-          label: '步骤',
+          label: this.$t('column-step'),
           field: 'step',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'description',
-          label: '描述',
+          label: this.$t('column-description'),
           field: 'description',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -669,8 +669,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

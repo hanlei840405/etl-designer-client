@@ -1,12 +1,12 @@
 <template>
   <div>
-    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header no-data-label="无数据" :rows-per-page-options="[0]" hide-bottom>
+    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :no-data-label="$t('table-empty')" :rows-per-page-options="[0]" hide-bottom>
       <template v-slot:top-left>
         <q-select
           v-model="table.project"
           outlined
           dense
-          label="选择工作区信息"
+          :label="$t('select-workspace')"
           :options="table.projectsCopy"
           option-value="id"
           option-label="name"
@@ -23,14 +23,14 @@
                 <q-item-label>{{ scope.opt.name }}</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-badge :color="scope.opt.status === '1' ? 'teal' : 'grey-5'" :label="scope.opt.status === '1' ? '有效' : '无效'" />
+                <q-badge :color="scope.opt.status === '1' ? 'teal' : 'grey-5'" :label="scope.opt.status === '1' ? $t('column-status-active') : $t('column-status-inactive')" />
               </q-item-section>
             </q-item>
           </template>
         </q-select>
       </template>
       <template v-if="table.project && table.project.status === '1'" v-slot:top-right>
-        <q-btn text-color="cyan-8" outline label="新建" @click="newDatasource"/>
+        <q-btn text-color="cyan-8" outline :label="$t('btn-new')" @click="newDatasource"/>
       </template>
       <template v-slot:item="props">
         <div
@@ -55,7 +55,7 @@
     <q-dialog v-model="editDatasourceDialog.state" :position="editDatasourceDialog.position" full-height>
       <q-card style="width: 100vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">数据源连接</div>
+          <div class="text-h6">{{ editDatasourceDialog.title }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
@@ -63,33 +63,33 @@
         <q-card-section>
           <q-form>
             <q-tabs v-model="editDatasourceDialog.tabOption" class="text-cyan-8" align="left">
-              <q-tab name="basic" label="一般" />
-              <q-tab name="option" label="选项" />
-              <q-tab name="pool" label="连接池" />
+              <q-tab name="basic" :label="$t('tab-basic')" />
+              <q-tab name="option" :label="$t('tab-option')" />
+              <q-tab name="pool" :label="$t('tab-datasource-pool')" />
             </q-tabs>
             <q-tab-panels v-model="editDatasourceDialog.tabOption" animated swipeable vertical transition-prev="jump-up" transition-next="jump-up">
               <q-tab-panel name="basic">
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.name" label="连接名" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-                <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.category" :options="editDatasourceDialog.categories" label="数据库类型"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+                <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.category" :options="editDatasourceDialog.categories" :label="$t('form-datasource-type')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.host" label="主机HOST地址"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.host" :label="$t('form-datasource-host')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.port" label="端口"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.port" :label="$t('form-datasource-port')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.schemaName" label="数据库SCHEMA"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.schemaName" :label="$t('form-datasource-schema')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-if="databaseDialogOracle" v-model="editDatasourceDialog.datasource.dataSpace" label="数据表空间"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-if="databaseDialogOracle" v-model="editDatasourceDialog.datasource.dataSpace" :label="$t('form-datasource-table-space')"/>
                 <br v-if="databaseDialogOracle"/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-if="databaseDialogOracle" v-model="editDatasourceDialog.datasource.indexSpace" label="索引表空间"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-if="databaseDialogOracle" v-model="editDatasourceDialog.datasource.indexSpace" :label="$t('form-datasource-index-space')"/>
                 <br v-if="databaseDialogOracle"/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.username" label="用户名"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.username" :label="$t('form-datasource-username')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.password" type="password" label="密码"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.password" type="password" :label="$t('form-datasource-password')"/>
                 <br/>
                 <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-if="databaseDialogMysql" v-model="editDatasourceDialog.datasource.useCursor" label="Use Result Streaming Cursor"/>
               </q-tab-panel>
               <q-tab-panel name="option">
-                <q-table :data="editDatasourceDialog.datasource.parameter" :columns="editDatasourceDialog.parameterColumns" title="参数" :rows-per-page-options="[]" row-key="name">
+                <q-table :data="editDatasourceDialog.datasource.parameter" :columns="editDatasourceDialog.parameterColumns" :title="$t('form-argument')" :rows-per-page-options="[]" row-key="name">
                   <template v-slot:body="props">
                     <q-tr :props="props">
                       <q-td key="name" :props="props">
@@ -109,26 +109,26 @@
                 </q-table>
               </q-tab-panel>
               <q-tab-panel name="pool">
-                <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.usePool" label="使用连接池" />
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolInitialSize" label="连接池大小"/>
+                <q-checkbox outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.usePool" :label="$t('form-datasource-use-pool')" />
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolInitialSize" :label="$t('form-datasource-pool-initial-size')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMaxSize" autogrow label="最大空闲空间"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMaxSize" autogrow :label="$t('form-datasource-pool-max-size')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolInitial" autogrow label="连接池启动时初始化连接数"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolInitial" autogrow :label="$t('form-datasource-pool-initial')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMaxActive" autogrow label="连接池同时能维持的最大连接数"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMaxActive" autogrow :label="$t('form-datasource-pool-max-active')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMaxIdle" autogrow label="最大维持空闲连接数"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMaxIdle" autogrow :label="$t('form-datasource-pool-max-idle')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMinIdle" autogrow label="最小维持空闲连接数"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMinIdle" autogrow :label="$t('form-datasource-pool-min-idle')"/>
                 <br/>
-                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMaxWait" autogrow label="最大建立连接等待时间"/>
+                <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editDatasourceDialog.datasource.poolMaxWait" autogrow :label="$t('form-datasource-pool-max-wait')"/>
               </q-tab-panel>
             </q-tab-panels>
             <q-card-actions align="right" v-if="editDatasourceDialog.datasource.status !== '0'">
-              <q-btn label="测试" outline text-color="primary" :icon="table.testIcon" @click="testDatasource"/>
-              <q-btn label="保存" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveDatasource"/>
-              <q-btn label="删除" outline text-color="negative" :icon="table.deleteIcon" @click="deleteDatasource"/>
+              <q-btn :label="$t('btn-test')" outline text-color="primary" :icon="table.testIcon" @click="testDatasource"/>
+              <q-btn :label="$t('btn-save')" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveDatasource"/>
+              <q-btn :label="$t('btn-delete')" outline text-color="negative" :icon="table.deleteIcon" @click="deleteDatasource"/>
             </q-card-actions>
           </q-form>
         </q-card-section>
@@ -157,41 +157,41 @@ export default {
         columns: [
           {
             name: 'name',
-            label: '名称',
+            label: this.$t('column-name'),
             field: 'name',
             align: 'left'
           },
           {
             name: 'category',
-            label: '类型',
+            label: this.$t('column-type'),
             field: 'category',
             align: 'left'
           },
           {
             name: 'host',
-            label: '主机地址',
+            label: this.$t('column-datasource-host'),
             field: 'host',
             align: 'left'
           },
           {
             name: 'port',
-            label: '端口',
+            label: this.$t('column-datasource-port'),
             field: 'port',
             align: 'left'
           },
           {
             name: 'schemaName',
-            label: 'schema',
+            label: this.$t('column-datasource-schema'),
             field: 'schemaName',
             align: 'left'
           },
           {
             name: 'status',
-            label: '状态',
+            label: this.$t('column-status'),
             field: 'status',
             align: 'left',
             format: (val, row) => {
-              return val === '1' ? '有效' : '无效'
+              return val === '1' ? this.$t('column-status-active') : this.$t('column-status-inactive')
             }
           }
         ]
@@ -199,7 +199,7 @@ export default {
       editDatasourceDialog: {
         state: false,
         position: 'right',
-        title: '数据库配置',
+        title: this.$t('form-title-edit'),
         tabOption: 'basic',
         datasource: {
           id: null,
@@ -229,8 +229,8 @@ export default {
         },
         categories: ['mysql', 'oracle'],
         parameterColumns: [
-          { name: 'name', align: 'left', label: '参数名称', field: 'name' },
-          { name: 'value', align: 'left', label: '参数值', field: 'value' }
+          { name: 'name', align: 'left', label: this.$t('form-argument-name'), field: 'name' },
+          { name: 'value', align: 'left', label: this.$t('form-argument-value'), field: 'value' }
         ]
       }
     }
@@ -352,7 +352,7 @@ export default {
           vm.table.data = res.data
         })
         vm.$q.notify({
-          message: '保存成功!',
+          message: this.$t('response-save-success'),
           position: 'top',
           color: 'teal'
         })
@@ -370,13 +370,13 @@ export default {
       }).then(res => {
         if (res.data) {
           vm.$q.notify({
-            message: '连接成功!',
+            message: vm.$t('response-test-success'),
             position: 'top',
             color: 'teal'
           })
         } else {
           vm.$q.notify({
-            message: '数据库连接失败!',
+            message: vm.$t('response-test-failure'),
             position: 'top',
             color: 'negative'
           })
@@ -393,7 +393,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除数据源?',
+        message: this.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,

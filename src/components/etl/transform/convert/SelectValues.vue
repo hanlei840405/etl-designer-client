@@ -3,39 +3,39 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-tabs v-model="mainTab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
                   narrow-indicator>
-            <q-tab name="select" label="选择和修改"/>
-            <q-tab name="remove" label="移除"/>
-            <q-tab name="metaData" label="元数据"/>
+            <q-tab name="select" :label="$t('form-select-alter')"/>
+            <q-tab name="remove" :label="$t('form-remove')"/>
+            <q-tab name="metaData" :label="$t('form-metaData')"/>
           </q-tabs>
           <q-tab-panels v-model="mainTab" animated>
             <q-tab-panel name="select">
               <q-table :data="form.selects" :columns="selectColumns" :rows-per-page-options="[0]" row-key="name"
-                       separator="cell" hide-bottom title="字段">
+                       separator="cell" hide-bottom :title="$t('table-title-field')">
                 <template v-slot:top-right>
                   <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addSelect">
                     <q-list>
                       <q-item clickable v-close-popup @click="appendDiffSelect">
                         <q-item-section>
-                          <q-item-label>增加新的</q-item-label>
+                          <q-item-label>{{ $t('btn-append') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                       <q-item clickable v-close-popup @click="addAllSelect">
                         <q-item-section>
-                          <q-item-label>增加所有</q-item-label>
+                          <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                       <q-item clickable v-close-popup @click="clearAndAddSelect">
                         <q-item-section>
-                          <q-item-label>清除并增加所有</q-item-label>
+                          <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                     </q-list>
@@ -75,27 +75,27 @@
                   </q-tr>
                 </template>
               </q-table>
-              <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.sortByName" label="包含未指定的列，按名称排序"/>
+              <q-checkbox text-color="cyan-8" color="cyan-8" v-model="form.sortByName" :label="$t('form-order-include-unspecified-field')"/>
             </q-tab-panel>
             <q-tab-panel name="remove">
               <q-table :data="form.removes" :columns="removeColumns" :rows-per-page-options="[0]" row-key="name"
-                       separator="cell" hide-bottom title="字段">
+                       separator="cell" hide-bottom :title="$t('table-title-field')">
                 <template v-slot:top-right>
                   <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addRemove">
                     <q-list>
                       <q-item clickable v-close-popup @click="appendDiffRemove">
                         <q-item-section>
-                          <q-item-label>增加新的</q-item-label>
+                          <q-item-label>{{ $t('btn-append') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                       <q-item clickable v-close-popup @click="addAllRemove">
                         <q-item-section>
-                          <q-item-label>增加所有</q-item-label>
+                          <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                       <q-item clickable v-close-popup @click="clearAndAddRemove">
                         <q-item-section>
-                          <q-item-label>清除并增加所有</q-item-label>
+                          <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                     </q-list>
@@ -119,23 +119,23 @@
             </q-tab-panel>
             <q-tab-panel name="metaData">
               <q-table :data="form.metaData" :columns="metaDataColumns" :rows-per-page-options="[0]" row-key="name"
-                       separator="cell" hide-bottom title="元数据">
+                       separator="cell" hide-bottom :title="$t('table-title-metadata')">
                 <template v-slot:top-right>
                   <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addMetaData">
                     <q-list>
                       <q-item clickable v-close-popup @click="appendDiffMetaData">
                         <q-item-section>
-                          <q-item-label>增加新的</q-item-label>
+                          <q-item-label>{{ $t('btn-append') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                       <q-item clickable v-close-popup @click="addAllMetaData">
                         <q-item-section>
-                          <q-item-label>增加所有</q-item-label>
+                          <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                       <q-item clickable v-close-popup @click="clearAndAddMetaData">
                         <q-item-section>
-                          <q-item-label>清除并增加所有</q-item-label>
+                          <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                         </q-item-section>
                       </q-item>
                     </q-list>
@@ -246,10 +246,9 @@
             </q-tab-panel>
           </q-tab-panels>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined v-model.number="form.parallel" label="执行线程数" type="number" min="1"
+        <q-tab-panel name="runningConfig">
+          <q-input outlined v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1"
                    :disable="forbiddenParallel"/>
-          <q-checkbox v-model="form.errorEnable" label="启用错误处理" :disable="true"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -270,51 +269,41 @@ export default {
         removes: [],
         metaData: [],
         sortByName: false,
-        parallel: 1,
-        errorNext: null,
-        errorEnable: false,
-        errorCountName: null,
-        errorColumnDescription: null,
-        errorColumnName: null,
-        errorColumnCode: null,
-        errorMaxCount: 0,
-        errorRate: 0,
-        errorMinRows: 0,
-        distribute: true
+        parallel: 1
       },
       sourceFields: [],
       selectColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'source',
-          label: '字段名称',
+          label: this.$t('column-source-field'),
           field: 'source',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'target',
-          label: '改名成',
+          label: this.$t('column-rename'),
           field: 'target',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -323,14 +312,14 @@ export default {
       removeColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'left',
           headerStyle: 'width: 20px'
         },
         {
           name: 'source',
-          label: '字段名称',
+          label: this.$t('column-source-field'),
           field: 'source',
           align: 'left'
         }
@@ -338,42 +327,42 @@ export default {
       metaDataColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'source',
-          label: '字段名出',
+          label: this.$t('column-source-field'),
           field: 'source',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'target',
-          label: '改名成',
+          label: this.$t('column-rename'),
           field: 'target',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -387,7 +376,7 @@ export default {
         },
         {
           name: 'formatValue',
-          label: '格式',
+          label: this.$t('column-format'),
           field: 'formatValue',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -429,21 +418,21 @@ export default {
         },
         {
           name: 'decimal',
-          label: '十进制',
+          label: this.$t('column-decimal-system'),
           field: 'decimal',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'groupBy',
-          label: '分组',
+          label: this.$t('column-group'),
           field: 'groupBy',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'currency',
-          label: '货币',
+          label: this.$t('column-currency'),
           field: 'currency',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -756,8 +745,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

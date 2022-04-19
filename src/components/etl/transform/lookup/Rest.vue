@@ -2,49 +2,49 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-        <q-tab name="general" label="基本信息"/>
-        <q-tab name="auth" label="鉴权"/>
-        <q-tab name="header" label="头信息"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')" />
+        <q-tab name="auth" :label="$t('tab-auth')"/>
+        <q-tab name="header" :label="$t('tab-header')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
-        <q-tab-panel name="general">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+        <q-tab-panel name="mail">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.url" label="URL" :disable="form.urlInStream"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.urlInStream" label="从流里接收URL?" />
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.urlField" :options="sourceFields" label="URL字段" :disable="!form.urlInStream"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.urlInStream" :label="$t('form-url-from-field')" />
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.urlField" :options="sourceFields" :label="$t('form-url-field')" :disable="!form.urlInStream"/>
           <br/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.method" :options="methods" label="Method字段" :disable="form.methodInStream"/>
-          <q-checkbox v-model="form.methodInStream" label="从流里接收Method?" text-color="cyan-8" color="cyan-8" label-color="cyan-8" />
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.methodField" :options="sourceFields" label="Method字段" :disable="!form.methodInStream"/>
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.method" :options="methods" :label="$t('form-http-field')" :disable="form.methodInStream"/>
+          <q-checkbox v-model="form.methodInStream" :label="$t('form-method-from-field')" text-color="cyan-8" color="cyan-8" label-color="cyan-8" />
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.methodField" :options="sourceFields" :label="$t('form-method-field')" :disable="!form.methodInStream"/>
           <br/>
           <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.body" :options="sourceFields" label="BODY"/>
           <br/>
           <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.applicationType" :options="applicationTypes" label="Application Type"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.resultFieldName" label="返回字段名称"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.resultFieldName" :label="$t('form-result-field-name')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.statusFieldName" label="HTTP状态字段"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.statusFieldName" :label="$t('form-http-status-field')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.costTimeField" label="返回耗时字段"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.costTimeField" :label="$t('form-response-time-field')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.responseHeaderField" label="返回头名称"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.responseHeaderField" :label="$t('form-response-header-field')"/>
           <br/>
         </q-tab-panel>
         <q-tab-panel name="auth">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.login" label="用户名"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.login" :label="$t('form-login')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.password" label="密码"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.password" :label="$t('form-password')"/>
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.preemptive" label="优先?" />
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.preemptive" :label="$t('form-preemptive')" />
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.proxyHost" label="代理主机"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.proxyHost" :label="$t('form-proxy-host')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.proxyPort" label="代理域名"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.proxyPort" :label="$t('form-proxy-port')"/>
           <br/>
         </q-tab-panel>
         <q-tab-panel name="header">
-          <q-table :data="form.headers" :columns="headerColumns" :rows-per-page-options="[0]" row-key="field" separator="cell" hide-bottom title="字段">
+          <q-table :data="form.headers" :columns="headerColumns" :rows-per-page-options="[0]" row-key="field" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addHeader"/>
             </template>
@@ -69,8 +69,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -83,7 +83,7 @@ export default {
   name: 'RestMeta',
   data () {
     return {
-      tab: 'general',
+      tab: 'mail',
       form: {
         name: null,
         url: null,
@@ -119,21 +119,21 @@ export default {
       headerColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '流中header定义',
+          label: this.$t('column-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'name',
-          label: 'rest请求中的header定义',
+          label: this.$t('column-name'),
           field: 'name',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -206,8 +206,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

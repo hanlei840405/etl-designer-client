@@ -1,12 +1,12 @@
 <template>
   <div>
     <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" :filter="table.filter" @request="searchLayout" hide-header
-             no-data-label="无数据" :rows-per-page-options="[0]" hide-bottom>
+             :no-data-label="$t('table-empty')" :rows-per-page-options="[0]" hide-bottom>
       <template v-slot:top-right>
         <q-input borderless dense debounce="300" v-model="table.filter" placeholder="Search">
           <template v-slot:append>
             <q-icon name="search"/>
-            <q-btn text-color="cyan-8" outline label="新建" @click="newLayout"/>
+            <q-btn text-color="cyan-8" outline :label="$t('btn-new')" @click="newLayout"/>
           </template>
         </q-input>
       </template>
@@ -26,8 +26,8 @@
                 </q-item-section>
               </q-item>
               <q-card-actions align="right">
-                <q-btn label="编辑" outline text-color="cyan-8" icon="edit" @click="loadLayout(props)"/>
-                <q-btn label="布局" outline text-color="negative" icon="dashboard_customize" @click="designLayout(props)"/>
+                <q-btn :label="$t('btn-edit')" outline text-color="cyan-8" icon="edit" @click="loadLayout(props)"/>
+                <q-btn :label="$t('btn-layout')" outline text-color="negative" icon="dashboard_customize" @click="designLayout(props)"/>
               </q-card-actions>
             </q-list>
           </q-card>
@@ -43,15 +43,15 @@
         </q-card-section>
         <q-card-section>
           <q-form class="q-gutter-md">
-            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="layout.code" label="布局编码 *" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-              <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="layout.name" label="布局名称 *" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-              <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="layout.resourceCode" label="资源码 *" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-              <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="textarea" v-model="layout.description" label="描述"/>
+            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="layout.code" :label="$t('form-code')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+              <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="layout.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+              <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="layout.resourceCode" :label="$t('form-resource-code')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+              <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="textarea" v-model="layout.description" :label="$t('form-description')"/>
           </q-form>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="保存" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveEntity"/>
-          <q-btn label="删除" outline text-color="negative" :icon="table.deleteIcon" @click="deleteLayout"/>
+          <q-btn :label="$t('btn-save')" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveEntity"/>
+          <q-btn :label="$t('btn-delete')" outline text-color="negative" :icon="table.deleteIcon" @click="deleteLayout"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -70,7 +70,7 @@
               <q-icon :name="table.deleteIcon" style="font-size: 2rem;"></q-icon>
               </div>
               <div>
-                移除报表
+                {{ $t('btn-delete-report') }}
               </div>
             </div>
             <div id="addBtn" class="newWidget grid-stack-item">
@@ -79,7 +79,7 @@
                 <q-icon name="add" style="font-size: 2rem;"></q-icon>
                 </div>
                 <div>
-                  添加报表
+                  {{ $t('btn-add-report') }}
                 </div>
               </div>
             </div>
@@ -87,23 +87,23 @@
           </div>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="保存" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveDesign"/>
+          <q-btn :label="$t('btn-save')" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveDesign"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
     <q-dialog v-model="selectReportDialog.state">
       <q-card style="width: 20vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">选择报表</div>
+          <div class="text-h6">{{ $t('btn-select-report') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-card-section class="row text-center">
-          <q-select style="width: 100%;" outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="selectReportDialog.report"  option-value="id" option-label="name" :options="selectReportDialog.reportList" label="报表 *" clearable lazy-rules :rules="[ val => (val != null) || 'datasource is invalid' ]">
+          <q-select style="width: 100%;" outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="selectReportDialog.report"  option-value="id" option-label="name" :options="selectReportDialog.reportList" :label="$t('form-report')" clearable lazy-rules :rules="[ val => (val != null) || 'datasource is invalid' ]">
           </q-select>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="确定" outline text-color="cyan-8" :icon="table.saveIcon" @click="selectedReport"/>
+          <q-btn :label="$t('btn-save')" outline text-color="cyan-8" :icon="table.saveIcon" @click="selectedReport"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -160,35 +160,35 @@ export default {
         columns: [
           {
             name: 'code',
-            label: '布局编码',
+            label: this.$t('column-code'),
             field: 'code',
             align: 'left'
           },
           {
             name: 'name',
-            label: '布局名称',
+            label: this.$t('column-name'),
             field: 'name',
             align: 'left'
           },
           {
             name: 'resourceCode',
-            label: '资源码',
+            label: this.$t('column-resource-code'),
             field: 'resourceCode',
             align: 'left'
           },
           {
             name: 'description',
-            label: '描述',
+            label: this.$t('column-description'),
             field: 'description',
             align: 'left'
           },
           {
             name: 'status',
-            label: '状态',
+            label: this.$t('column-status'),
             field: 'status',
             align: 'left',
             format: (val, row) => {
-              return val === '1' ? '有效' : '无效'
+              return val === '1' ? this.$t('column-status-active') : this.$t('column-status-inactive')
             }
           }
         ]
@@ -196,7 +196,7 @@ export default {
       editLayoutDialog: {
         state: false,
         position: 'right',
-        title: '编辑'
+        title: this.$t('form-title-edit')
       },
       layout: {
         id: null,
@@ -209,7 +209,7 @@ export default {
       },
       designLayoutDialog: {
         state: false,
-        title: '设计布局',
+        title: this.$t('form-layout'),
         grid: null
       },
       selectReportDialog: {
@@ -259,7 +259,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: '未授权的布局!',
+            message: vm.$t('response-error-10002'),
             position: 'top',
             color: 'negative'
           })
@@ -380,7 +380,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: '未授权的布局!',
+            message: vm.$t('response-error-10002'),
             position: 'top',
             color: 'negative'
           })
@@ -424,7 +424,7 @@ export default {
         vm.searchLayout()
         vm.designLayoutDialog.state = false
         vm.$q.notify({
-          message: '保存成功!',
+          message: this.$t('response-save-success'),
           position: 'top',
           color: 'teal'
         })
@@ -445,7 +445,7 @@ export default {
           status: null
         })
         vm.$q.notify({
-          message: '保存成功!',
+          message: this.$t('response-save-success'),
           position: 'top',
           color: 'teal'
         })
@@ -455,7 +455,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除布局?',
+        message: vm.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,
@@ -493,5 +493,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-</style>

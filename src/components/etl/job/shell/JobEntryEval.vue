@@ -1,9 +1,9 @@
 <template>
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
-        <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="作业名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+        <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
         <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.script" type="textarea" rows="20" label="JavaScript" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.parallel" label="后续节点并行进行"/>
+        <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.parallel" :label="$t('form-parallel')"/>
     </q-form>
   </div>
 </template>

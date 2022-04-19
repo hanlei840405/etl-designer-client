@@ -1,13 +1,13 @@
 <template>
   <div>
     <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header
-             no-data-label="无数据" :rows-per-page-options="[0]" hide-bottom>
+             :no-data-label="$t('table-empty')" :rows-per-page-options="[0]" hide-bottom>
       <template v-slot:top-left>
         <q-select
           v-model="table.project"
           outlined
           dense
-          label="选择工作区信息"
+          :label="$t('select-workspace')"
           :options="table.projectsCopy"
           option-value="id"
           option-label="name"
@@ -24,14 +24,14 @@
                 <q-item-label>{{ scope.opt.name }}</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-badge :color="scope.opt.status === '1' ? 'teal' : 'grey-5'" :label="scope.opt.status === '1' ? '有效' : '无效'" />
+                <q-badge :color="scope.opt.status === '1' ? 'teal' : 'grey-5'" :label="scope.opt.status === '1' ? $t('column-status-active') : $t('column-status-inactive')" />
               </q-item-section>
             </q-item>
           </template>
         </q-select>
       </template>
       <template v-if="table.project && table.project.status === '1'" v-slot:top-right>
-        <q-btn text-color="cyan-8" outline label="新建" @click="newMember"/>
+        <q-btn text-color="cyan-8" outline :label="$t('btn-new')" @click="newMember"/>
       </template>
       <template v-slot:item="props">
         <div
@@ -87,7 +87,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn label="保存" outline text-color="cyan-8" @click="saveMember"/>
+          <q-btn :label="$t('btn-save')" outline text-color="cyan-8" @click="saveMember"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -122,18 +122,18 @@ export default {
           },
           {
             name: 'status',
-            label: '状态',
+            label: this.$t('column-status'),
             field: 'status',
             align: 'left',
             format: (val, row) => {
-              return val === '1' ? '有效' : '无效'
+              return val === '1' ? this.$t('column-status-active') : this.$t('column-status-inactive')
             }
           }
         ]
       },
       editMemberDialog: {
         state: false,
-        title: '编辑',
+        title: this.$t('form-title-edit'),
         users: [],
         userId: null,
         projectId: null
@@ -173,7 +173,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除成员?',
+        message: this.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,
@@ -196,7 +196,7 @@ export default {
     newMember () {
       this.editMemberDialog = Object.assign(this.editMemberDialog, {
         state: true,
-        title: '编辑',
+        title: this.$t('form-title-edit'),
         userId: null,
         projectId: null
       })

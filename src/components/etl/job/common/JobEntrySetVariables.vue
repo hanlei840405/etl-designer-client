@@ -1,10 +1,10 @@
 <template>
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
-      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="名称" lazy-rules
+      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                :rules="[ val => val && val.length > 0 || 'Please type something']"/>
       <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-               separator="cell" hide-bottom title="变量">
+               separator="cell" hide-bottom :title="$t('table-title-parameter')">
         <template v-slot:top-right>
           <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
         </template>
@@ -35,8 +35,8 @@
           </q-tr>
         </template>
       </q-table>
-      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.replaceVars" label="变量替换"/>
-      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.parallel" label="后续节点并行进行"/>
+      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.replaceVars" :label="$t('form-replace-variable')"/>
+      <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.parallel" :label="$t('form-parallel')"/>
     </q-form>
   </div>
 </template>
@@ -76,28 +76,28 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'name',
-          label: '字段名',
+          label: this.$t('column-operate'),
           field: 'name',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'value',
-          label: '值',
+          label: this.$t('column-value'),
           field: 'value',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'scope',
-          label: '作用范围',
+          label: this.$t('column-scope'),
           field: 'scope',
           align: 'left',
           headerStyle: 'width: 100px;'

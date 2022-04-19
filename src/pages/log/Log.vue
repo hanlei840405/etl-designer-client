@@ -14,7 +14,7 @@
           <q-card-section class="col q-pt-none">
             <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
                     selected-color="cyan-8"
-                    :selected.sync="selectedShellId" @update:selected="selectShell" no-nodes-label="暂无目录，请先创建目录">
+                    :selected.sync="selectedShellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
               <template v-slot:default-header="prop">
                 <div class="row items-center">
                   <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
@@ -34,7 +34,7 @@
              row-key="id"
              :separator="logTable.separator"
              :rows-per-page-options="[20, 50, 100]"
-             no-data-label="无数据">
+             :no-data-label="$t('table-empty')">
       <template v-slot:top-right>
         <q-btn icon="event" round outlined text-color="cyan-8">
           <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -49,9 +49,9 @@
       <template v-slot:body-cell-operate="props">
         <q-td>
           <q-btn-group>
-            <q-btn size="small" outline text-color="deep-orange" label="分解详情" @click="steps(props.row)"></q-btn>
-            <q-btn size="small" outline text-color="cyan-8" label="日志详情" @click="logDetail(props.row)"></q-btn>
-            <q-btn size="small" outline text-color="primary" label="步骤详情" @click="transDetail(props.row)"></q-btn>
+            <q-btn size="small" outline text-color="deep-orange" :label="$t('btn-step')" @click="steps(props.row)"></q-btn>
+            <q-btn size="small" outline text-color="cyan-8" :label="$t('btn-detail')" @click="logDetail(props.row)"></q-btn>
+            <q-btn size="small" outline text-color="primary" :label="$t('btn-step-log')" @click="transDetail(props.row)"></q-btn>
           </q-btn-group>
         </q-td>
       </template>
@@ -59,7 +59,7 @@
     <q-dialog v-model="jobDialog.state" transition-show="scale" transition-hide="scale">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">分解详情</div>
+          <div class="text-h6">{{ $t('dialog-title-step') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
@@ -72,7 +72,7 @@
     <q-dialog v-model="stepDialog.state" transition-show="scale" transition-hide="scale">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">步骤详情</div>
+          <div class="text-h6">{{ $t('dialog-title-detail') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
@@ -85,7 +85,7 @@
     <q-dialog v-model="detailDialog.state" transition-show="scale" transition-hide="scale">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">日志详情</div>
+          <div class="text-h6">{{ $t('dialog-title-step-log') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
           <pre>{{detailDialog.detail}}</pre>
@@ -131,13 +131,13 @@ export default {
           }
         },
         columns: [
-          { name: 'name', label: '任务名称', field: 'name', align: 'left' },
-          { name: 'startDate', label: '开始时间', field: 'startDate', align: 'left' },
-          { name: 'endDate', label: '结束时间', field: 'endDate', align: 'left' },
-          { name: 'logDate', label: '记录时间', field: 'logDate', align: 'left' },
-          { name: 'status', label: '状态', field: 'status', align: 'left' },
-          { name: 'errors', label: '错误数', field: 'errors', align: 'left' },
-          { name: 'operate', label: '操作', filed: 'operate', align: 'left' }
+          { name: 'name', label: this.$t('column-job'), field: 'name', align: 'left' },
+          { name: 'startDate', label: this.$t('column-begin-time'), field: 'startDate', align: 'left' },
+          { name: 'endDate', label: this.$t('column-end-time'), field: 'endDate', align: 'left' },
+          { name: 'logDate', label: this.$t('column-log-time'), field: 'logDate', align: 'left' },
+          { name: 'status', label: this.$t('column-status'), field: 'status', align: 'left' },
+          { name: 'errors', label: this.$t('column-count-error'), field: 'errors', align: 'left' },
+          { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'left' }
         ]
       },
       jobDialog: {
@@ -146,8 +146,8 @@ export default {
         separator: 'cell',
         steps: [],
         stepColumns: [
-          { name: 'logDate', label: '记录时间', field: 'logDate', align: 'left' },
-          { name: 'stepName', label: '步骤名称', field: 'stepName', align: 'left' }
+          { name: 'logDate', label: this.$t('column-log-time'), field: 'logDate', align: 'left' },
+          { name: 'stepName', label: this.$t('column-step'), field: 'stepName', align: 'left' }
         ]
       },
       stepDialog: {
@@ -158,59 +158,59 @@ export default {
         stepLogColumns: [
           {
             name: 'name',
-            label: '名称',
+            label: this.$t('column-name'),
             field: 'name'
           },
           {
             name: 'logDate',
-            label: '记录时间',
+            label: this.$t('column-log-time'),
             field: 'logDate'
           },
           {
             name: 'stepCopy',
-            label: '副本数',
+            label: this.$t('column-stepCopy'),
             field: 'stepCopy',
             align: 'left'
           },
           {
             name: 'read',
-            label: '读进数',
+            label: this.$t('column-read'),
             field: 'read',
             align: 'left'
           },
           {
             name: 'written',
-            label: '写入数',
+            label: this.$t('column-written'),
             field: 'written',
             align: 'left'
           },
           {
             name: 'updated',
-            label: '更新数',
+            label: this.$t('column-updated'),
             field: 'updated',
             align: 'left'
           },
           {
             name: 'input',
-            label: '输入数',
+            label: this.$t('column-input'),
             field: 'input',
             align: 'left'
           },
           {
             name: 'output',
-            label: '输出数',
+            label: this.$t('column-output'),
             field: 'output',
             align: 'left'
           },
           {
             name: 'rejected',
-            label: '拒绝数',
+            label: this.$t('column-rejected'),
             field: 'rejected',
             align: 'left'
           },
           {
             name: 'errors',
-            label: '错误数',
+            label: this.$t('column-count-error'),
             field: 'errors',
             align: 'left'
           }
@@ -295,7 +295,7 @@ export default {
       const vm = this
       if (!vm.selectedShellId) {
         vm.$q.notify({
-          message: '请在左侧工作区中选择具体任务!',
+          message: vm.$t('message-select-workspace'),
           position: 'top',
           color: 'negative'
         })
@@ -325,13 +325,13 @@ export default {
           this.logTable.loading = false
           if (err.status === 10002) {
             vm.$q.notify({
-              message: '未授权的工作区!',
+              message: vm.$t('response-error-10002'),
               position: 'top',
               color: 'negative'
             })
           } else if (err.status === 10001) {
             vm.$q.notify({
-              message: '没有可用日志!',
+              message: vm.$t('dialog-message-not-found'),
               position: 'top',
               color: 'negative'
             })
@@ -361,7 +361,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: '未授权的工作区!',
+            message: vm.$t('response-error-10002'),
             position: 'top',
             color: 'negative'
           })
@@ -384,7 +384,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: '未授权的工作区!',
+            message: vm.$t('response-error-10002'),
             position: 'top',
             color: 'negative'
           })
@@ -421,7 +421,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: '未授权的工作区!',
+            message: vm.$t('response-error-10002'),
             position: 'top',
             color: 'negative'
           })

@@ -3,32 +3,32 @@
     <q-form class="q-gutter-md">
         <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
                 narrow-indicator>
-          <q-tab name="main" label="主选项"/>
-          <q-tab name="field" label="字段"/>
-          <q-tab name="parameter" label="运行参数"/>
+          <q-tab name="main" :label="$t('tab-main')"/>
+          <q-tab name="field" :label="$t('tab-field')"/>
+          <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="main">
-            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-            <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :options="sourceFields" label="关键字段"/>
+            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+            <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :options="sourceFields" :label="$t('form-key-field')"/>
             <q-table :data="form.groups" :columns="groupColumns" :rows-per-page-options="[0]" row-key="name"
-                     separator="cell" hide-bottom title="构成分组的字段">
+                     separator="cell" hide-bottom :title="$t('table-title-grouping-field')">
               <template v-slot:top-right>
                 <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addGroup">
                   <q-list>
                     <q-item clickable v-close-popup @click="appendDiffGroup">
                       <q-item-section>
-                        <q-item-label>增加新的</q-item-label>
+                        <q-item-label>{{ $t('btn-append') }}</q-item-label>
                       </q-item-section>
                     </q-item>
                     <q-item clickable v-close-popup @click="addAllGroup">
                       <q-item-section>
-                        <q-item-label>增加所有</q-item-label>
+                        <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                       </q-item-section>
                     </q-item>
                     <q-item clickable v-close-popup @click="clearAndAddGroup">
                       <q-item-section>
-                        <q-item-label>清除并增加所有</q-item-label>
+                        <q-item-label>{{ $t('btn-clear-add') }}</q-item-label>
                       </q-item-section>
                     </q-item>
                   </q-list>
@@ -52,23 +52,23 @@
           </q-tab-panel>
           <q-tab-panel name="field">
             <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-                     separator="cell" hide-bottom title="目标字段">
+                     separator="cell" hide-bottom :title="$t('table-title-target-field')">
               <template v-slot:top-right>
                 <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addTarget">
                   <q-list>
                     <q-item clickable v-close-popup @click="appendDiffTarget">
                       <q-item-section>
-                        <q-item-label>增加新的</q-item-label>
+                        <q-item-label>{{ $t('btn-append') }}</q-item-label>
                       </q-item-section>
                     </q-item>
                     <q-item clickable v-close-popup @click="addAllTarget">
                       <q-item-section>
-                        <q-item-label>增加所有</q-item-label>
+                        <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                       </q-item-section>
                     </q-item>
                     <q-item clickable v-close-popup @click="clearAndAddTarget">
                       <q-item-section>
-                        <q-item-label>清除并增加所有</q-item-label>
+                        <q-item-label>{{ $t('btn-clear-add') }}</q-item-label>
                       </q-item-section>
                     </q-item>
                   </q-list>
@@ -151,8 +151,8 @@
               </template>
             </q-table>
           </q-tab-panel>
-          <q-tab-panel name="parameter">
-            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-tab-panel name="runningConfig">
+            <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
           </q-tab-panel>
         </q-tab-panels>
     </q-form>
@@ -179,14 +179,14 @@ export default {
       groupColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '分组字段',
+          label: this.$t('column-group-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -195,70 +195,70 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'target',
-          label: '目标字段',
+          label: this.$t('column-target-field'),
           field: 'target',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'source',
-          label: '数据字段',
+          label: this.$t('column-source-field'),
           field: 'source',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'keyValue',
-          label: '关键字值',
+          label: this.$t('column-key-field'),
           field: 'keyValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'formatValue',
-          label: '格式化',
+          label: this.$t('column-format'),
           field: 'formatValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'lengthValue',
-          label: '长度',
+          label: this.$t('column-length'),
           field: 'lengthValue',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'accuracy',
-          label: '精度',
+          label: this.$t('column-accuracy'),
           field: 'accuracy',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'currency',
-          label: '货币类型',
+          label: this.$t('column-currency'),
           field: 'currency',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'groupBy',
-          label: '分组',
+          label: this.$t('column-group'),
           field: 'groupBy',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -272,7 +272,7 @@ export default {
         },
         {
           name: 'agg',
-          label: '聚合',
+          label: this.$t('column-agg'),
           field: 'agg',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -416,8 +416,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

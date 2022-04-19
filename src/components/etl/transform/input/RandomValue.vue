@@ -1,10 +1,10 @@
 <template>
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
-      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                :rules="[ val => val && val.length > 0 || 'Please type something']"/>
       <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-               separator="cell" hide-bottom title="字段">
+               separator="cell" hide-bottom :title="$t('table-title-field')">
         <template v-slot:top-right>
           <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addParameter"/>
         </template>
@@ -46,39 +46,39 @@ export default {
       parameterColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: '字段',
+          label: this.$t('column-source-field'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: '类型',
+          label: this.$t('column-type'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         }
       ],
       categories: [
-        { value: 1, label: '随机数字' },
-        { value: 2, label: '随机整数' },
-        { value: 3, label: '随机字符串' },
+        { value: 1, label: this.$t('form-random-number') },
+        { value: 2, label: this.$t('form-random-integer') },
+        { value: 3, label: this.$t('form-random-string') },
         { value: 4, label: 'UUID' },
         { value: 5, label: 'UUID4' },
         { value: 6, label: 'MD5' },
         { value: 7, label: 'SHA1' }
       ],
       categoryMapping: {
-        1: '随机数字',
-        2: '随机整数',
-        3: '随机字符串',
+        1: this.$t('form-random-number'),
+        2: this.$t('form-random-integer'),
+        3: this.$t('form-random-string'),
         4: 'UUID',
         5: 'UUID4',
         6: 'MD5',

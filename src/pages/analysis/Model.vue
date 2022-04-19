@@ -1,13 +1,13 @@
 <template>
   <div>
     <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" :filter="table.filter" @request="searchModels" hide-header
-             no-data-label="无数据" :rows-per-page-options="[0]" hide-bottom>
+             :no-data-label="$t('table-empty')" :rows-per-page-options="[0]" hide-bottom>
       <template v-slot:top-left>
         <q-select
           v-model="table.project"
           outlined
           dense
-          label="选择工作区信息"
+          :label="$t('select-workspace')"
           :options="table.projectsCopy"
           option-value="id"
           option-label="name"
@@ -24,7 +24,7 @@
                 <q-item-label>{{ scope.opt.name }}</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-badge :color="scope.opt.status === '1' ? 'teal' : 'grey-5'" :label="scope.opt.status === '1' ? '有效' : '无效'" />
+                <q-badge :color="scope.opt.status === '1' ? 'teal' : 'grey-5'" :label="scope.opt.status === '1' ? $t('column-status-active') : $t('column-status-inactive')" />
               </q-item-section>
             </q-item>
           </template>
@@ -34,7 +34,7 @@
         <q-input borderless dense debounce="300" v-model="table.filter" placeholder="Search">
           <template v-slot:append>
             <q-icon name="search"/>
-            <q-btn text-color="cyan-8" outline label="新建" @click="newModel"/>
+            <q-btn text-color="cyan-8" outline :label="$t('btn-new')" @click="newModel"/>
           </template>
         </q-input>
       </template>
@@ -67,9 +67,9 @@
         </q-card-section>
         <q-separator/>
         <q-card-section>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editModelDialog.model.code" label="模型编码 *" hint="数据库英文表名" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editModelDialog.model.name" label="模型名称 *" hint="数据库表名描述" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="editModelDialog.model.datasource.id" emit-value map-options option-value="id" :options="editModelDialog.datasourceList" label="数据库连接" clearable lazy-rules :rules="[ val => (val != null) || 'datasource is invalid' ]" @input="selectedDs">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editModelDialog.model.code" :label="$t(form-code)" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editModelDialog.model.name" :label="$t(form-name)" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="editModelDialog.model.datasource.id" emit-value map-options option-value="id" :options="editModelDialog.datasourceList" :label="$t('form-select-datasource')" clearable lazy-rules :rules="[ val => (val != null) || 'datasource is invalid' ]" @input="selectedDs">
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                 <q-item-section>
@@ -83,8 +83,8 @@
               </q-item>
             </template>
           </q-select>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="textarea" rows="2" v-model="editModelDialog.model.description" label="描述" hint="描述"/>
-          <q-table :data="editModelDialog.model.metadataList" :columns="editModelDialog.metadataColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom title="字段">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="textarea" rows="2" v-model="editModelDialog.model.description" :label="$t('form-description')"/>
+          <q-table :data="editModelDialog.model.metadataList" :columns="editModelDialog.metadataColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addMetadata"/>
             </template>
@@ -113,19 +113,19 @@
                   </q-popup-edit>
                 </q-td>
                 <q-td key="primaryKey" :props="props">
-                  {{ props.row.primaryKey ? '是' : '否' }}
+                  {{ props.row.primaryKey ? $t('column-yes') : $t('column-no') }}
                   <q-popup-edit v-model.number="props.row.primaryKey" :auto-save=true>
                     <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.primaryKey" />
                   </q-popup-edit>
                 </q-td>
                 <q-td key="notNull" :props="props">
-                  {{ props.row.notNull ? '是' : '否' }}
+                  {{ props.row.notNull ? $t('column-yes') : $t('column-no') }}
                   <q-popup-edit v-model="props.row.notNull" :auto-save=true>
                     <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.notNull" />
                   </q-popup-edit>
                 </q-td>
                 <q-td key="autoIncrement" :props="props">
-                  {{ props.row.autoIncrement ? '是' : '否' }}
+                  {{ props.row.autoIncrement ? $t('column-yes') : $t('column-no') }}
                   <q-popup-edit v-model="props.row.autoIncrement" :auto-save=true>
                     <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.autoIncrement" />
                   </q-popup-edit>
@@ -147,9 +147,9 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="保存" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveModel"/>
+          <q-btn :label="$t('btn-save')" outline text-color="cyan-8" :icon="table.saveIcon" @click="saveModel"/>
           <q-btn label="生成SQL" outline text-color="cyan-8" :icon="table.saveIcon" @click="generateSql"/>
-          <q-btn label="删除" outline text-color="negative" :icon="table.deleteIcon" @click="deleteModel"/>
+          <q-btn :label="$t('btn-delete')" outline text-color="negative" :icon="table.deleteIcon" @click="deleteModel"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -185,29 +185,29 @@ export default {
         columns: [
           {
             name: 'code',
-            label: '模型编码',
+            label: this.$t('column-code'),
             field: 'code',
             align: 'left'
           },
           {
             name: 'name',
-            label: '模型名称',
+            label: this.$t('column-name'),
             field: 'name',
             align: 'left'
           },
           {
             name: 'description',
-            label: '描述',
+            label: this.$t('column-description'),
             field: 'description',
             align: 'left'
           },
           {
             name: 'status',
-            label: '状态',
+            label: this.$t('column-status'),
             field: 'status',
             align: 'left',
             format: (val, row) => {
-              return val === '1' ? '有效' : '无效'
+              return val === '1' ? this.$t('column-status-active') : this.$t('column-status-inactive')
             }
           }
         ]
@@ -215,7 +215,7 @@ export default {
       editModelDialog: {
         state: false,
         position: 'right',
-        title: '编辑',
+        title: this.$t('form-title-edit'),
         datasourceCategory: 'mysql',
         model: {
           id: null,
@@ -230,56 +230,56 @@ export default {
         metadataColumns: [
           {
             name: 'operate',
-            label: '操作',
+            label: this.$t('column-operate'),
             field: 'operate',
             align: 'right',
             headerStyle: 'width: 20px'
           },
           {
             name: 'columnCode',
-            label: '编码',
+            label: this.$t('column-code'),
             field: 'columnCode',
             align: 'left'
           },
           {
             name: 'columnName',
-            label: '名称',
+            label: this.$t('column-name'),
             field: 'columnName',
             align: 'left'
           },
           {
             name: 'columnCategory',
-            label: '类型',
+            label: this.$t('column-type'),
             field: 'columnCategory',
             align: 'left'
           },
           {
             name: 'primaryKey',
-            label: '主键',
+            label: this.$t('column-primary-key'),
             field: 'primaryKey',
             align: 'left'
           },
           {
             name: 'notNull',
-            label: '非空',
+            label: this.$t('column-not-null'),
             field: 'notNull',
             align: 'left'
           },
           {
             name: 'autoIncrement',
-            label: '自增',
+            label: this.$t('column-auto-incr'),
             field: 'autoIncrement',
             align: 'left'
           },
           {
             name: 'columnLength',
-            label: '长度',
+            label: this.$t('column-length'),
             field: 'columnLength',
             align: 'left'
           },
           {
             name: 'columnDecimal',
-            label: '小数位',
+            label: this.$t('column-decimal'),
             field: 'columnDecimal',
             align: 'left'
           }
@@ -368,7 +368,7 @@ export default {
       }).catch(err => {
         if (err.status === 10002) {
           vm.$q.notify({
-            message: '未授权的模型!',
+            message: vm.$t('response-error-10002'),
             position: 'top',
             color: 'negative'
           })
@@ -433,7 +433,7 @@ export default {
           }
         })
         vm.$q.notify({
-          message: '保存成功!',
+          message: this.$t('response-save-success'),
           position: 'top',
           color: 'teal'
         })
@@ -446,19 +446,19 @@ export default {
           title: 'SQL',
           message: res.data,
           cancel: {
-            label: '关闭',
+            label: vm.$t('btn-close'),
             textColor: 'orange',
             outline: true
           },
           ok: {
-            label: '执行SQL',
+            label: vm.$t('btn-execute-ddl'),
             textColor: 'teal',
             outline: true
           }
         }).onOk(() => {
           this.$q.dialog({
             title: 'Confirm',
-            message: '确定执行SQL?',
+            message: vm.$t('confirm-title-execute-ddl'),
             cancel: {
               textColor: 'orange',
               outline: true,
@@ -473,7 +473,7 @@ export default {
           }).onOk(() => {
             executeSql(vm.editModelDialog.model.id).then(res => {
               vm.$q.notify({
-                message: '操作成功!',
+                message: vm.$t('response-execute-success'),
                 position: 'top',
                 color: 'teal'
               })
@@ -486,7 +486,7 @@ export default {
       const vm = this
       this.$q.dialog({
         title: 'Confirm',
-        message: '确定删除模型?',
+        message: vm.$t('confirm-delete'),
         cancel: {
           textColor: 'orange',
           outline: true,
@@ -501,7 +501,7 @@ export default {
       }).onOk(() => {
         deleteModel(vm.editModelDialog.model.id).then(res => {
           vm.$q.notify({
-            message: '删除成功!',
+            message: vm.$t('response-delete-success'),
             position: 'top',
             color: 'teal'
           })

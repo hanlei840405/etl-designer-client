@@ -2,15 +2,15 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-        <q-tab name="main" label="主选项" />
-        <q-tab name="options" label="选项" />
+        <q-tab name="main" :label="$t('tab-main')" />
+        <q-tab name="options" :label="$t('tab-option')" />
         <q-tab name="property" label="属性" />
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-separator />
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-radio color="cyan-8" label-color="cyan-8" v-model="form.connection" val="ACTIVEMQ" label="Active MQ"/>
           <q-radio color="cyan-8" label-color="cyan-8" v-model="form.connection" val="ACTIVEMQ5" label="Active MQ5"/>
           <q-radio color="cyan-8" label-color="cyan-8" v-model="form.connection" val="WEBSPHERE" label="IBM MQ"/>
@@ -72,8 +72,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -127,13 +127,13 @@ export default {
         distribute: true
       },
       optionColumns: [
-        { name: 'name', label: '属性', field: 'name', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'value', label: '值', field: 'value', align: 'left', headerStyle: 'width: 100px;' }
+        { name: 'name', label: this.$t('column-name'), field: 'name', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'value', label: this.$t('column-value'), field: 'value', align: 'left', headerStyle: 'width: 100px;' }
       ],
       parameterColumns: [
-        { name: 'operate', label: '操作', filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
-        { name: 'name', label: '属性', field: 'name', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'value', label: '值', field: 'value', align: 'left', headerStyle: 'width: 100px;' }
+        { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
+        { name: 'name', label: this.$t('column-name'), field: 'name', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'value', label: this.$t('column-value'), field: 'value', align: 'left', headerStyle: 'width: 100px;' }
       ],
       sourceFields: [],
       forbiddenParallel: false
@@ -193,8 +193,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

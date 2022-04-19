@@ -2,17 +2,17 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-        <q-tab name="main" label="主选项" />
-        <q-tab name="search" label="查询条件" />
-        <q-tab name="field" label="数据库字段" />
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')" />
+        <q-tab name="search" :label="$t('tab-search-condition')" />
+        <q-tab name="field" :label="$t('tab-field')" />
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-separator />
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.datasource" emit-value map-options option-value="id" :options="datasource"
-                    label="数据库连接" clearable @input="inputDatasource">
+                    :label="$t('form-select-datasource')" clearable @input="inputDatasource">
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                 <q-item-section>
@@ -27,23 +27,20 @@
             </template>
           </q-select>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.schemaName" label="目标模式" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.schemaName" :label="$t('form-datasource-schema')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.tableName" label="目标表" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.tableName" :label="$t('form-table-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']">
             <template v-slot:append>
               <q-btn round dense flat icon="search" @click="loadTables" text-color="cyan-8"/>
             </template>
           </q-input>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="number" min="1" v-model.number="form.commitSize" label="提交记录数量"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.noUpdating" label="不执行任何更新" />
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" type="number" min="1" v-model.number="form.commitSize" :label="$t('form-commit-size')"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.noUpdating" :label="$t('form-no-update')" />
         </q-tab-panel>
         <q-tab-panel name="search">
-          <q-chip square text-color="cyan-8" icon="bookmark" style="width: 100%; margin: 0px;">
-            点击添加按钮后，可直接单击单元格编辑
-          </q-chip>
           <q-table :data="form.searchMappingData" :columns="searchMappingColumns" :rows-per-page-options="[0]"
-                   row-key="name" separator="cell" hide-bottom title="字段">
+                   row-key="name" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addSearchMapping"/>
             </template>
@@ -84,27 +81,24 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="field">
-          <q-chip square text-color="cyan-8" icon="bookmark" style="width: 100%; margin: 0px;">
-            点击添加按钮后，可直接双击单元格编辑
-          </q-chip>
           <q-table :data="form.fieldMappingData" :columns="fieldMappingColumns" :rows-per-page-options="[0]"
-                   row-key="name" separator="cell" hide-bottom title="字段">
+                   row-key="name" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addFieldMapping">
                 <q-list>
                   <q-item clickable v-close-popup @click="appendDiffFieldMapping">
                     <q-item-section>
-                      <q-item-label>增加新的</q-item-label>
+                      <q-item-label>{{ $t('btn-append') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="addAllFieldMapping">
                     <q-item-section>
-                      <q-item-label>增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="clearAndAddFieldMapping">
                     <q-item-section>
-                      <q-item-label>清除并增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -138,14 +132,14 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectTables.mode">
       <q-card style="width: 100vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">数据库信息</div>
+          <div class="text-h6">{{ $t('dialog-title-datasource') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
@@ -192,17 +186,17 @@ export default {
         distribute: true
       },
       searchMappingColumns: [
-        { name: 'operate', label: '操作', filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
-        { name: 'target', label: '表字段', field: 'target', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'condition', label: '比较符', field: 'condition', align: 'left', headerStyle: 'width: 100px;' },
-        { name: 'source', label: '流字段1', field: 'source', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'source2', label: '流字段2', field: 'source2', align: 'left', headerStyle: 'width: 150px;' }
+        { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
+        { name: 'target', label: this.$t('column-target-field'), field: 'target', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'condition', label: this.$t('column-condition'), field: 'condition', align: 'left', headerStyle: 'width: 100px;' },
+        { name: 'source', label: this.$t('column-source-field'), field: 'source', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'source2', label: this.$t('column-source-field2'), field: 'source2', align: 'left', headerStyle: 'width: 150px;' }
       ],
       fieldMappingColumns: [
-        { name: 'operate', label: '操作', filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
-        { name: 'target', label: '表字段', field: 'target', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'source', label: '流字段', field: 'source', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'update', label: '更新', field: 'update', align: 'left', headerStyle: 'width: 50px;' }
+        { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
+        { name: 'target', label: this.$t('column-target-field'), field: 'target', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'source', label: this.$t('column-source-field'), field: 'source', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'update', label: this.$t('column-update'), field: 'update', align: 'left', headerStyle: 'width: 50px;' }
       ],
       state: false,
       datasource: [],
@@ -242,7 +236,7 @@ export default {
       if (!vm.form.datasource) {
         vm.$q.notify({
           position: 'top',
-          message: '请先选择数据源',
+          message: vm.$t('message-select-datasource'),
           color: 'negative'
         })
       } else {
@@ -440,8 +434,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

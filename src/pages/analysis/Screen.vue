@@ -105,7 +105,7 @@ export default {
     }).catch(err => {
       if (err.status === 10002) {
         vm.$q.notify({
-          message: '未授权的布局!',
+          message: vm.$t('response-error-10002'),
           position: 'top',
           color: 'negative'
         })

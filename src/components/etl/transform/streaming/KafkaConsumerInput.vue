@@ -2,36 +2,55 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-        <q-tab name="main" label="主选项" />
-        <q-tab name="fields" label="字段" />
-        <q-tab name="options" label="选项" />
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')" />
+        <q-tab name="fields" :label="$t('tab-field')" />
+        <q-tab name="options" :label="$t('tab-option')" />
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-separator />
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.servers" label="Kafka服务器地址" hint="host:port,多个服务器用,间隔"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.shellName" label="转换">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.servers" :label="$t('form-server')" hint="host:port,host:port..."/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.shellName" :label="$t('form-transformation')">
             <template v-slot:append>
               <q-btn round dense flat icon="search" text-color="cyan-8" label-color="cyan-8" @click="openShellSelectDialog"/>
             </template>
           </q-input>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.topic" label="Topic"/>
+          <q-table dense :data="form.topics" :columns="topicColumns" :rows-per-page-fields="[0]"
+                   row-key="topic" separator="cell" hide-bottom :title="$t('table-title-topic')">
+            <template v-slot:top-right>
+              <q-btn dense split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addParameter"/>
+            </template>
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key="operate" :props="props">
+                  <q-btn dense size="xs" outline round color="negative" icon="remove"
+                         @click="deleteParameter(props)"></q-btn>
+                </q-td>
+                <q-td key="topic" :props="props">
+                  {{ props.row.topic }}
+                  <q-popup-edit v-model="props.row.topic" :auto-save=true>
+                    <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.topic"/>
+                  </q-popup-edit>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
           <br/>
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.consumerGroup" label="Consumer group"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.duration" label="每批次持续时间"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.duration" :label="$t('form-duration')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.records" label="每批次处理条数" hint="0不限制"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.batches" label="每批次最大并行数"/>
-          <q-radio color="cyan-8" label-color="cyan-8" v-model="form.commitMode" val="record" label="逐条提交"/>
-          <q-radio color="cyan-8" label-color="cyan-8" v-model="form.commitMode" val="batch" label="等待批处理结束后提交"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.records" :label="$t('form-number-records')"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.batches" :label="$t('form-max-batches')"/>
+          <q-radio color="cyan-8" label-color="cyan-8" v-model="form.commitMode" val="record" :label="$t('form-commit-mode-record-read')"/>
+          <q-radio color="cyan-8" label-color="cyan-8" v-model="form.commitMode" val="batch" :label="$t('form-commit-mode-batch')"/>
         </q-tab-panel>
         <q-tab-panel name="fields">
           <q-table :data="form.fields" :columns="fieldColumns" :rows-per-page-fields="[0]"
-                   row-key="name" separator="cell" hide-bottom title="Kafka连接配置">
+                   row-key="name" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td key="inputName" :props="props">
@@ -53,11 +72,11 @@
             </template>
           </q-table>
           <br/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.returnFieldByStepValue" :options="nextSteps" emit-value map-options label="从步骤获取字段信息" @input="setStepName"/>
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.returnFieldByStepValue" :options="nextSteps" emit-value map-options :label="$t('form-return-field-from')" @input="setStepName"/>
         </q-tab-panel>
         <q-tab-panel name="options">
           <q-table :data="form.options" :columns="optionColumns" :rows-per-page-options="[0]"
-                   row-key="name" separator="cell" hide-bottom title="Kafka连接配置">
+                   row-key="name" separator="cell" hide-bottom :title="$t('table-title-kafka-connection')">
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td key="name" :props="props">
@@ -76,20 +95,20 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectShellDialog.state">
       <q-card style="min-height: 45vh; min-width: 25vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">转换选择</div>
+          <div class="text-h6">{{ $t('dialog-title-transformation') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
         <q-separator/>
         <q-card-section class="row items-center q-pb-none">
-          <q-tree ref="shellTree" :nodes="selectShellDialog.shells" node-key="id" selected-color="cyan-8" :selected.sync="form.shellId" @update:selected="selectShell" no-nodes-label="没有数据">
+          <q-tree ref="shellTree" :nodes="selectShellDialog.shells" node-key="id" selected-color="cyan-8" :selected.sync="form.shellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
             <template v-slot:default-header="prop">
               <div class="row items-center">
                 <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
@@ -121,7 +140,7 @@ export default {
         servers: null,
         shellId: null,
         shellName: null,
-        topic: null,
+        topics: [],
         consumerGroup: null,
         duration: 10000,
         records: 0,
@@ -176,14 +195,18 @@ export default {
         parallel: 1,
         distribute: true
       },
+      topicColumns: [
+        { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
+        { name: 'topic', label: this.$t('column-topic'), field: 'topic', align: 'left' }
+      ],
       fieldColumns: [
-        { name: 'inputName', label: '入参', field: 'inputName', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'outputName', label: '出参', field: 'outputName', align: 'left', headerStyle: 'width: 100px;' },
-        { name: 'category', label: '类型', field: 'category', align: 'left', headerStyle: 'width: 100px;' }
+        { name: 'inputName', label: this.$t('column-input'), field: 'inputName', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'outputName', label: this.$t('column-output'), field: 'outputName', align: 'left', headerStyle: 'width: 100px;' },
+        { name: 'category', label: this.$t('column-type'), field: 'category', align: 'left', headerStyle: 'width: 100px;' }
       ],
       optionColumns: [
-        { name: 'name', label: '属性', field: 'name', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'value', label: '值', field: 'value', align: 'left', headerStyle: 'width: 100px;' }
+        { name: 'name', label: this.$t('column-name'), field: 'name', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'value', label: this.$t('column-value'), field: 'value', align: 'left', headerStyle: 'width: 100px;' }
       ],
       categories: ['String', 'Integer', 'Binary', 'Number'],
       nextSteps: [],
@@ -193,7 +216,7 @@ export default {
         projectId: null,
         shells: [{
           id: 0,
-          label: '转换',
+          label: this.$t('dialog-title-transformation'),
           children: [],
           selectable: false,
           icon: 'folder_open',
@@ -251,7 +274,7 @@ export default {
           }
         }).catch(err => {
           vm.$q.dialog({
-            title: '错误',
+            title: vm.$t('dialog-title-error'),
             ok: {
               color: 'negative'
             },
@@ -304,6 +327,14 @@ export default {
       })
       const binData = new Uint8Array(charData)
       return pako.inflate(binData, { to: 'string' })
+    },
+    addParameter () {
+      this.form.topics.push({
+        topic: null
+      })
+    },
+    deleteParameter (props) {
+      this.form.topics.splice(props.rowIndex, 1)
     }
   },
   mounted () {

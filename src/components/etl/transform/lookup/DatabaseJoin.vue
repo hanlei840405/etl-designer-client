@@ -3,15 +3,15 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" label="步骤名称" lazy-rules
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.datasource" emit-value map-options option-value="id" :options="datasource"
-                    label="数据库连接" clearable lazy-rules :rules="[ val => validate(val) || 'datasource is invalid' ]">
+                    :label="$t('form-select-datasource')" clearable lazy-rules :rules="[ val => validate(val) || 'datasource is invalid' ]">
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                 <q-item-section>
@@ -28,27 +28,27 @@
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.sql" type="textarea" rows="12" label="SQL" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']">
           </q-input>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.returnRows" label="返回行数"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.outerJoin" label="外链接"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.variableReplacementActive" label="替换SQL语句里的变量"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.returnRows" :label="$t('form-return-row-size')"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.outerJoin" :label="$t('form-outer-join')"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.variableReplacementActive" :label="$t('form-replace-variables-script')"/>
           <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]"
-                   row-key="name" separator="cell" hide-bottom title="变量">
+                   row-key="name" separator="cell" hide-bottom :title="$t('table-title-parameter')">
             <template v-slot:top-right>
               <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addParameter">
                 <q-list>
                   <q-item clickable v-close-popup @click="appendDiffParameter">
                     <q-item-section>
-                      <q-item-label>增加新的</q-item-label>
+                      <q-item-label>{{ $t('btn-append') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="addAllParameter">
                     <q-item-section>
-                      <q-item-label>增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="clearAndAddParameter">
                     <q-item-section>
-                      <q-item-label>清除并增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -77,14 +77,14 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectTables.mode">
       <q-card style="width: 100vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">数据库信息</div>
+          <div class="text-h6">{{ $t('dialog-title-datasource') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
@@ -139,9 +139,9 @@ export default {
         loading: false
       },
       parameterColumns: [
-        { name: 'operate', label: '操作', filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
-        { name: 'field', label: '参数', field: 'field', align: 'left', headerStyle: 'width: 200px;' },
-        { name: 'category', label: '类型', field: 'category', align: 'left', headerStyle: 'width: 200px;' }
+        { name: 'operate', label: this.$t('column-operate'), filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
+        { name: 'field', label: this.$t('column-field'), field: 'field', align: 'left', headerStyle: 'width: 200px;' },
+        { name: 'category', label: this.$t('column-type'), field: 'category', align: 'left', headerStyle: 'width: 200px;' }
       ],
       forbiddenParallel: false
     }
@@ -155,7 +155,7 @@ export default {
       if (!vm.form.datasource) {
         vm.$q.notify({
           position: 'top',
-          message: '请先选择数据源',
+          message: vm.$t('message-select-datasource'),
           color: 'negative'
         })
       } else {
@@ -284,8 +284,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,

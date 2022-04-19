@@ -6,7 +6,7 @@
           <q-avatar>
             <img src="/logo.png">
           </q-avatar>
-          新恩数造</div>
+          {{ $t('app') }}</div>
         <div class="text-subtitle1 text-right text-bold">BY NXIN</div>
       </q-card-section>
       <q-card-section>
@@ -15,7 +15,7 @@
             filled
             v-model="forgotForm.name"
             color="cyan-8"
-            label="姓名 *"
+            :label="$t('form-name')"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
           />
@@ -23,12 +23,12 @@
             filled
             v-model="forgotForm.email"
             color="cyan-8"
-            label="注册邮箱 *"
+            :label="$t('form-email')"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
           />
-          <q-btn type="submit" unelevated size="lg" color="cyan-8" class="full-width text-white" label="找回密码"/>
-          <p class="text-right"><a href="#/login" class="text-grey-6">返回登录</a><a href="#/register" class="text-grey-6" style="margin-left: 10px;">注册账号</a></p>
+          <q-btn type="submit" unelevated size="lg" color="cyan-8" class="full-width text-white" :label="$t('btn-get-back-password')"/>
+          <p class="text-right"><a href="#/login" class="text-grey-6">{{ $t('btn-back') }}</a><a href="#/register" class="text-grey-6" style="margin-left: 10px;">{{ $t('btn-register') }}</a></p>
         </q-form>
       </q-card-section>
     </q-card>
@@ -52,20 +52,20 @@ export default {
       const vm = this
       forgot(vm.forgotForm).then(() => {
         vm.$q.dialog({
-          title: '找回成功',
-          message: '请前往注册邮箱查看验证码'
+          title: vm.$t('response-operate-success'),
+          message: vm.$t('message-verification-code')
         })
         vm.$router.push('/reset')
       }).catch(err => {
         if (err.status === 10011) {
           vm.$q.notify({
-            message: '用户名与密码不匹配!',
+            message: vm.$t('dialog-message-not-found'),
             position: 'top',
             color: 'negative'
           })
         } else if (err.status === 10001) {
           vm.$q.notify({
-            message: '用户名不存在!',
+            message: vm.$t('dialog-message-not-found'),
             position: 'top',
             color: 'negative'
           })

@@ -3,89 +3,86 @@
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left"
               narrow-indicator>
-        <q-tab name="main" label="主选项"/>
-        <q-tab name="option" label="选项"/>
-        <q-tab name="field" label="字段"/>
-        <q-tab name="index" label="索引"/>
-        <q-tab name="parameter" label="运行参数"/>
+        <q-tab name="main" :label="$t('tab-main')"/>
+        <q-tab name="option" :label="$t('tab-option')"/>
+        <q-tab name="field" :label="$t('tab-field')"/>
+        <q-tab name="index" :label="$t('tab-index')"/>
+        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-separator/>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="main">
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" class="col-8" v-model="form.name" label="步骤名称" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.host" label="地址" />
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" class="col-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.host" :label="$t('form-host')" />
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.port" label="端口" />
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.ssl" label="启用SSL连接"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.replica" label="当连接多个主机时，选择所有的集合副本"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.authenticateDB" label="验证的数据库"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.port" :label="$t('form-port')" />
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.ssl" :label="$t('form-ssl')"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.replica" :label="$t('form-replica')"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.authenticateDB" :label="$t('form-auth-database')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.username" label="用户名"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.username" :label="$t('form-username')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.password" label="密码"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.password" :label="$t('form-password')"/>
           <br/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.mechanism" :options="mechanismOptions" label="验证机制"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.kerberos" label="使用kerberos算法验证"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.connectTimeout" label="超时时间设置"/>
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.mechanism" :options="mechanismOptions" :label="$t('form-auth-mechanism')"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.kerberos" :label="$t('form-auth-kerberos')"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.connectTimeout" :label="$t('form-connection-timeout')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.socketTimeout" label="socket连接时间"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.socketTimeout" :label="$t('form-socket-timeout')"/>
         </q-tab-panel>
         <q-tab-panel name="option">
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.database" :options="databaseNames" label="database">
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.database" :options="databaseNames" :label="$t('form-database')">
             <template v-slot:append>
               <q-btn round dense flat icon="autorenew" text-color="cyan-8" @click="loadDBNames"/>
             </template>
           </q-select>
           <br/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.collection" :options="collectionNames" label="集合">
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.collection" :options="collectionNames" :label="$t('form-collection')">
             <template v-slot:append>
               <q-btn round dense flat icon="autorenew" text-color="cyan-8" @click="loadCollections"/>
             </template>
           </q-select>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.batchInsertSize" label="批量写入阈值" />
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.batchInsertSize" :label="$t('form-batch-insert-size')" />
           <br/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.truncate" label="清空集合"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.update" label="只更新" @click.native="changeUpdateStatus"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.upSert" label="更新或新增" :disable="!form.update"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.modifierUpdate" label="modifier update" :disable="!form.update" @click.native="changeUpdateStatus"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.multiUpdate" label="多个更新" :disable="!form.modifierUpdate"/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.writeCorn" :options="writeCorns" label="写入策略">
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.truncate" :label="$t('form-truncate-collection')"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.update" :label="$t('form-update')" @click.native="changeUpdateStatus"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.upSert" :label="$t('form-upsert')" :disable="!form.update"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.modifierUpdate" :label="$t('form-modifier-update')" :disable="!form.update" @click.native="changeUpdateStatus"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.multiUpdate" :label="$t('form-multi-update')" :disable="!form.modifierUpdate"/>
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.writeCorn" :options="writeCorns" :label="$t('form-write-concern')">
             <template v-slot:append>
               <q-btn round dense flat icon="autorenew" text-color="cyan-8" @click="loadWriteConcerns"/>
             </template>
           </q-select>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.writeCornTimeout" label="写入策略超时设置"/>
-          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.journaled" label="journaled方式"/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.readPreference" :options="readPreferenceOptions" label="读偏好" :disable="!form.modifierUpdate"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.writeCornTimeout" :label="$t('form-write-timeout')"/>
+          <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.journaled" :label="$t('form-journaled')"/>
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.readPreference" :options="readPreferenceOptions" :label="$t('form-read-preference')" :disable="!form.modifierUpdate"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.writeRetryTimes" label="写重试次数"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.writeRetryTimes" :label="$t('form-retry-write-number')"/>
           <br/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.delay" label="距上次重试延迟时间(s)"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.delay" :label="$t('form-between-retry-attempts')"/>
         </q-tab-panel>
         <q-tab-panel name="field">
-          <q-chip square text-color="cyan-8" icon="bookmark" style="width: 100%; margin: 0px;">
-            点击添加按钮后，可直接单击单元格编辑
-          </q-chip>
           <q-table :data="form.fieldMapping" :columns="fieldMappingColumns" :rows-per-page-options="[0]"
-                   row-key="name" separator="cell" hide-bottom title="字段">
+                   row-key="name" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn-dropdown split outline color="cyan-8" icon="add" text-color="cyan-8" @click="addFieldMapping">
                 <q-list>
                   <q-item clickable v-close-popup @click="appendDiffParameter">
                     <q-item-section>
-                      <q-item-label>增加新的</q-item-label>
+                      <q-item-label>{{ $t('btn-append') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="addAllParameter">
                     <q-item-section>
-                      <q-item-label>增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="clearAndAddParameter">
                     <q-item-section>
-                      <q-item-label>清除并增加所有</q-item-label>
+                      <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -151,11 +148,8 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="index">
-          <q-chip square text-color="cyan-8" icon="bookmark" style="width: 100%; margin: 0px;">
-            点击添加按钮后，可直接单击单元格编辑
-          </q-chip>
           <q-table :data="form.indices" :columns="indexColumns" :rows-per-page-options="[0]"
-                   row-key="name" separator="cell" hide-bottom title="字段">
+                   row-key="name" separator="cell" hide-bottom :title="$t('table-title-field')">
             <template v-slot:top-right>
               <q-btn size="sm" outline text-color="cyan-8" icon="add" @click="addIndex"/>
             </template>
@@ -193,8 +187,8 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <q-tab-panel name="parameter">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" label="执行线程数" type="number" min="1" :disable="forbiddenParallel"/>
+        <q-tab-panel name="runningConfig">
+          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -263,63 +257,63 @@ export default {
       fieldMappingColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'source',
-          label: '来源流字段',
+          label: this.$t('column-source-field'),
           field: 'source',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'target',
-          label: '目标表字段',
+          label: this.$t('column-target-field'),
           field: 'target',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'useSourceField',
-          label: '使用源字段名字',
+          label: this.$t('column-using-field-name'),
           field: 'useSourceField',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'nullValue',
-          label: '空值策略',
+          label: this.$t('column-null-value'),
           field: 'nullValue',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'json',
-          label: '是否JSON',
+          label: this.$t('column-is-json'),
           field: 'json',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'match',
-          label: '匹配到字段更新',
+          label: this.$t('column-match-field-for-update'),
           field: 'match',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'modifierMode',
-          label: 'modifier模式',
+          label: this.$t('column-modify-operation'),
           field: 'modifierMode',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'modifierPolicy',
-          label: 'modifier策略',
+          label: this.$t('column-modify-policy'),
           field: 'modifierPolicy',
           align: 'left',
           headerStyle: 'width: 150px;'
@@ -328,35 +322,35 @@ export default {
       indexColumns: [
         {
           name: 'operate',
-          label: '操作',
+          label: this.$t('column-operate'),
           filed: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'index',
-          label: '索引',
+          label: this.$t('column-index-field'),
           field: 'index',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'operation',
-          label: '索引操作',
+          label: this.$t('column-index-operation'),
           field: 'operation',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'unique',
-          label: '唯一',
+          label: this.$t('column-unique'),
           field: 'unique',
           align: 'left',
           headerStyle: 'width: 150px;'
         },
         {
           name: 'sparse',
-          label: '稀疏索引',
+          label: this.$t('column-sparse'),
           field: 'sparse',
           align: 'left',
           headerStyle: 'width: 150px;'
@@ -553,8 +547,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: '错误',
-        message: '来源字段中存在重复名称，组件禁止使用'
+        title: vm.$t('dialog-title-error'),
+        message: this.$t('warning-duplicate-source-field-name')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,
