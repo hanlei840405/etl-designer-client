@@ -609,6 +609,8 @@ export default {
   'response-execute-success': 'Execute success',
   'response-operate-success': 'Operate success',
   'response-error-10002': 'No permission to view this data',
+  'response-error-10004': 'Your account is disabled',
+  'response-error-10005': 'Your Authentication is invalid',
   'response-error-10006': 'The mailbox is already in use',
   'response-error-10009': 'Please check the script syntax exception',
   'response-error-10010': 'Data exception, please check the script',

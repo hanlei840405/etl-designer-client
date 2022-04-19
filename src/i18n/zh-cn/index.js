@@ -608,6 +608,8 @@ export default {
   'response-shutdown-success': '终端成功',
   'response-execute-success': '操作成功',
   'response-error-10002': '无权限查看该数据',
+  'response-error-10004': '您的账号被禁用',
+  'response-error-10005': '您的登录信息无效',
   'response-error-10006': '该邮箱已被使用',
   'response-error-10009': '任务脚本语法异常，请检查脚本',
   'response-error-10010': '数据异常，请检查脚本',

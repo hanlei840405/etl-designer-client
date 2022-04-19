@@ -76,13 +76,13 @@ export default {
         if (err.status === 10004) {
           vm.$q.notify({
             position: 'top',
-            message: '您的账号被禁用',
+            message: vm.$t('response-error-10004'),
             color: 'negative'
           })
         } else if (err.status === 10005) {
           vm.$q.notify({
             position: 'top',
-            message: '您的登录信息无效',
+            message: vm.$t('response-error-10005'),
             color: 'negative'
           })
         } else {
