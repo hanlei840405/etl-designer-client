@@ -253,7 +253,7 @@ export default {
   'form-name': '名称',
   'form-name-require': '名称 *',
   'form-description': '描述',
-  'form-category': '数据库信息',
+  'form-category': '类型',
   'form-directory': '目录',
   'form-transform': '转换',
   'form-create-time': '创建时间',

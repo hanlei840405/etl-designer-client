@@ -426,7 +426,7 @@ export default {
       return false
     },
     databaseDialogMysql: function () {
-      if (this.editDatasourceDialog.datasource.category === 'mysql567' || this.editDatasourceDialog.datasource.category === 'mysql8') {
+      if (this.editDatasourceDialog.datasource.category === 'mysql') {
         return true
       }
       return false
