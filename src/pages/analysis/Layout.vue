@@ -305,7 +305,6 @@ export default {
           status: res.data.status
         })
         vm.designLayout.grid = GridStack.init({
-          cellHeight: 60,
           margin: 1,
           acceptWidgets: true,
           dragIn: '.newWidget',
@@ -368,7 +367,7 @@ export default {
                   records: res.data.records
                 }
                 const cellId = new Date().getTime()
-                vm.designLayout.grid.update(item.el, { w: 2, h: 2, content: '<div class="bg-indigo-1" style="height: 100%; width: width: 95%;"><div id="cell_' + cellId + '"/></div>', report: { id: val.id, cellId: 'cell_' + cellId } })
+                vm.designLayout.grid.update(item.el, { content: '<div class="bg-indigo-1" style="height: 100%; width: width: 95%;"><div id="cell_' + cellId + '"/></div>', report: { id: val.id, cellId: 'cell_' + cellId } })
                 vm.$nextTick(() => {
                   new Vue({
                     render (h) {

@@ -51,7 +51,6 @@ export default {
     const vm = this
     fetchLayout(vm.$route.params.id).then(res => {
       vm.grid = GridStack.init({
-        cellHeight: 60,
         margin: 1,
         acceptWidgets: true,
         dragIn: '.newWidget',
