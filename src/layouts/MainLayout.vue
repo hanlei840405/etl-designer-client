@@ -198,7 +198,7 @@
               </q-item-section>
 
               <q-item-section>
-              {{ $t('batch-task') }}
+              {{ $t('batch-task-management') }}
               </q-item-section>
             </q-item>
             <q-item
@@ -214,7 +214,7 @@
               </q-item-section>
 
               <q-item-section>
-              {{ $t('streaming-task') }}
+              {{ $t('streaming-task-management') }}
               </q-item-section>
             </q-item>
             <q-item

@@ -3,12 +3,6 @@
 
 export default {
   app: '新恩数造',
-  language: '语言',
-  en: '英语',
-  zh: '中文',
-  document: '帮助文档',
-  notice: '消息通知',
-  'modify-password': '修改密码',
   contact: '联系我们',
   logout: '登出',
   home: '首页',
@@ -30,7 +24,7 @@ export default {
   'layout-setting': '布局设计',
   'system-setting': '系统设计',
   'workspace-member': '工作区成员',
-  'user-management': '用户管理',
+  'user-setting': '用户管理',
   'system-metrics': '系统监控',
   dashboard: '数据大屏',
   'table-empty': '暂无数据',
