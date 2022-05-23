@@ -367,12 +367,15 @@ export default {
                   amountDimensions: val.amountDimensions,
                   records: res.data.records
                 }
-                vm.designLayout.grid.update(item.el, { w: 2, h: item.h, content: '<div class="bg-indigo-1" style="height: 100%; width: width: 95%;"><div id="cell_' + item._id + '"/></div>', report: { id: val.id, cellId: 'cell_' + item._id } })
-                new Vue({
-                  render (h) {
-                    return h(vm.components[val.chart], { props: { config: vm.config } })
-                  }
-                }).$mount('#cell_' + item._id)
+                const cellId = new Date().getTime()
+                vm.designLayout.grid.update(item.el, { w: 2, h: 2, content: '<div class="bg-indigo-1" style="height: 100%; width: width: 95%;"><div id="cell_' + cellId + '"/></div>', report: { id: val.id, cellId: 'cell_' + cellId } })
+                vm.$nextTick(() => {
+                  new Vue({
+                    render (h) {
+                      return h(vm.components[val.chart], { props: { config: vm.config } })
+                    }
+                  }).$mount('#cell_' + cellId)
+                })
               })
             }
           })

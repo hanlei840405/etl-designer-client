@@ -68,7 +68,7 @@ export default {
         vm.config.amountDimensions.forEach(amount => {
           vm.config.subjectDimensions.forEach(subject => {
             for (var key in values) {
-              if (key === item[subject.code]) {
+              if (key === ('' + item[subject.code])) {
                 values[key].push(parseInt(item[amount.code]))
               }
             }

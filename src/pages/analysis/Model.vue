@@ -67,8 +67,8 @@
         </q-card-section>
         <q-separator/>
         <q-card-section>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editModelDialog.model.code" :label="$t(form-code)" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editModelDialog.model.name" :label="$t(form-name)" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editModelDialog.model.code" :label="$t('form-code')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="editModelDialog.model.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="editModelDialog.model.datasource.id" emit-value map-options option-value="id" :options="editModelDialog.datasourceList" :label="$t('form-select-datasource')" clearable lazy-rules :rules="[ val => (val != null) || 'datasource is invalid' ]" @input="selectedDs">
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
