@@ -1,181 +1,185 @@
 <template>
-  <div class="row">
-    <div class="col-md-3 col-sm-4">
-      <q-list padding>
-        <q-expansion-item group="project" @before-show="(ele) => loadShell(ele, link)" v-for="link in projects"
-                          :key="link.id">
-          <template v-slot:header>
-            <q-item-section avatar>
-              <q-avatar size="24px" text-color="white" color="cyan-8">{{ link.name.substring(0, 1) }}</q-avatar>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-cyan-8">{{ link.name }}</q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-btn class="text-cyan-8 gt-xs" size="12px" flat dense round icon="logout"
-                      @click="quitCurrentProject(link.id)">
-                <q-tooltip>{{ $t('btn-quit') }}</q-tooltip>
-              </q-btn>
-            </q-item-section>
-          </template>
-          <q-card>
-            <q-card-section class="col q-pt-none">
-              <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
-                      selected-color="cyan-8"
-                      :selected.sync="project.shellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
-                <template v-slot:default-header="prop">
-                  <div class="row items-center">
-                    <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
-                    <span>{{ prop.node.label }}</span>
-                  </div>
-                </template>
-              </q-tree>
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
-      </q-list>
-      <q-page-sticky position="bottom-left" :offset="[18, 18]">
-        <q-fab
-          padding="sm"
-          v-model="fab"
-          class="bg-cyan-8"
-          glossy
-          icon="keyboard_arrow_up"
-          direction="up"
+  <div>
+    <q-splitter v-model="splitterModel">
+      <template v-slot:before>
+        <q-list padding style="min-height: calc(100vh - 120px);">
+          <q-expansion-item group="project" @before-show="(ele) => loadShell(ele, link)" v-for="link in projects"
+                            :key="link.id">
+            <template v-slot:header>
+              <q-item-section avatar>
+                <q-avatar size="24px" text-color="white" color="cyan-8">{{ link.name.substring(0, 1) }}</q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-cyan-8">{{ link.name }}</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-btn class="text-cyan-8 gt-xs" size="12px" flat dense round icon="logout"
+                        @click="quitCurrentProject(link.id)">
+                  <q-tooltip>{{ $t('btn-quit') }}</q-tooltip>
+                </q-btn>
+              </q-item-section>
+            </template>
+            <q-card>
+              <q-card-section class="col q-pt-none">
+                <q-tree ref="shellTree" :nodes="project.shells" node-key="id"
+                        selected-color="cyan-8"
+                        :selected.sync="project.shellId" @update:selected="selectShell" :no-nodes-label="$t('table-empty')">
+                  <template v-slot:default-header="prop">
+                    <div class="row items-center">
+                      <q-icon :name="prop.node.icon" :color="prop.node.color" class="q-mr-sm"/>
+                      <span>{{ prop.node.label }}</span>
+                    </div>
+                  </template>
+                </q-tree>
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+        </q-list>
+        <q-page-sticky position="bottom-left" :offset="[18, 18]">
+          <q-fab
+            padding="sm"
+            v-model="fab"
+            class="bg-cyan-8"
+            glossy
+            icon="keyboard_arrow_up"
+            direction="up"
+          >
+            <q-fab-action square class="bg-cyan-8" @click="removeShell" :label="$t('btn-delete')" v-show="project.shellId"/>
+            <q-fab-action square class="bg-cyan-8" @click="editShell" :label="$t('btn-edit')" v-show="project.shellId"/>
+            <q-fab-action square class="bg-cyan-8" @click="newShell" :label="$t('btn-new')"/>
+          </q-fab>
+        </q-page-sticky>
+      </template>
+      <template v-slot:separator>
+        <q-avatar color="cyan-8" text-color="white" size="40px" icon="drag_indicator" />
+      </template>
+      <template v-slot:after>
+        <q-tabs
+          v-model="selectedTabId"
+          inline-label
+          align="left"
+          dense
         >
-          <q-fab-action square class="bg-cyan-8" @click="removeShell" :label="$t('btn-delete')" v-show="project.shellId"/>
-          <q-fab-action square class="bg-cyan-8" @click="editShell" :label="$t('btn-edit')" v-show="project.shellId"/>
-          <q-fab-action square class="bg-cyan-8" @click="newShell" :label="$t('btn-new')"/>
-        </q-fab>
-      </q-page-sticky>
-      <q-dialog v-model="shellDialog.state">
-        <q-card style="width: 100%">
-          <q-form @submit="submitShell" class="q-gutter-md">
-            <q-card-section class="row items-center q-pb-none">
-              <div class="text-h6">{{ $t('form-title-edit') }}</div>
-              <q-space/>
-              <q-btn icon="close" flat round dense v-close-popup/>
-            </q-card-section>
-            <q-card-section class="col q-pt-none">
-              <q-select
-                outlined
-                color="cyan-8"
-                label-color="cyan-8"
-                clearable
-                v-model="shellDialog.shell.project.id"
-                use-input
-                hide-selected
-                fill-input
-                input-debounce="0"
-                :label="$t('select-workspace')"
-                :no-data-label="$t('table-empty')"
-                :options="projects"
-                emit-value
-                map-options
-                option-value="id"
-                option-label="name"
-                @input="selectProject"
-                lazy-rules
-                :rules="[ val => !!val || 'Please type something']"
-              >
-              </q-select>
-              <q-tree :nodes="shellDialog.shells" node-key="id" selected-color="cyan-8" ref="shellDialogTree"
-                      :selected.sync="shellDialog.shell.shell.id" default-expand-all
-                       :no-nodes-label="$t('table-empty')"/>
-              <q-select outlined color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.category" :options="shellDialog.categories" emit-value
-                        map-options option-value="id" option-label="name"  :label="$t('form-category')" lazy-rules
-                        :rules="[ val => !!val || 'Please type something']"/>
-              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.name" :label="$t('form-name')"
-                        :rules="[val => !!val || 'Field is required']"/>
-              <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.description" :label="$t('form-description')"/>
-            </q-card-section>
-            <q-card-actions align="right">
-              <q-btn outline text-color="cyan-8" color="cyan-8" :label="$t('btn-save')" icon="save" type="submit"/>
-            </q-card-actions>
-          </q-form>
-        </q-card>
-      </q-dialog>
-    </div>
-    <div class="col-md-9 col-sm-8">
-      <q-tabs
-        v-model="selectedTabId"
-        inline-label
-        align="left"
-        dense
-      >
-        <q-tab v-for="designer in designerTabs" style="margin: 0px;" :key="designer.id"
-              :name="designer.id" @click="selectTab(designer.id)" v-model="shellTab">
-          <q-icon :name="designer.icon" :color="designer.color" size="sm" class="q-mr-sm"/>
-          <span>{{ designer.label }}</span>
-          <q-btn style="left: 10px;" round size="xs" icon="history" flat @click.stop="requestPublishes"
-                v-show="selectedTabId === designer.id">
-            <q-tooltip>
-              {{ $t('btn-history') }}
-            </q-tooltip>
-          </q-btn>
-          <q-btn style="left: 10px;" round size="xs" :icon="archiveIcon" flat @click.stop="publish(designer.id)"
-                v-show="selectedTabId === designer.id">
-            <q-tooltip>
-              {{ $t('btn-publish') }}
-            </q-tooltip>
-          </q-btn>
-          <q-btn style="left: 10px;" round size="xs" icon="close" flat @click.stop="closeTab(designer.id)">
-            <q-tooltip>
-              {{ $t('btn-close') }}
-            </q-tooltip>
-          </q-btn>
-        </q-tab>
-      </q-tabs>
-      <q-separator/>
-      <q-tab-panels v-model="selectedTabId" animated :keep-alive="true">
-        <q-tab-panel style="padding: 0px;" v-for="designer in designerTabs" :key="designer.id" :name="designer.id">
-          <router-view :ref="'designerRouterView_' + designer.id" :key="designer.uid"/>
-        </q-tab-panel>
-      </q-tab-panels>
-      <q-dialog v-model="publishDialog.state">
-        <q-card>
+          <q-tab v-for="designer in designerTabs" style="margin: 0px;" :key="designer.id"
+                :name="designer.id" @click="selectTab(designer.id)" v-model="shellTab">
+            <q-icon :name="designer.icon" :color="designer.color" size="sm" class="q-mr-sm"/>
+            <span>{{ designer.label }}</span>
+            <q-btn style="left: 10px;" round size="xs" icon="history" flat @click.stop="requestPublishes"
+                  v-show="selectedTabId === designer.id">
+              <q-tooltip>
+                {{ $t('btn-history') }}
+              </q-tooltip>
+            </q-btn>
+            <q-btn style="left: 10px;" round size="xs" :icon="archiveIcon" flat @click.stop="publish(designer.id)"
+                  v-show="selectedTabId === designer.id">
+              <q-tooltip>
+                {{ $t('btn-publish') }}
+              </q-tooltip>
+            </q-btn>
+            <q-btn style="left: 10px;" round size="xs" icon="close" flat @click.stop="closeTab(designer.id)">
+              <q-tooltip>
+                {{ $t('btn-close') }}
+              </q-tooltip>
+            </q-btn>
+          </q-tab>
+        </q-tabs>
+        <q-separator/>
+        <q-tab-panels v-model="selectedTabId" animated :keep-alive="true">
+          <q-tab-panel style="padding: 0px;" v-for="designer in designerTabs" :key="designer.id" :name="designer.id">
+            <router-view :ref="'designerRouterView_' + designer.id" :key="designer.uid"/>
+          </q-tab-panel>
+        </q-tab-panels>
+      </template>
+    </q-splitter>
+    <q-dialog v-model="shellDialog.state">
+      <q-card style="width: 100%">
+        <q-form @submit="submitShell" class="q-gutter-md">
           <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6">{{ $t('form-title-history') }}</div>
+            <div class="text-h6">{{ $t('form-title-edit') }}</div>
             <q-space/>
             <q-btn icon="close" flat round dense v-close-popup/>
           </q-card-section>
-
-          <q-card-section>
-            <q-table
+          <q-card-section class="col q-pt-none">
+            <q-select
+              outlined
               color="cyan-8"
-              flat
-              dense
-              bordered
-              :data="publishDialog.publishes"
-              :columns="publishDialog.columns"
-              row-key="id"
-              :loading="publishDialog.loading"
-              separator="cell"
+              label-color="cyan-8"
+              clearable
+              v-model="shellDialog.shell.project.id"
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="0"
+              :label="$t('select-workspace')"
               :no-data-label="$t('table-empty')"
-              @request="requestPublishes"
-              :pagination.sync="publishDialog.pagination"
+              :options="projects"
+              emit-value
+              map-options
+              option-value="id"
+              option-label="name"
+              @input="selectProject"
+              lazy-rules
+              :rules="[ val => !!val || 'Please type something']"
             >
-              <template v-slot:body-cell-createTime="props">
-                <q-td style="padding: 1px;">
-                  {{ dateFormat(props.row.createTime) }}
-                </q-td>
-              </template>
-              <template v-slot:body-cell-operate="props">
-                <q-td style="padding: 1px;">
-                  <q-btn-group>
-                    <q-btn size="xs" color="negative" icon="undo" @click="recover(props.row)">
-                      <q-tooltip>
-                        {{ $t('btn-cover') }}
-                      </q-tooltip>
-                    </q-btn>
-                  </q-btn-group>
-                </q-td>
-              </template>
-            </q-table>
+            </q-select>
+            <q-tree :nodes="shellDialog.shells" node-key="id" selected-color="cyan-8" ref="shellDialogTree"
+                    :selected.sync="shellDialog.shell.shell.id" default-expand-all
+                      :no-nodes-label="$t('table-empty')"/>
+            <q-select outlined color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.category" :options="shellDialog.categories" emit-value
+                      map-options option-value="id" option-label="name"  :label="$t('form-category')" lazy-rules
+                      :rules="[ val => !!val || 'Please type something']"/>
+            <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.name" :label="$t('form-name')"
+                      :rules="[val => !!val || 'Field is required']"/>
+            <q-input outlined color="cyan-8" text-color="cyan-8" label-color="cyan-8" v-model="shellDialog.shell.description" :label="$t('form-description')"/>
           </q-card-section>
-        </q-card>
-      </q-dialog>
-    </div>
+          <q-card-actions align="right">
+            <q-btn outline text-color="cyan-8" color="cyan-8" :label="$t('btn-save')" icon="save" type="submit"/>
+          </q-card-actions>
+        </q-form>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="publishDialog.state">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ $t('form-title-history') }}</div>
+          <q-space/>
+          <q-btn icon="close" flat round dense v-close-popup/>
+        </q-card-section>
+        <q-card-section>
+          <q-table
+            color="cyan-8"
+            flat
+            dense
+            bordered
+            :data="publishDialog.publishes"
+            :columns="publishDialog.columns"
+            row-key="id"
+            :loading="publishDialog.loading"
+            separator="cell"
+            :no-data-label="$t('table-empty')"
+            @request="requestPublishes"
+            :pagination.sync="publishDialog.pagination"
+          >
+            <template v-slot:body-cell-createTime="props">
+              <q-td style="padding: 1px;">
+                {{ dateFormat(props.row.createTime) }}
+              </q-td>
+            </template>
+            <template v-slot:body-cell-operate="props">
+              <q-td style="padding: 1px;">
+                <q-btn-group>
+                  <q-btn size="xs" color="negative" icon="undo" @click="recover(props.row)">
+                    <q-tooltip>
+                      {{ $t('btn-cover') }}
+                    </q-tooltip>
+                  </q-btn>
+                </q-btn-group>
+              </q-td>
+            </template>
+          </q-table>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -199,7 +203,7 @@ export default {
       state: false,
       sourceCodeIcon: mdiXml,
       archiveIcon: mdiArrowUpBoldOutline,
-      drawer: false,
+      splitterModel: 20,
       miniState: false,
       fab: false,
       projects: [],

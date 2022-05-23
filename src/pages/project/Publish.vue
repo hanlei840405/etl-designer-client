@@ -1,7 +1,8 @@
 <template>
-  <div class="row">
-    <div class="col-md-3 col-sm-4">
-      <q-list padding>
+  <div>
+    <q-splitter v-model="splitterModel">
+      <template v-slot:before>
+      <q-list padding style="min-height: calc(100vh - 60px);">
         <q-expansion-item group="project" @before-show="(ele) => loadShell(ele, link)" v-for="link in projects" :key="link.id">
           <template v-slot:header>
             <q-item-section avatar>
@@ -27,8 +28,11 @@
           </q-card>
         </q-expansion-item>
       </q-list>
-    </div>
-    <div class="col-md-8">
+      </template>
+      <template v-slot:separator>
+        <q-avatar color="cyan-8" text-color="white" size="40px" icon="drag_indicator" />
+      </template>
+      <template v-slot:after>
       <q-table
         color="cyan-8"
         :data="publishes"
@@ -56,67 +60,68 @@
           </q-td>
         </template>
       </q-table>
-      <q-dialog v-model="deployDialog.state">
-        <q-card>
-          <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6">{{ $t('dialog-title-reference-file') }}</div>
-            <q-space/>
-            <q-btn icon="close" flat round dense v-close-popup/>
-          </q-card-section>
+      </template>
+    </q-splitter>
+    <q-dialog v-model="deployDialog.state">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ $t('dialog-title-reference-file') }}</div>
+          <q-space/>
+          <q-btn icon="close" flat round dense v-close-popup/>
+        </q-card-section>
 
-          <q-card-section>
-            <q-table
-              color="cyan-8"
-              :data="deployDialog.references"
-              :columns="deployDialog.referenceColumns"
-              row-key="id"
-              separator="cell"
-              :no-data-label="$t('table-empty')"
-              hide-bottom
-              :rows-per-page-options="[0]"
-            >
-              <template v-slot:body-cell-createTime="props">
-                <q-td style="padding: 1px;">
-                  {{ dateFormat(props.row.createTime) }}
-                </q-td>
-              </template>
-              <template v-slot:body-cell-operate="props">
-                <q-td>
-                  <q-btn-group>
-                    <q-btn size="small" outline color="cyan-8" icon="visibility" :label="$t('btn-preview')" @click="view(props.row)"></q-btn>
-                  </q-btn-group>
-                </q-td>
-              </template>
-            </q-table>
-          </q-card-section>
-          <q-card-section>
-          <div class="text-h6">{{ $t('dialog-title-preview') }}</div>
-            <mx-graph-canvas :content="deployDialog.content"/>
-          </q-card-section>
-          <q-card-section v-if="'0' === deployDialog.streaming">
-            <q-select
-              v-model="deployDialog.form.misfire"
-              outlined
-              :label="$t('form-quartz-misfire-option')"
-              :options="deployDialog.misfireOptions"
-              map-options
-              emit-value
-              use-input
-              clearable
-              color="cyan-8"
-              label-color="cyan-8"
-            >
-            </q-select>
-          </q-card-section>
-          <q-card-section class="col q-pt-none" v-if="'0' === deployDialog.streaming">
-            <q-input outlined color="cyan-8" v-model="deployDialog.form.cron" :label="$t('form-quartz-cron')" :rules="[val => !!val || 'Field is required', val => validate(val) || 'cron is invalid']"/>
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn outline color="cyan-8" :label="$t('btn-deploy')" :icon="saveIcon" @click="done"/>
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-    </div>
+        <q-card-section>
+          <q-table
+            color="cyan-8"
+            :data="deployDialog.references"
+            :columns="deployDialog.referenceColumns"
+            row-key="id"
+            separator="cell"
+            :no-data-label="$t('table-empty')"
+            hide-bottom
+            :rows-per-page-options="[0]"
+          >
+            <template v-slot:body-cell-createTime="props">
+              <q-td style="padding: 1px;">
+                {{ dateFormat(props.row.createTime) }}
+              </q-td>
+            </template>
+            <template v-slot:body-cell-operate="props">
+              <q-td>
+                <q-btn-group>
+                  <q-btn size="small" outline color="cyan-8" icon="visibility" :label="$t('btn-preview')" @click="view(props.row)"></q-btn>
+                </q-btn-group>
+              </q-td>
+            </template>
+          </q-table>
+        </q-card-section>
+        <q-card-section>
+        <div class="text-h6">{{ $t('dialog-title-preview') }}</div>
+          <mx-graph-canvas :content="deployDialog.content"/>
+        </q-card-section>
+        <q-card-section v-if="'0' === deployDialog.streaming">
+          <q-select
+            v-model="deployDialog.form.misfire"
+            outlined
+            :label="$t('form-quartz-misfire-option')"
+            :options="deployDialog.misfireOptions"
+            map-options
+            emit-value
+            use-input
+            clearable
+            color="cyan-8"
+            label-color="cyan-8"
+          >
+          </q-select>
+        </q-card-section>
+        <q-card-section class="col q-pt-none" v-if="'0' === deployDialog.streaming">
+          <q-input outlined color="cyan-8" v-model="deployDialog.form.cron" :label="$t('form-quartz-cron')" :rules="[val => !!val || 'Field is required', val => validate(val) || 'cron is invalid']"/>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn outline color="cyan-8" :label="$t('btn-deploy')" :icon="saveIcon" @click="done"/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -139,6 +144,7 @@ export default {
     return {
       taskIcon: mdiCalendarMonthOutline,
       saveIcon: mdiContentSaveOutline,
+      splitterModel: 20,
       projects: [],
       project: {
         id: null,
