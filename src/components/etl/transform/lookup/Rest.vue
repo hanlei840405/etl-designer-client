@@ -8,13 +8,13 @@
         <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
-        <q-tab-panel name="mail">
+        <q-tab-panel name="main">
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.url" label="URL" :disable="form.urlInStream"/>
           <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.urlInStream" :label="$t('form-url-from-field')" />
           <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.urlField" :options="sourceFields" :label="$t('form-url-field')" :disable="!form.urlInStream"/>
           <br/>
-          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.method" :options="methods" :label="$t('form-http-field')" :disable="form.methodInStream"/>
+          <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.method" :options="methods" :label="$t('form-http-method')" :disable="form.methodInStream"/>
           <q-checkbox v-model="form.methodInStream" :label="$t('form-method-from-field')" text-color="cyan-8" color="cyan-8" label-color="cyan-8" />
           <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.methodField" :options="sourceFields" :label="$t('form-method-field')" :disable="!form.methodInStream"/>
           <br/>
