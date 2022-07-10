@@ -53,6 +53,7 @@ export default {
   'table-title-statistical-object': '统计对象',
   'table-title-statistical-data': '统计数据',
   'table-title-report-order': '请按照开始，最高，最低，结束的顺序填写统计数据定义',
+  'column-code': '编码',
   'column-name': '名称',
   'column-scope': '范围',
   'column-status': '状态',

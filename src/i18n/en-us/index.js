@@ -59,6 +59,7 @@ export default {
   'table-title-statistical-object': 'Statistical object',
   'table-title-statistical-data': 'Statistical data',
   'table-title-report-order': 'Please fill in the statistical data definition in the order of start, highest, lowest and end',
+  'column-code': 'Code',
   'column-name': 'Name',
   'column-scope': 'Scope',
   'column-status': 'Status',
