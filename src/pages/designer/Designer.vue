@@ -1699,7 +1699,7 @@ export default {
         id: res.data.id,
         name: res.data.name,
         category: res.data.category,
-        shellId: res.data.shell.id,
+        shellId: res.data.shell ? res.data.shell.id : null,
         projectId: res.data.project.id,
         content: res.data.content
       })
