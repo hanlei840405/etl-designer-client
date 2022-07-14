@@ -175,8 +175,8 @@
         </q-card-section>
         <q-card-section class="items-center q-pb-none">
           <q-tabs v-model="helpDialog.tab" class="text-grey" active-color="cyan-8" indicator-color="cyan-8" align="left" narrow-indicator>
-            <q-tab name="function" :label="$('tab-constant')"/>
-            <q-tab name="input" :label="$('tab-input-parameter')"/>
+            <q-tab name="function" :label="$t('tab-constant')"/>
+            <q-tab name="input" :label="$t('tab-input-parameter')"/>
           </q-tabs>
           <q-tab-panels v-model="helpDialog.tab" animated>
             <q-tab-panel name="function" class="row q-pa-md q-col-gutter-sm">
@@ -612,6 +612,14 @@ export default {
     loadHelps () {
       const vm = this
       vm.helpDialog.mode = true
+    },
+    createSourceField (val, done) {
+      if (val.length > 0) {
+        if (!this.sourceFields.includes(val)) {
+          this.sourceFields.push(val)
+        }
+        done(val, 'toggle')
+      }
     },
     submitForm () {
       this.$emit('propertiesForm', {

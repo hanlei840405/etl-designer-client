@@ -46,8 +46,7 @@
                 <q-td key="field" :props="props">
                   {{ props.row.field }}
                   <q-popup-edit v-model="props.row.field" :auto-save=true>
-                    <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.field" :options="sourceFields" v-if="sourceFields.length > 0"/>
-                    <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.field" v-if="sourceFields.length === 0"/>
+                    <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.field" :options="sourceFields" @new-value="createSourceField" use-input/>
                   </q-popup-edit>
                 </q-td>
               </q-tr>
@@ -162,6 +161,14 @@ export default {
     loadHelps () {
       const vm = this
       vm.helpDialog.mode = true
+    },
+    createSourceField (val, done) {
+      if (val.length > 0) {
+        if (!this.sourceFields.includes(val)) {
+          this.sourceFields.push(val)
+        }
+        done(val, 'toggle')
+      }
     },
     submitForm () {
       this.$emit('propertiesForm', {

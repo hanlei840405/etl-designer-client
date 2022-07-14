@@ -11,8 +11,7 @@
         <q-tab-panel name="main">
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :options="sourceFields" :label="$t('form-switch-field')" clearable v-if="sourceFields.length > 0"></q-select>
-          <q-input autofocus text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :label="$t('form-switch-field')" v-if="sourceFields.length === 0"/>
+          <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.field" :options="sourceFields" :label="$t('form-switch-field')" clearable @new-value="createSourceField" use-input></q-select>
           <q-checkbox text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.useStringIn" :label="$t('form-compare-string-contain')"/>
           <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.category" :options="categories" :label="$t('form-case-value-data-type')"></q-select>
           <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.mask" :label="$t('form-case-value-conversion-mask')"/>
@@ -115,6 +114,14 @@ export default {
     },
     deleteCase (props) {
       this.form.cases.splice(props.rowIndex, 1)
+    },
+    createSourceField (val, done) {
+      if (val.length > 0) {
+        if (!this.sourceFields.includes(val)) {
+          this.sourceFields.push(val)
+        }
+        done(val, 'toggle')
+      }
     },
     submitForm (e) {
       this.$emit('propertiesForm', {

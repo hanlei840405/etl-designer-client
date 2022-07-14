@@ -462,7 +462,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$i18n)
+    this.$i18n.locale = this.$q.lang.getLocale()
     me().then(res => {
       this.me = Object.assign({
         name: '',

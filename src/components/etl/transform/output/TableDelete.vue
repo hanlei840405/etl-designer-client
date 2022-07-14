@@ -63,15 +63,13 @@
                 <q-td key="source" :props="props">
                   {{ props.row.source }}
                   <q-popup-edit v-model="props.row.source" :auto-save=true>
-                    <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.source" :options="sourceFields" v-if="sourceFields.length > 0"/>
-                    <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.source" v-if="sourceFields.length === 0"/>
+                    <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.source" :options="sourceFields" @new-value="createSourceField" use-input/>
                   </q-popup-edit>
                 </q-td>
                 <q-td key="source2" :props="props">
                   {{ props.row.source2 }}
                   <q-popup-edit v-model="props.row.source2" :auto-save=true>
-                    <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.source2" :options="sourceFields" v-if="sourceFields.length > 0"/>
-                    <q-input autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.source2" v-if="sourceFields.length === 0"/>
+                    <q-select autofocus outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="props.row.source2" :options="sourceFields" @new-value="createSourceField" use-input/>
                   </q-popup-edit>
                 </q-td>
               </q-tr>
@@ -284,6 +282,14 @@ export default {
     },
     deleteSearchMapping (props) {
       this.form.searchMappingData.splice(props.rowIndex, 1)
+    },
+    createSourceField (val, done) {
+      if (val.length > 0) {
+        if (!this.sourceFields.includes(val)) {
+          this.sourceFields.push(val)
+        }
+        done(val, 'toggle')
+      }
     },
     submitForm (e) {
       this.$emit('propertiesForm', {
