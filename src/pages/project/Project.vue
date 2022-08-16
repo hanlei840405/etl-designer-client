@@ -221,6 +221,20 @@ export default {
               status: null
             }
           })
+        }).catch(err => {
+          if (err.status === 10003) {
+            vm.$q.notify({
+              message: this.$t('response-error-10003'),
+              position: 'top',
+              color: 'negative'
+            })
+          } else {
+            vm.$q.notify({
+              message: err.data.error,
+              position: 'top',
+              color: 'negative'
+            })
+          }
         })
       })
     }
