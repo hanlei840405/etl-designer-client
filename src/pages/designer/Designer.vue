@@ -153,6 +153,7 @@ import SetValueFieldMeta from 'components/etl/transform/convert/SetValueField.vu
 import MongoDbOutputMeta from 'components/etl/transform/output/MongodbOutput.vue'
 import RowsToResultMeta from 'components/etl/transform/shell/RowsToResult.vue'
 import RowsFromResultMeta from 'components/etl/transform/shell/RowsFromResult.vue'
+import MultiMergeJoinMeta from 'components/etl/transform/lookup/MultiMergeJoin.vue'
 import { fetchShell, saveShellContent } from '../../service/ShellService'
 import { execute, stop } from '../../service/DesignerService'
 import { mdiContentSaveOutline, mdiPlayOutline, mdiTrashCanOutline, mdiPause } from '@quasar/extras/mdi-v5'
@@ -220,7 +221,8 @@ export default {
     SetValueFieldMeta,
     MongoDbOutputMeta,
     RowsToResultMeta,
-    RowsFromResultMeta
+    RowsFromResultMeta,
+    MultiMergeJoinMeta
   },
   data () {
     return {
@@ -409,6 +411,10 @@ export default {
             img: '/images/etl/DBJ.svg',
             name: this.$t('component-category-lookup-database-join'),
             type: 'DatabaseJoinMeta'
+          }, {
+            img: '/images/etl/MJOINS.svg',
+            name: this.$t('component-category-lookup-multi-merge-join'),
+            type: 'MultiMergeJoinMeta'
           }, {
             img: '/images/etl/REST.svg',
             name: this.$t('component-category-lookup-rest'),

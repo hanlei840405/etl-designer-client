@@ -561,6 +561,11 @@ export default {
   'form-layout': 'Layout',
   'form-email': 'Email',
   'form-tenant': 'Organization',
+  // 2022-09-14 multiMergeJoin
+  'form-step-name': 'Step name',
+  'form-input-step': 'Input step',
+  'form-join-key': 'Join key',
+  'form-join-type': 'Join type',
   'message-cancel-running-etl': 'Cancelled the running programing.',
   'message-no-component-selected': 'No components selected',
   'message-robin-mode': 'The current component is already in robin mode',
@@ -687,5 +692,7 @@ export default {
   'component-category-common-job-entry-special': 'Start',
   'component-category-common-job-entry-trans': 'Transform',
   'component-category-common-job-entry-success': 'Success',
-  'component-category-common-job-entry-job': 'Job'
+  'component-category-common-job-entry-job': 'Job',
+  // 2022-09-14 multiMergeJoin
+  'component-category-lookup-multi-merge-join': 'Multi merge join'
 }

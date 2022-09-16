@@ -555,6 +555,11 @@ export default {
   'form-layout': '布局',
   'form-email': '邮箱',
   'form-tenant': '组织',
+  // 2022-09-14 multiMergeJoin
+  'form-step-name': '步骤名称',
+  'form-input-step': '输入步骤',
+  'form-join-key': '关联字段',
+  'form-join-type': '关联方式',
   'message-cancel-running-etl': '取消执行运行中的脚本.',
   'message-no-component-selected': '未选定任何组件',
   'message-robin-mode': '当前组件已经为轮询模式',
@@ -681,5 +686,7 @@ export default {
   'component-category-common-job-entry-special': '开始',
   'component-category-common-job-entry-trans': '转换',
   'component-category-common-job-entry-success': '成功',
-  'component-category-common-job-entry-job': '作业'
+  'component-category-common-job-entry-job': '作业',
+  // 2022-09-14 multiMergeJoin
+  'component-category-lookup-multi-merge-join': '输入内容合并'
 }
