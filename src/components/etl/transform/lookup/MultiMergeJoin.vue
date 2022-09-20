@@ -1,10 +1,10 @@
 <template>
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
-      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.stepName" :label="$t('form-step-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+      <q-input outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.name" :label="$t('form-step-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
       <div v-for="(step, i) in previousSteps" :key="step.value">
-        <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.inputStep[step.value]" :options="previousSteps" emit-value map-options :label="$t('form-input-step') + (i + 1)" @input="setLookupFromStepName"/>
-        <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.joinKey[step.value]" :options="sourceFields[step.value]" emit-value map-options :label="$t('form-join-key') + (i + 1)"/>
+        <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.inputStep[step.value]" :options="previousSteps" emit-value map-options :label="$t('form-input-step') + (i + 1)"/>
+        <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" multiple v-model="form.joinKey[step.value]" :options="sourceFields[step.value]" emit-value map-options :label="$t('form-join-key') + (i + 1)"/>
       </div>
       <q-select clearable outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model="form.joinType" :options="joinTypes" :label="$t('form-join-type')"/>
   </q-form>
@@ -20,10 +20,11 @@ export default {
     return {
       tab: 'main',
       form: {
-        stepName: null,
+        name: null,
         inputStep: {},
+        inputStepLabel: {},
         joinKey: {},
-        joinType: 'join'
+        joinType: 'INNER'
       },
       forbiddenParallel: false,
       previousSteps: [],
@@ -32,12 +33,16 @@ export default {
     }
   },
   methods: {
-    setLookupFromStepName () {
-    },
     submitForm () {
+      const vm = this
+      vm.previousSteps.forEach(step => {
+        if (vm.form.inputStep[step.value]) {
+          vm.form.inputStepLabel[step.value] = step.label
+        }
+      })
       this.$emit('propertiesForm', {
         state: true,
-        mxCellProperties: this.form
+        mxCellProperties: vm.form
       })
     }
   },
@@ -65,6 +70,13 @@ export default {
     }
     const mxCellValue = vm.$store.getters['etl/getMxCellForm']
     if (mxCellValue) {
+      const inputStep = {}
+      vm.previousSteps.forEach(step => {
+        if (mxCellValue.inputStep[step.value]) {
+          inputStep[step.value] = mxCellValue.inputStep[step.value]
+        }
+      })
+      mxCellValue.inputStep = inputStep
       vm.form = Object.assign(vm.form, mxCellValue)
     }
   }
