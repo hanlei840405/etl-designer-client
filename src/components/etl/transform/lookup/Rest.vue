@@ -83,7 +83,7 @@ export default {
   name: 'RestMeta',
   data () {
     return {
-      tab: 'mail',
+      tab: 'main',
       form: {
         name: null,
         url: null,
