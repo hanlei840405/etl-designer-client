@@ -154,6 +154,7 @@ import MongoDbOutputMeta from 'components/etl/transform/output/MongodbOutput.vue
 import RowsToResultMeta from 'components/etl/transform/shell/RowsToResult.vue'
 import RowsFromResultMeta from 'components/etl/transform/shell/RowsFromResult.vue'
 import MultiMergeJoinMeta from 'components/etl/transform/lookup/MultiMergeJoin.vue'
+import SortRowsMeta from 'components/etl/transform/convert/SortRows.vue'
 import { fetchShell, saveShellContent } from '../../service/ShellService'
 import { execute, stop } from '../../service/DesignerService'
 import { mdiContentSaveOutline, mdiPlayOutline, mdiTrashCanOutline, mdiPause } from '@quasar/extras/mdi-v5'
@@ -222,7 +223,8 @@ export default {
     MongoDbOutputMeta,
     RowsToResultMeta,
     RowsFromResultMeta,
-    MultiMergeJoinMeta
+    MultiMergeJoinMeta,
+    SortRowsMeta
   },
   data () {
     return {
@@ -373,6 +375,10 @@ export default {
             img: '/images/etl/SVF.svg',
             name: this.$t('component-category-convert-set-value-field'),
             type: 'SetValueFieldMeta'
+          }, {
+            img: '/images/etl/SRT.svg',
+            name: this.$t('component-category-convert-sort-rows'),
+            type: 'SortRowsMeta'
           }],
           stepScript: [{
             img: '/images/etl/janino.svg',

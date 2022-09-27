@@ -160,6 +160,11 @@ export default {
   'column-line': '线性',
   'column-column': '柱形',
   'column-email': '邮箱',
+  // 2022-09-27 sortRows
+  'column-sort-asc': '升序',
+  'column-sort-based-on-locale': '基于当前语言排序',
+  'column-collator-strength': '整理器强度',
+  'column-pre-sort': '预排序',
   'tab-basic': '一般',
   'tab-option': '选项',
   'tab-datasource-pool': '连接池',
@@ -560,6 +565,10 @@ export default {
   'form-input-step': '输入步骤',
   'form-join-key': '关联字段',
   'form-join-type': '关联方式',
+  // 2022-09-27 SortRows
+  'form-free-memory': '未使用内存限值(%)',
+  'form-compress-temp-file': '压缩临时文件？',
+  'form-pass-unique-row': '仅仅传递非重复的记录？（仅仅校验关键字）',
   'message-cancel-running-etl': '取消执行运行中的脚本.',
   'message-no-component-selected': '未选定任何组件',
   'message-robin-mode': '当前组件已经为轮询模式',
@@ -688,5 +697,7 @@ export default {
   'component-category-common-job-entry-success': '成功',
   'component-category-common-job-entry-job': '作业',
   // 2022-09-14 multiMergeJoin
-  'component-category-lookup-multi-merge-join': '输入内容合并'
+  'component-category-lookup-multi-merge-join': '输入内容合并',
+  // 2022-09-27 sortRows
+  'component-category-convert-sort-rows': '排序记录'
 }

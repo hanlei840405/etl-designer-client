@@ -166,6 +166,11 @@ export default {
   'column-line': 'Line',
   'column-column': 'Column',
   'column-email': 'Email',
+  // 2022-09-27 sortRows
+  'column-sort-asc': 'Sort',
+  'column-sort-based-on-locale': 'Sort based on current locale',
+  'column-collator-strength': 'Collator strength',
+  'column-pre-sort': 'presorted',
   'tab-basic': 'Basic',
   'tab-option': 'Option',
   'tab-datasource-pool': 'Datasource pool',
@@ -566,6 +571,10 @@ export default {
   'form-input-step': 'Input step',
   'form-join-key': 'Join key',
   'form-join-type': 'Join type',
+  // 2022-09-27 SortRows
+  'form-free-memory': 'Free memory threshold (in %)',
+  'form-compress-temp-file': 'Compress TMP Files?',
+  'form-pass-unique-row': 'Only pass unique rows?(verifies keys only)',
   'message-cancel-running-etl': 'Cancelled the running programing.',
   'message-no-component-selected': 'No components selected',
   'message-robin-mode': 'The current component is already in robin mode',
@@ -694,5 +703,7 @@ export default {
   'component-category-common-job-entry-success': 'Success',
   'component-category-common-job-entry-job': 'Job',
   // 2022-09-14 multiMergeJoin
-  'component-category-lookup-multi-merge-join': 'Multi merge join'
+  'component-category-lookup-multi-merge-join': 'Multi merge join',
+  // 2022-09-27 sortRows
+  'component-category-convert-sort-rows': 'Sort rows'
 }
