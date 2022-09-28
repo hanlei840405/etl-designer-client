@@ -89,8 +89,8 @@ export default {
         name: null,
         cacheSize: '1000000',
         freeMemory: '50',
-        compressTempFile: null,
-        passUniqueRow: null,
+        compressTempFile: false,
+        passUniqueRow: false,
         parameters: [],
         distribute: true,
         parallel: 1

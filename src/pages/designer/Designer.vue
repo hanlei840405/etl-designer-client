@@ -907,14 +907,32 @@ export default {
         const edge = incoming[i]
         if (edge.source && edge.source.id !== root.id) {
           const sourceCell = this.graph.getModel().getCell(edge.source.id)
+          const linkNodes = []
+          this.getLinkNodes(sourceCell, linkNodes)
           this.preNodes.push({
             value: edge.source.id,
             title: sourceCell.getAttribute('title'),
             ext: sourceCell.getAttribute('ext'),
             type: sourceCell.style,
-            depth: depth
+            depth: depth,
+            linkNodes: linkNodes
           })
           this.getPreNodes(edge.source, root, depth + 1)
+        }
+      }
+    },
+    getLinkNodes (node, linkNodes) {
+      const incoming = this.graph.getModel().getIncomingEdges(node)
+      for (let i = 0; i < incoming.length; i++) {
+        const edge = incoming[i]
+        if (edge.source) {
+          const sourceCell = this.graph.getModel().getCell(edge.source.id)
+          linkNodes.push({
+            id: sourceCell.id,
+            title: sourceCell.getAttribute('title'),
+            ext: sourceCell.getAttribute('ext')
+          })
+          this.getLinkNodes(sourceCell, linkNodes)
         }
       }
     },

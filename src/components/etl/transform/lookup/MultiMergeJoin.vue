@@ -14,6 +14,7 @@
 <script>
 
 const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
+const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta']
 export default {
   name: 'MultiMergeJoinMeta',
   data () {
@@ -53,18 +54,19 @@ export default {
     vm.sourceFields = []
     if (previousSteps && previousSteps.length > 0) {
       previousSteps.forEach((step, i) => {
-        vm.previousSteps.push({ value: step.value, label: step.title })
-        vm.sourceFields[step.value] = []
         if (i === 0 && FORBIDDEN_NEXT_STEP_PARALLEL.indexOf(step.type) >= 0) {
           vm.forbiddenParallel = true
         }
-        if (step.ext !== undefined && step.ext !== 'undefined') {
-          const ext = JSON.parse(step.ext)
-          if (ext.sourceFields) {
-            ext.sourceFields.forEach(field => {
-              vm.sourceFields[step.value].push(field)
-            })
+        if (step.depth === 0) {
+          vm.previousSteps.push({ value: step.value, label: step.title })
+          vm.sourceFields[step.value] = []
+          if (step.ext !== undefined && step.ext !== 'undefined' && IGNORE_REPEAT_WARNING_META.indexOf(step.type) < 0) {
+            const ext = JSON.parse(step.ext)
+            if (ext.sourceFields) {
+              ext.sourceFields.forEach(field => vm.sourceFields[step.value].push(field))
+            }
           }
+          step.linkNodes.forEach(linkNode => JSON.parse(linkNode.ext).sourceFields.forEach(field => vm.sourceFields[step.value].push(field)))
         }
       })
     }
