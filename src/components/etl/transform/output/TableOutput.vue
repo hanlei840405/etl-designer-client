@@ -267,7 +267,6 @@ export default {
       })
     },
     initOutputTable (target) {
-      debugger
       const vm = this
       const tableInfo = target.replace('t_', '').split('.')
       if (tableInfo.length === 2) {
