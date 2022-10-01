@@ -227,7 +227,7 @@ export default {
             id: null
           }
         },
-        categories: ['mysql', 'oracle'],
+        categories: ['mysql', 'postgresql', 'oracle'],
         parameterColumns: [
           { name: 'name', align: 'left', label: this.$t('form-argument-name'), field: 'name' },
           { name: 'value', align: 'left', label: this.$t('form-argument-value'), field: 'value' }

@@ -13,7 +13,7 @@
           <q-input outlined text-color="cyan-8" color="cyan-8" class="col-8" label-color="cyan-8" v-model="form.name" :label="$t('form-name')" lazy-rules
                    :rules="[ val => val && val.length > 0 || 'Please type something']"/>
           <q-select outlined text-color="cyan-8" color="cyan-8" label-color="cyan-8" v-model.number="form.datasource" emit-value map-options option-value="id" :options="datasource"
-                    :label="$t('form-select-datasource')" clearable @input="inputDatasource">
+                    :label="$t('form-select-datasource')" clearable>
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                 <q-item-section>
@@ -108,7 +108,7 @@
         </q-card-section>
         <q-card-section class="row items-center q-pb-none">
           <q-tree :nodes="selectTables.data" node-key="id" @lazy-load="loadColumns" selected-color="cyan-8"
-                  @update:selected="initOutPutTable" :selected.sync="selectTables.name"/>
+                  @update:selected="initOutputTable" :selected.sync="selectTables.name"/>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -266,9 +266,16 @@ export default {
         })
       })
     },
-    initOutPutTable (target) {
+    initOutputTable (target) {
+      debugger
       const vm = this
-      vm.form.tableName = target.replace('t_', '')
+      const tableInfo = target.replace('t_', '').split('.')
+      if (tableInfo.length === 2) {
+        vm.form.schemaName = tableInfo[0]
+        vm.form.tableName = tableInfo[1]
+      } else {
+        vm.form.tableName = tableInfo[0]
+      }
       vm.form.fieldMappingData = []
       vm.targetFields = []
       vm.$q.loading.show()
