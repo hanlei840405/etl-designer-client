@@ -66,6 +66,7 @@ import { fetchAllDatasource } from 'src/service/DatasourceService'
 import { structure } from 'src/service/PreviewService'
 
 const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
+const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta']
 export default {
   name: 'ExecSQLMeta',
   data () {
@@ -176,7 +177,7 @@ export default {
         if (i === 0 && FORBIDDEN_NEXT_STEP_PARALLEL.indexOf(step.type) >= 0) {
           vm.forbiddenParallel = true
         }
-        if (step.ext !== undefined && step.ext !== 'undefined') {
+        if (step.ext !== undefined && step.ext !== 'undefined' && IGNORE_REPEAT_WARNING_META.indexOf(step.type) < 0) {
           const ext = JSON.parse(step.ext)
           if (ext.sourceFields) {
             ext.sourceFields.forEach(field => {
