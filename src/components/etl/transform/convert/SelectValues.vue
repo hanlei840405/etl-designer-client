@@ -701,17 +701,19 @@ export default {
     },
     submitForm () {
       const vm = this
-      const replaceFields = []
+      const array = []
       vm.form.selects.forEach(item => {
-        replaceFields.push(item.source)
+        if (vm.sourceFields.indexOf(item.source) >= 0) {
+          vm.sourceFields.splice(vm.sourceFields.indexOf(item.source), 1)
+        }
+        if (item.target && array.indexOf(item.source) < 0) {
+          array.push(item.target || item.source)
+        }
       })
-      vm.form.removes.forEach(item => {
-        replaceFields.push(item.source)
-      })
-      vm.form.metaData.forEach(item => {
-        replaceFields.push(item.source)
-      })
-      const array = [...Array.from(new Set(this.form.selects.map(ele => ele.target))), ...Array.from(new Set(this.form.metaData.map(ele => ele.target)))]
+      const replaceFields = vm.sourceFields
+      vm.form.removes.forEach(item => replaceFields.push(item.target || item.source))
+      vm.form.metaData.forEach(item => replaceFields.push(item.target || item.source))
+      // const array = [...Array.from(new Set(this.form.selects.map(ele => ele.target))), ...Array.from(new Set(this.form.metaData.map(ele => ele.target)))]
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form,
@@ -751,6 +753,7 @@ export default {
       vm.sourceFields.splice(vm.sourceFields.indexOf(field), 1)
     })
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
+      debugger
       vm.$q.dialog({
         dark: true,
         title: vm.$t('dialog-title-error'),

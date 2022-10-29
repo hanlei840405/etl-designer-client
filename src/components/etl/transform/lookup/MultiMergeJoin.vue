@@ -52,6 +52,7 @@ export default {
     const previousSteps = vm.$store.getters['etl/getPreNodes']
     vm.previousSteps = []
     vm.sourceFields = []
+    const replaceFields = {}
     if (previousSteps && previousSteps.length > 0) {
       previousSteps.forEach((step, i) => {
         if (i === 0 && FORBIDDEN_NEXT_STEP_PARALLEL.indexOf(step.type) >= 0) {
@@ -65,9 +66,28 @@ export default {
             if (ext.sourceFields) {
               ext.sourceFields.forEach(field => vm.sourceFields[step.value].push(field))
             }
+            if (ext.replaceFields) {
+              replaceFields[step.value] = []
+              ext.replaceFields.forEach(field => {
+                replaceFields[step.value].push(field)
+              })
+            }
           }
-          step.linkNodes.forEach(linkNode => JSON.parse(linkNode.ext).sourceFields.forEach(field => vm.sourceFields[step.value].push(field)))
+          step.linkNodes.forEach(linkNode => {
+            if (linkNode.ext !== 'undefined') {
+              JSON.parse(linkNode.ext).sourceFields.forEach(field => {
+                if (vm.sourceFields[step.value].indexOf(field) < 0) {
+                  vm.sourceFields[step.value].push(field)
+                }
+              })
+            }
+          })
         }
+      })
+    }
+    for (const k in replaceFields) {
+      replaceFields[k].forEach(field => {
+        vm.sourceFields[k].splice(vm.sourceFields[k].indexOf(field), 1)
       })
     }
     const mxCellValue = vm.$store.getters['etl/getMxCellForm']
