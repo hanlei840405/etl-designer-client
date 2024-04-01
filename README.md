@@ -46,7 +46,7 @@ A Quasar Framework app
 jesse.18@163.com<br/>
 用户名: jesse.18@163.com
 密码: 123456 (请勿修改)
-![contact.jpeg](public/images/contact.jpeg)
+![img.png](img.png)
 
 ![img_login.png](img_login.png)
 ![img_index.png](img_index.png)
