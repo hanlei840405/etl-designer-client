@@ -31,7 +31,7 @@
             />
             <q-btn type="submit" unelevated size="lg" color="cyan-8" class="full-width text-white" :label="$t('login.submit')" />
             <div class="text-right">
-              <a href="#/forgot" class="text-cyan-8">{{ $t('login.forget') }}</a><a href="#/register" class="text-cyan-8" style="margin-left: 10px;">{{ $t('login.register') }}</a>
+              <a href="#/forgot" class="text-cyan-8">{{ $t('login.forget') }}</a>
               <q-btn-dropdown class="text-cyan-8" auto-close stretch flat size="md" :label="$t('global.language')" no-caps>
                 <q-list class="text-cyan-8">
                   <q-item clickable @click="$i18n.locale = 'en-us'" v-ripple>
