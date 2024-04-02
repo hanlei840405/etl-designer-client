@@ -258,7 +258,8 @@ export default {
         entryMail: this.$t('etl.transform.entryMail.default'),
         entryCommon: this.$t('etl.job.entryCommon.default'),
         entryScript: this.$t('etl.job.entryScript.default'),
-        conditionShell: this.$t('etl.job.conditionShell.default')
+        conditionShell: this.$t('etl.job.conditionShell.default'),
+        fileTransfer: this.$t('etl.job.fileTransfer.default'),
       },
       toolbar: Constant.ETL_TOOLBAR,
       executing: false,

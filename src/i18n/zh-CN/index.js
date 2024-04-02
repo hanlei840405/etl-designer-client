@@ -1250,6 +1250,52 @@ export default {
       columnParameter: "参数",
       columnSourceField: "流列名",
       columnValue: "值",
+    },
+    excelOutput: {
+      name: "名称",
+      tabBasic: "基本",
+      tabSheet: "工作表",
+      tabContent: "内容",
+      tabField: "字段",
+      tabRunningConfig: "运行参数",
+      suffix: "扩展名",
+      splitEveryDataRows: "批量写入行数",
+      specifyDateFormat: "指定日期时间格式",
+      dateFormat: "日期时间格式",
+      existOutputFile: "如果文件已存在",
+      streamXlsxData: "以流模式处理超大数据",
+      includeStepnrInFilename: "文件名包含步骤数目",
+      includeDateInFilename: "文件名包含日期",
+      includeTimeInFilename: "文件名包含时间",
+      waitForFirstRowBeforeCreatingFile: "在接收到数据前不创建文件",
+      addFilenameToResult: "结果中添加文件名",
+      sheetName: "工作表名",
+      sheetExist: "如果输出文件中已存在工作表",
+      makeActive: "设为活动工作表",
+      startCell: "开始输出自单元格",
+      whenWritingRows: "当输出记录时",
+      skipRows: "抵消行数",
+      beginWritingEmptyLines: "在写入文件前添加的空行数",
+      writeHeader: "输出表头",
+      writeFooter: "输出表尾",
+      autoSizeColumns: "自动调整列大小",
+      forceFormulaRecaluculation: "强制公式重新计算",
+      leaveStyleExisting: "不改变现有单元格格式",
+      appendLines: "在表格末尾开始写（追加行）",
+      removeHeader: "删除表头",
+      tableField: "字段",
+      threads: "并行数",
+      overwrite: "覆盖已存在的单元格",
+      append: "下移已有单元格",
+      columnOperate: "操作",
+      columnName: "名称",
+      columnType: "类型",
+      columnFormat: "格式",
+      columnStyle: "样式",
+      columnTitle: "标题",
+      columnHeaderStyle: "表头样式",
+      columnFormula: "包含公式",
+      columnLink: "超链接"
     }
   },
   response: {
@@ -1309,7 +1355,8 @@ export default {
         UpdateMeta: "更新",
         TableOutputMeta: "表输出",
         JsonOutputMeta: "JSON输出",
-        ElasticSearchBulkMeta: "elastic search输出"
+        ElasticSearchBulkMeta: "elastic search输出",
+        ExcelWriterMata: "EXCEL输出"
       },
       streaming: {
         default: "流处理",
@@ -1376,6 +1423,12 @@ export default {
       conditionShell: {
         default: "条件",
         JobEntrySimpleEval: "检查字段值"
+      },
+      fileTransfer: {
+        default: "文件传输",
+        JobEntryFTP: "FTP下载",
+        JobEntryFTPPUT: "FTP上传",
+        JobEntryFTPDelete: "FTP删除"
       }
     }
   },

@@ -74,6 +74,10 @@ const ETL_TOOLBAR = {
       img: '/images/etl/ESB.svg',
       name: i18n.t('etl.transform.stepOutput.ElasticSearchBulkMeta'),
       type: 'ElasticSearchBulkMeta'
+    }, {
+      img: '/images/etl/XWS.svg',
+      name: i18n.t('etl.transform.stepOutput.ExcelWriterMata'),
+      type: 'ExcelWriterStepMeta'
     }],
     streaming: [{
       img: '/images/etl/get-records-from-stream.svg',
@@ -248,6 +252,23 @@ const ETL_TOOLBAR = {
         name: i18n.t('etl.job.conditionShell.JobEntrySimpleEval'),
         type: 'JobEntrySimpleEval'
       }
+    ],
+    fileTransfer: [
+      {
+        img: '/images/etl/GFTP.svg',
+        name: i18n.t('etl.job.fileTransfer.JobEntryFTP'),
+        type: 'JobEntryFTP'
+      },
+      {
+        img: '/images/etl/PFTP.svg',
+        name: i18n.t('etl.job.fileTransfer.JobEntryFTPPUT'),
+        type: 'JobEntryFTPPUT'
+      },
+      {
+        img: '/images/etl/FTPD.svg',
+        name: i18n.t('etl.job.fileTransfer.JobEntryFTPDelete'),
+        type: 'JobEntryFTPDelete'
+      },
     ]
   }
 }

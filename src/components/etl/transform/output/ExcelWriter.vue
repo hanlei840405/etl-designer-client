@@ -2,74 +2,64 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" align="left" narrow-indicator>
-        <q-tab name="main" :label="$t('tab-file')"/>
-        <q-tab name="sheet" label="工作表"/>
-        <q-tab name="content" :label="$t('tab-content')"/>
-        <q-tab name="field" :label="$t('tab-field')"/>
-        <q-tab name="runningConfig" :label="$t('tab-running-config')"/>
+        <q-tab name="basic" :label="$t('form.excelOutput.tabBasic')"/>
+        <q-tab name="sheet" :label="$t('form.excelOutput.tabSheet')"/>
+        <q-tab name="content" :label="$t('form.excelOutput.tabContent')"/>
+        <q-tab name="field" :label="$t('form.excelOutput.tabField')"/>
+        <q-tab name="runningConfig" :label="$t('form.excelOutput.tabRunningConfig')"/>
       </q-tabs>
       <q-tab-panels v-model="tab" animated>
-        <q-tab-panel name="main">
-          <q-input outlined v-model="form.name" :label="$t('form-name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"/>
-          <q-input outlined v-model="form.filename" :label="$t('form-file-name')"/>
-          <br/>
-          <q-select outlined v-model="form.suffix" :options="suffixes" emit-value map-options :label="$t('form-file-suffix')"/>
-          <br/>
-          <q-input outlined v-model="form.rowNumber" :label="$t('form-split-every-data-rows')"/>
-          <q-checkbox v-model="form.useDateFormat" :label="$t('form-specify-date-format')"/>
-          <q-select outlined v-model="form.dateFormat" :options="formats" emit-value map-options :label="$t('form-date-format')" :disable="!form.useDateFormat"/>
-          <br/>
-          <q-select outlined v-model="form.fileOutputMode" :options="outputModes" emit-value map-options :label="$t('form-exist-output-file')"/>
-          <br/>
-          <q-checkbox v-model="form.useStream" :label="$t('form-stream-xlsx-data')"/>
-          <q-checkbox v-model="form.useStepInfoSuffix" :label="$t('form-include-stepnr-in-filename')"/>
-          <q-checkbox v-model="form.useDateSuffix" :label="$t('form-include-date-in-filename')"/>
-          <q-checkbox v-model="form.useTimeSuffix" :label="$t('form-include-time-in-filename')"/>
-          <q-checkbox v-model="form.generateMode" :label="$t('form-wait-for-first-row-before-creating-file')"/>
-          <q-checkbox v-model="form.nameInResult" :label="$t('form-add-filename-to-result')"/>
+        <q-tab-panel class="row q-col-gutter-xs" name="basic">
+          <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.excelOutput.name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.filename" :label="$t('form.excelOutput.name')" hint=""/>
+          <q-select class="col-12 col-md-6" outlined v-model="form.suffix" :options="suffixes" emit-value map-options :label="$t('form.excelOutput.suffix')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.rowNumber" :label="$t('form.excelOutput.splitEveryDataRows')" hint=""/>
+          <q-select class="col-12 col-md-6" outlined v-model="form.fileOutputMode" :options="outputModes" emit-value map-options :label="$t('form.excelOutput.existOutputFile')" hint=""/>
+          <q-select class="col-12 col-md-6" outlined v-model="form.dateFormat" :options="formats" emit-value map-options :label="$t('form.excelOutput.dateFormat')" :disable="!form.useDateFormat" hint=""/>
+          <q-checkbox class="col-12 col-md-4" v-model="form.useDateFormat" :label="$t('form.excelOutput.specifyDateFormat')"/>
+          <q-checkbox class="col-12 col-md-4" v-model="form.useStream" :label="$t('form.excelOutput.streamXlsxData')"/>
+          <q-checkbox class="col-12 col-md-4" v-model="form.useStepInfoSuffix" :label="$t('form.excelOutput.includeStepnrInFilename')"/>
+          <q-checkbox class="col-12 col-md-4" v-model="form.useDateSuffix" :label="$t('form.excelOutput.includeDateInFilename')"/>
+          <q-checkbox class="col-12 col-md-4" v-model="form.useTimeSuffix" :label="$t('form.excelOutput.includeTimeInFilename')"/>
+          <q-checkbox class="col-12 col-md-4" v-model="form.generateMode" :label="$t('form.excelOutput.waitForFirstRowBeforeCreatingFile')"/>
+          <q-checkbox class="col-12 col-md-4" v-model="form.nameInResult" :label="$t('form.excelOutput.addFilenameToResult')"/>
         </q-tab-panel>
-        <q-tab-panel name="sheet">
-          <q-input outlined v-model="form.sheetName" :label="$t('form-sheet-name')"/>
-          <br/>
-          <q-select outlined v-model="form.sheetOutputMode" :options="outputModes" emit-value map-options :label="$t('form-sheet-exist')"/>
-          <br/>
-          <q-checkbox v-model="form.asActiveSheet" :label="$t('form-make-active')"/>
+        <q-tab-panel class="row q-col-gutter-xs" name="sheet">
+          <q-input class="col-12 col-md-6" outlined v-model="form.sheetName" :label="$t('form.excelOutput.sheetName')" hint=""/>
+          <q-select class="col-12 col-md-6" outlined v-model="form.sheetOutputMode" :options="outputModes" emit-value map-options :label="$t('form.excelOutput.sheetExist')" hint=""/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.asActiveSheet" :label="$t('form.excelOutput.makeActive')"/>
         </q-tab-panel>
-        <q-tab-panel name="content">
-          <q-input outlined v-model="form.startPoint" :label="$t('form-start-cell')"/>
-          <br/>
-          <q-select outlined v-model="form.cellOutputMode" :options="outputModes" emit-value map-options :label="$t('form-when-writing-rows')"/>
-          <br/>
-          <q-input outlined v-model.number="form.deleteLines" :label="$t('form-skip-rows')"/>
-          <br/>
-          <q-input outlined v-model.number="form.emptyLines" :label="$t('form-begin-writing-empty-lines')"/>
-          <br/>
-          <q-checkbox v-model="form.useHeader" :label="$t('form-write-header')"/>
-          <q-checkbox v-model="form.useFooter" :label="$t('form-write-footer')"/>
-          <q-checkbox v-model="form.autoSize" :label="$t('form-auto-size-columns')"/>
-          <q-checkbox v-model="form.recalculate" :label="$t('form-force-formula-recaluculation')"/>
-          <q-checkbox v-model="form.keepStyle" :label="$t('form-leave-style-existing')"/>
-          <q-checkbox v-model="form.append" :label="$t('form-append-lines')"/>
-          <q-checkbox v-model="form.deleteHeader" :label="$t('form-remove-header')"/>
+        <q-tab-panel class="row q-col-gutter-xs" name="content">
+          <q-input class="col-12 col-md-6" outlined v-model="form.startPoint" :label="$t('form.excelOutput.startCell')" hint=""/>
+          <q-select class="col-12 col-md-6" outlined v-model="form.cellOutputMode" :options="outputModes" emit-value map-options :label="$t('form.excelOutput.whenWritingRows')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model.number="form.deleteLines" :label="$t('form.excelOutput.skipRows')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model.number="form.emptyLines" :label="$t('form.excelOutput.beginWritingEmptyLines')" hint=""/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.useHeader" :label="$t('form.excelOutput.writeHeader')"/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.useFooter" :label="$t('form.excelOutput.writeFooter')"/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.autoSize" :label="$t('form.excelOutput.autoSizeColumns')"/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.recalculate" :label="$t('form.excelOutput.forceFormulaRecaluculation')"/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.keepStyle" :label="$t('form.excelOutput.leaveStyleExisting')"/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.append" :label="$t('form.excelOutput.appendLines')"/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.deleteHeader" :label="$t('form.excelOutput.removeHeader')"/>
         </q-tab-panel>
         <q-tab-panel name="field">
-          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('table-title-field')">
+          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.excelOutput.tableField')">
             <template v-slot:top-right>
               <q-btn-dropdown split outline color="primary" icon="add" @click="addParameter">
                 <q-list>
                   <q-item clickable v-close-popup @click="appendDiffParameter">
                     <q-item-section>
-                      <q-item-label>{{ $t('btn-append') }}</q-item-label>
+                      <q-item-label>{{ $t('button.append') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="addAllParameter">
                     <q-item-section>
-                      <q-item-label>{{ $t('btn-add-all') }}</q-item-label>
+                      <q-item-label>{{ $t('button.addAll') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup @click="clearAndAddParameter">
                     <q-item-section>
-                      <q-item-label>{{ $t('btn-remove-add') }}</q-item-label>
+                      <q-item-label>{{ $t('button.removeAndAdd') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -88,13 +78,13 @@
                 </q-td>
                 <q-td key="category" :props="props">
                   {{ props.row.category }}
-                  <q-popup-edit v-model="props.row.category" :auto-save=true>
+                  <q-popup-edit v-model="props.row.category" :auto-save="true">
                     <q-select autofocus outlined v-model="props.row.category" :options="categories"/>
                   </q-popup-edit>
                 </q-td>
                 <q-td key="format" :props="props">
                   {{ props.row.format }}
-                  <q-popup-edit v-model="props.row.format" :auto-save=true>
+                  <q-popup-edit v-model="props.row.format" :auto-save="true">
                     <q-select autofocus outlined v-model="props.row.format" :options="fieldFormats"/>
                   </q-popup-edit>
                 </q-td>
@@ -118,7 +108,7 @@
                 </q-td>
                 <q-td key="formula" :props="props">
                   {{ props.row.formula }}
-                  <q-popup-edit v-model="props.row.formula" :auto-save=true>
+                  <q-popup-edit v-model="props.row.formula" :auto-save="true">
                     <q-select autofocus outlined v-model="props.row.formula" :options="formulas"/>
                   </q-popup-edit>
                 </q-td>
@@ -133,7 +123,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined text-color="cyan-8" color="cyan-8" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input autofocus outlined v-model.number="form.parallel" :label="$t('form.excelOutput.threads')" type="number" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -147,7 +137,7 @@ export default {
   name: 'ExcelWriterStepMeta',
   data () {
     return {
-      tab: 'main',
+      tab: 'basic',
       form: {
         name: null,
         rowNumber: 0,
@@ -188,69 +178,69 @@ export default {
         { value: 'xlsx', label: 'xlsx [Excel 2007 and above]' }
       ],
       outputModes: [
-        { value: 'new', label: this.$t('form-overwrite') },
-        { value: 'reuse', label: this.$t('form-append') }
+        { value: 'new', label: this.$t('form.excelOutput.overwrite') },
+        { value: 'reuse', label: this.$t('form.excelOutput.append') }
       ],
       parameterColumns: [
         {
           name: 'operate',
-          label: this.$t('column-operate'),
+          label: this.$t('form.excelOutput.columnOperate'),
           field: 'operate',
           align: 'right',
           headerStyle: 'width: 20px'
         },
         {
           name: 'field',
-          label: this.$t('column-name'),
+          label: this.$t('form.excelOutput.columnName'),
           field: 'field',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'category',
-          label: this.$t('column-type'),
+          label: this.$t('form.excelOutput.columnType'),
           field: 'category',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'format',
-          label: this.$t('column-format'),
+          label: this.$t('form.excelOutput.columnFormat'),
           field: 'format',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'style',
-          label: this.$t('column-style'),
+          label: this.$t('form.excelOutput.columnStyle'),
           field: 'style',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'title',
-          label: this.$t('column-title'),
+          label: this.$t('form.excelOutput.columnTitle'),
           field: 'title',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'headerStyle',
-          label: this.$t('column-header-style'),
+          label: this.$t('form.excelOutput.columnHeaderStyle'),
           field: 'headerStyle',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'formula',
-          label: this.$t('column-formula'),
+          label: this.$t('form.excelOutput.columnFormula'),
           field: 'formula',
           align: 'left',
           headerStyle: 'width: 100px;'
         },
         {
           name: 'link',
-          label: this.$t('column-link'),
+          label: this.$t('form.excelOutput.columnLink'),
           field: 'link',
           align: 'left',
           headerStyle: 'width: 100px;'
@@ -367,8 +357,8 @@ export default {
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
-        title: vm.$t('dialog-title-error'),
-        message: this.$t('warning-duplicate-source-field-name')
+        title: vm.$t('message.error.default'),
+        message: this.$t('message.error.duplicateSourceField')
       }).onOk(() => {
         this.$emit('propertiesForm', {
           state: true,
