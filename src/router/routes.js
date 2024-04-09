@@ -44,16 +44,7 @@ const routes = [
         component: () => import('pages/etl/Design.vue'),
         meta: {
           authorities: ['ETL', 'ROOT']
-        },
-        children: [
-          {
-            path: ':category/:id',
-            component: () => import('src/pages/etl/DesignCanvas.vue'),
-            meta: {
-              authorities: ['ETL', 'ROOT']
-            }
-          }
-        ]
+        }
       },
       {
         path: '/etl-deploy',

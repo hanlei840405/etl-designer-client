@@ -88,8 +88,8 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="logDialog.state">
-      <q-card style="min-width: 25vw; min-height: 45vh">
+    <q-dialog v-model="logDialog.state" position="right">
+      <q-card style="min-width: 25vw; min-height: 60vh">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">{{ logDialog.title }}<q-circular-progress v-if="logDialog.showProcessing" indeterminate size="sm" class="q-ma-md"/></div>
           <q-space/>
@@ -179,6 +179,7 @@ import JobEntrySuccess from 'src/components/etl/job/common/JobEntrySuccess.vue'
 import JobEntryJob from 'src/components/etl/job/common/JobEntryJob.vue'
 import JobEntryEval from 'src/components/etl/job/shell/JobEntryEval.vue'
 import JobEntrySetVariables from 'src/components/etl/job/common/JobEntrySetVariables.vue'
+import JobEntryFTPPUT from 'src/components/etl/job/transfer/JobEntryFTPPUT.vue'
 import ValueMapperMeta from 'src/components/etl/transform/convert/ValueMapper.vue'
 import SplitFieldToRowsMeta from 'src/components/etl/transform/convert/SplitFieldToRows.vue'
 import DenormaliserMeta from 'src/components/etl/transform/convert/Denormaliser.vue'
@@ -247,6 +248,7 @@ export default {
     JobEntrySuccess,
     JobEntryJob,
     JobEntrySetVariables,
+    JobEntryFTPPUT,
     ValueMapperMeta,
     SplitFieldToRowsMeta,
     DenormaliserMeta,

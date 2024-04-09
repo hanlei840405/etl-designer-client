@@ -1296,6 +1296,23 @@ export default {
       columnHeaderStyle: "表头样式",
       columnFormula: "包含公式",
       columnLink: "超链接"
+    },
+    jobEntryFTPPUT: {
+      name: "名称",
+      serverName: "服务器地址",
+      serverPort: "服务器端口",
+      userName: "用户名",
+      password: "密码",
+      remoteDirectory: "远程目录",
+      localDirectory: "生成文件的转换",
+      wildcard: "通配符(正则)",
+      binaryMode: "二进制模式",
+      timeout: "超时",
+      remove: "上传后删除原文件",
+      onlyPuttingNewFiles: "不覆盖目标文件",
+      activeConnection: "使用活动的FTP连接",
+      controlEncoding: "控制编码",
+      parallel: "并行"
     }
   },
   response: {
