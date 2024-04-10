@@ -108,7 +108,7 @@
                 <q-td key="field" :props="props">
                   {{ props.row.field }}
                   <q-popup-edit v-model="props.row.field" :auto-save="true">
-                    <q-select autofocus stack-label outlined v-model="props.row.field" :options="sourceFields" @input="props.row.target = toHump(props.row.field)" @new-value="createSourceField" use-input/>
+                    <q-select autofocus outlined v-model="props.row.field" :options="sourceFields" @input="props.row.target = toHump(props.row.field)" @new-value="createSourceField" use-input/>
                   </q-popup-edit>
                 </q-td>
                 <q-td key="target" :props="props">

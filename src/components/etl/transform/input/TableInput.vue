@@ -2,13 +2,15 @@
   <div style="width: 100%;">
     <q-form class="row q-col-gutter-xs">
       <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.tableInput.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-      <q-select class="col-12 col-md-6" outlined v-model.number="form.datasource" emit-value map-options option-value="id" :options="datasource" :label="$t('form.tableInput.datasource')" clearable :rules="[ val => validate(val) || 'datasource is invalid' ]" hint="">
+      <q-select class="col-12 col-md-6" outlined v-model.number="form.datasource" emit-value map-options option-value="id" :options="datasourceOptions" :label="$t('form.tableInput.datasource')" clearable :rules="[ val => validate(val) || 'datasource is invalid' ]" hint="">
         <template v-slot:option="scope">
           <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
             <q-item-section>
               <q-item-label>{{ scope.opt.label }}</q-item-label>
-              <q-item-label caption>host: {{ scope.opt.host }}</q-item-label>
-              <q-item-label caption>port: {{ scope.opt.port }}</q-item-label>
+              <q-item-label caption v-if="scope.opt.category !== 'jdbc'">host: {{ scope.opt.host }}</q-item-label>
+              <q-item-label caption v-if="scope.opt.category !== 'jdbc'">port: {{ scope.opt.port }}</q-item-label>
+              <q-item-label caption v-if="scope.opt.category === 'jdbc'">url: {{ scope.opt.url }}</q-item-label>
+              <q-item-label caption v-if="scope.opt.category === 'jdbc'">driver: {{ scope.opt.driver }}</q-item-label>
             </q-item-section>
             <q-item-section side>
               <q-badge :label="scope.opt.category" />
@@ -93,7 +95,7 @@ export default {
         rowLimit: 0,
         distribute: true
       },
-      datasource: [],
+      datasourceOptions: [],
       previousSteps: [],
       previewDataDialog: {
         mode: false,
@@ -272,12 +274,14 @@ export default {
       id: root.projectId
     }).then(res => {
       res.data.forEach(ele => {
-        vm.datasource.push({
+        vm.datasourceOptions.push({
           id: ele.id,
           label: ele.name,
           category: ele.category,
           host: ele.host,
-          port: ele.port
+          port: ele.port,
+          url: ele.url,
+          driver: ele.driver
         })
       })
     })

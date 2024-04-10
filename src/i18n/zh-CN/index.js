@@ -112,7 +112,9 @@ export default {
       type: "数据库类型",
       host: "Host",
       port: "Port",
-      schema: "Schema"
+      schema: "Schema",
+      url: "JDBC URL",
+      driver: "JDBC驱动名",
     },
     user: {
       name: "姓名",
@@ -212,6 +214,8 @@ export default {
       username: "用户名",
       password: "密码",
       userResultStreamCursor: "以游标形式返回结果",
+      url: "JDBC URL",
+      driver: "JDBC驱动名",
       option: {
         argument: "参数",
         argumentName: "名称",

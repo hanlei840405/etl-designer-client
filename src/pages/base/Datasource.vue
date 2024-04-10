@@ -33,11 +33,16 @@
             <q-card-section>
               <q-list dense>
                 <q-item v-for="col in props.cols" :key="col.name">
-                  <q-item-section>
+                  <q-item-section class="col-4">
                     <q-item-label caption lines="1" class="text-primary">{{ col.label }}</q-item-label>
                   </q-item-section>
-                  <q-item-section>
-                    <q-item-label caption lines="1">{{ col.value }}</q-item-label>
+                  <q-item-section class="col-8">
+                    <q-item-label caption lines="1">
+                      {{ col.value }}
+                      <q-tooltip>
+                        {{ col.value }}
+                      </q-tooltip>
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -71,16 +76,18 @@
           </q-tabs>
           <q-tab-panels v-model="editDatasourceDialog.tabOption" animated swipeable vertical transition-prev="jump-up" transition-next="jump-up">
             <q-tab-panel class="row q-col-gutter-xs" name="basic">
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.name" :label="$t('form.datasource.name')" hint="" stack-label :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.datasource.name')]"/>
-              <q-select class="col-12 col-md-6" outlined v-model="datasource.category" :options="editDatasourceDialog.categories" :label="$t('form.datasource.type')" hint="" stack-label/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.host" :label="$t('form.datasource.host')" hint="" stack-label/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.port" :label="$t('form.datasource.port')" hint="" stack-label/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.schemaName" :label="$t('form.datasource.schema')" hint="" stack-label/>
-              <q-input class="col-12 col-md-6" outlined v-if="databaseDialogOracle" v-model="datasource.dataSpace" :label="$t('form.datasource.tableSpace')" hint="" stack-label/>
-              <q-input class="col-12 col-md-6" outlined v-if="databaseDialogOracle" v-model="datasource.indexSpace" :label="$t('form.datasource.indexSpace')" hint="" stack-label/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.username" :label="$t('form.datasource.username')" hint="" stack-label/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.password" :label="$t('form.datasource.password')" hint="" stack-label/>
-              <q-checkbox class="col-12 col-md-6" outlined v-if="databaseDialogMysql" v-model="datasource.useCursor" :label="$t('form.datasource.userResultStreamCursor')"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.name" :label="$t('form.datasource.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.datasource.name')]"/>
+              <q-select class="col-12 col-md-6" outlined v-model="datasource.category" :options="editDatasourceDialog.categories" :label="$t('form.datasource.type')" hint=""/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.host" :label="$t('form.datasource.host')" hint="" v-if="datasource.category !== 'jdbc'"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.port" :label="$t('form.datasource.port')" hint="" v-if="datasource.category !== 'jdbc'"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.schemaName" :label="$t('form.datasource.schema')" hint="" v-if="datasource.category !== 'jdbc'"/>
+              <q-input class="col-12 col-md-6" outlined v-if="databaseDialogOracle && datasource.category !== 'jdbc'" v-model="datasource.dataSpace" :label="$t('form.datasource.tableSpace')" hint=""/>
+              <q-input class="col-12 col-md-6" outlined v-if="databaseDialogOracle && datasource.category !== 'jdbc'" v-model="datasource.indexSpace" :label="$t('form.datasource.indexSpace')" hint=""/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.url" :label="$t('form.datasource.url')" hint="" v-if="datasource.category === 'jdbc'"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.driver" :label="$t('form.datasource.driver')" hint="" v-if="datasource.category === 'jdbc'"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.username" :label="$t('form.datasource.username')" hint=""/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.password" :label="$t('form.datasource.password')" hint=""/>
+              <q-checkbox class="col-12 col-md-6" outlined v-if="databaseDialogMysql && datasource.category !== 'jdbc'" v-model="datasource.useCursor" :label="$t('form.datasource.userResultStreamCursor')"/>
             </q-tab-panel>
             <q-tab-panel name="option">
               <q-table :data="datasource.parameter" :columns="editDatasourceDialog.parameterColumns" :title="$t('form.datasource.option.argument')" :rows-per-page-options="[]" row-key="name">
@@ -166,13 +173,25 @@ export default {
             label: this.$t('table.datasource.schema'),
             field: 'schemaName',
             align: 'left'
+          },
+          {
+            name: 'url',
+            label: this.$t('table.datasource.url'),
+            field: 'url',
+            align: 'left'
+          },
+          {
+            name: 'driver',
+            label: this.$t('table.datasource.driver'),
+            field: 'driver',
+            align: 'left'
           }
         ]
       },
       editDatasourceDialog: {
         state: false,
         tabOption: 'basic',
-        categories: ['mysql', 'postgresql', 'oracle'],
+        categories: ['mysql', 'postgresql', 'oracle', 'jdbc'],
         parameterColumns: [
           { name: 'name', align: 'left', label: this.$t('form.datasource.option.argumentName'), field: 'name' },
           { name: 'value', align: 'left', label: this.$t('form.datasource.option.argumentValue'), field: 'value' }
@@ -202,7 +221,9 @@ export default {
         poolMinIdle: null,
         poolMaxWait: null,
         status: null,
-        projectId: null
+        projectId: null,
+        url: null,
+        driver: null
       }
     }
   },
@@ -268,6 +289,8 @@ export default {
           poolMinIdle: res.data.poolMinIdle,
           poolMaxWait: res.data.poolMaxWait,
           projectId: res.data.projectId,
+          url: res.data.url,
+          driver: res.data.driver,
           parameter: JSON.parse(res.data.parameter)
         })
       })
@@ -316,7 +339,9 @@ export default {
         port: this.datasource.port,
         schemaName: this.datasource.schemaName,
         username: this.datasource.username,
-        password: this.datasource.password
+        password: this.datasource.password,
+        url: this.datasource.url,
+        driver: this.datasource.driver
       }).then(res => {
         if (res.data) {
           this.$q.notify({

@@ -10,13 +10,15 @@
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel class="row q-col-gutter-xs" name="basic">
           <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.tableDelete.name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-          <q-select class="col-12 col-md-6" outlined v-model="form.datasource" emit-value map-options option-value="id" :options="datasource" :label="$t('form.tableDelete.datasource')" clearable hint="">
+          <q-select class="col-12 col-md-6" outlined v-model="form.datasource" emit-value map-options option-value="id" :options="datasourceOptions" :label="$t('form.tableDelete.datasource')" clearable hint="">
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                 <q-item-section>
                   <q-item-label>{{ scope.opt.label }}</q-item-label>
-                  <q-item-label caption>host: {{ scope.opt.host }}</q-item-label>
-                  <q-item-label caption>port: {{ scope.opt.port }}</q-item-label>
+                  <q-item-label caption v-if="scope.opt.category !== 'jdbc'">host: {{ scope.opt.host }}</q-item-label>
+                  <q-item-label caption v-if="scope.opt.category !== 'jdbc'">port: {{ scope.opt.port }}</q-item-label>
+                  <q-item-label caption v-if="scope.opt.category === 'jdbc'">url: {{ scope.opt.url }}</q-item-label>
+                  <q-item-label caption v-if="scope.opt.category === 'jdbc'">driver: {{ scope.opt.driver }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-badge :label="scope.opt.category" color="primary"/>
@@ -129,7 +131,7 @@ export default {
         { name: 'source2', label: this.$t('form.tableDelete.columnSourceField2'), field: 'source2', align: 'left', headerStyle: 'width: 150px;' }
       ],
       state: false,
-      datasource: [],
+      datasourceOptions: [],
       sourceFields: [],
       targetFields: [],
       conditions: ['=', '=~NULL', '<>', '<', '<=', '>', '>=', 'LIKE', 'BETWEEN', 'IS NULL', 'IS NOT NULL'],
@@ -355,13 +357,14 @@ export default {
       ignoreStatus: false
     }).then(res => {
       res.data.forEach(ele => {
-        vm.datasource.push({
+        vm.datasourceOptions.push({
           id: ele.id,
           label: ele.name,
           category: ele.category,
           host: ele.host,
           port: ele.port,
-          schema: ele.schemaName
+          url: ele.url,
+          driver: ele.driver
         })
       })
     })
