@@ -1272,7 +1272,7 @@ export default {
       includeDateInFilename: "文件名包含日期",
       includeTimeInFilename: "文件名包含时间",
       waitForFirstRowBeforeCreatingFile: "在接收到数据前不创建文件",
-      addFilenameToResult: "结果中添加文件名",
+      addFilenameToResult: "结果中添加文件名(任务类型中的【发送邮件】组件可默认读取到此文件)",
       sheetName: "工作表名",
       sheetExist: "如果输出文件中已存在工作表",
       makeActive: "设为活动工作表",
@@ -1316,6 +1316,34 @@ export default {
       onlyPuttingNewFiles: "不覆盖目标文件",
       activeConnection: "使用活动的FTP连接",
       controlEncoding: "控制编码",
+      parallel: "并行"
+    },
+    jobEntryMail: {
+      name: "名称",
+      tabBasic: "基本",
+      tabServer: "邮件服务器",
+      tabContent: "内容",
+      destination: "收件人地址",
+      destinationCc: "抄送",
+      destinationBCc: "暗抄",
+      replyAddress: "发件人地址",
+      replyName: "发件人名称",
+      replyToAddresses: "回复地址(指定后，回复邮件时可选该地址)",
+      contactPerson: "联系人",
+      contactPhone: "联系人电话",
+      server: "SMTP服务器",
+      port: "端口",
+      usingAuthentication: "验证用户",
+      authenticationUser: "用户名",
+      authenticationPassword: "密码",
+      usingSecureAuthentication: "使用安全验证",
+      secureConnectionType: "安全连接类型",
+      includeDate: "信息里带日期",
+      useHTML: "使用HTML邮件格式",
+      subject: "主题",
+      comment: "正文",
+      includingFiles: "携带附件(转换组件中加入结果中的文件)",
+      onlySendComment: "只发送正文内容",
       parallel: "并行"
     }
   },
@@ -1449,7 +1477,8 @@ export default {
         default: "文件传输",
         JobEntryFTP: "FTP下载",
         JobEntryFTPPUT: "FTP上传",
-        JobEntryFTPDelete: "FTP删除"
+        JobEntryFTPDelete: "FTP删除",
+        JobEntryMail: "发送邮件"
       }
     }
   },

@@ -22,7 +22,7 @@
           <q-checkbox class="col-12 col-md-4" v-model="form.useDateSuffix" :label="$t('form.excelOutput.includeDateInFilename')"/>
           <q-checkbox class="col-12 col-md-4" v-model="form.useTimeSuffix" :label="$t('form.excelOutput.includeTimeInFilename')"/>
           <q-checkbox class="col-12 col-md-4" v-model="form.generateMode" :label="$t('form.excelOutput.waitForFirstRowBeforeCreatingFile')"/>
-          <q-checkbox class="col-12 col-md-4" v-model="form.nameInResult" :label="$t('form.excelOutput.addFilenameToResult')"/>
+          <q-checkbox class="col-12 col-md-12" v-model="form.nameInResult" :label="$t('form.excelOutput.addFilenameToResult')"/>
         </q-tab-panel>
         <q-tab-panel class="row q-col-gutter-xs" name="sheet">
           <q-input class="col-12 col-md-6" outlined v-model="form.sheetName" :label="$t('form.excelOutput.sheetName')" hint=""/>
