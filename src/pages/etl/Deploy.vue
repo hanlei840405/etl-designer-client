@@ -142,7 +142,7 @@
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-form @submit="submitForm">
-          <q-card-section class="q-col-gutter-xs" v-if="'0' === streaming">
+          <q-card-section class="q-col-gutter-xs">
             <q-select
               v-model="misfire"
               outlined
@@ -156,7 +156,7 @@
             >
             </q-select>
           </q-card-section>
-          <q-card-section class="col q-pt-none" v-if="'0' === streaming">
+          <q-card-section class="col q-pt-none">
             <q-input outlined color="cyan-8" v-model="cron" :label="$t('form.shellPublish.cron')" :rules="[val => !!val || 'Please type something', val => validate(val) || $t('form.shellPublish.cronRule')]" hint=""/>
           </q-card-section>
           <q-card-actions align="right">
@@ -455,7 +455,53 @@ export default {
     deploy (row) {
       this.selectShellPublishId = row.id
       this.streaming = row.streaming
-      this.deployShellState = true
+      if (this.streaming === '0') {
+        this.deployShellState = true
+      } else {
+        this.$q.dialog({
+          title: 'Confirm',
+          message: this.$t('message.confirm.deploy'),
+          cancel: {
+            textColor: 'primary',
+            outline: true
+          },
+          ok: {
+            textColor: 'negative',
+            outline: true
+          },
+          persistent: true
+        }).onOk(() => {
+          deployShellPublish({id: this.selectShellPublishId}).then(() => {
+            this.history()
+            this.$q.notify({
+              message: this.$t('response.success.deploy'),
+              position: 'top',
+              color: 'teal'
+            })
+          this.deployShellState = false
+          }).catch(err => {
+            if (err.status === 10002) {
+              this.$q.notify({
+                message: this.$t('response.error.10002'),
+                position: 'top',
+                color: 'negative'
+              })
+            } else if (err.status === 10012) {
+              this.$q.notify({
+                message: this.$t('response.error.10012'),
+                position: 'top',
+                color: 'negative'
+              })
+            } else {
+              this.$q.notify({
+                message: err.data.error,
+                position: 'top',
+                color: 'negative'
+              })
+            }
+          })
+        })
+      }
     },
     submitForm () {
       this.$q.dialog({

@@ -163,7 +163,7 @@
 import pako from 'pako'
 import { date } from 'quasar'
 import { fetchShellPublishReferences, fetchShellPublishContent, deployShellPublish } from 'src/service/kettle/ShellService'
-import { fetchBatchTasks, fetchHistory, fetchHistoryLog, modifyBatchTask, pauseBatchTask, resumeBatchTask, shutdownRunningInstance, stopBatchTask } from 'src/service/task/TaskService'
+import { fetchBatchTasks, fetchHistory, fetchHistoryLog, modifyBatchTask, pauseBatchTask, resumeBatchTask, shutdownRunningInstance, stopTask } from 'src/service/task/TaskService'
 import PreviewCanvasCom from 'src/pages/etl/PreviewCanvasCom.vue'
 // var persitedArray = []
 export default {
@@ -182,6 +182,7 @@ export default {
           rowsNumber: 0,
           rowsPerPage: 20
         },
+        filter: null,
         columns: [
           {
             name: 'name',
@@ -374,8 +375,7 @@ export default {
       const query = {
         pageNo: e.pagination.page,
         pageSize: e.pagination.rowsPerPage,
-        name: e.filter,
-        streaming: '0'
+        payload: e.filter
       }
       fetchBatchTasks(query).then(res => {
         this.table.pagination = Object.assign(e.pagination, {
@@ -671,7 +671,7 @@ export default {
       })
     },
     stop (id) {
-      stopBatchTask({id: id}).then(res => {
+      stopTask({id: id}).then(res => {
         this.runningBatchTasks(this.table)
         this.$q.notify({
           message: this.$t('response.success.pause'),

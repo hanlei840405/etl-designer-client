@@ -208,8 +208,8 @@ export default {
     this.menus = [
       {
         id: 'basic',
-        category: this.$t('menu.basic.default'), 
-        prefix: '/basic-', 
+        category: this.$t('menu.basic.default'),
+        prefix: '/basic-',
         icon: 'las la-server',
         children: [
           {
@@ -228,8 +228,8 @@ export default {
       },
       {
         id: 'auth',
-        category: this.$t('menu.auth.default'), 
-        prefix: '/auth-', 
+        category: this.$t('menu.auth.default'),
+        prefix: '/auth-',
         icon: 'lab la-centos',
         children: [
           {
@@ -248,8 +248,8 @@ export default {
       },
       {
         id: 'etl',
-        category: this.$t('menu.etl.default'), 
-        prefix: '/etl-', 
+        category: this.$t('menu.etl.default'),
+        prefix: '/etl-',
         icon: 'las la-cogs',
         children: [
           {
@@ -268,8 +268,8 @@ export default {
       },
       {
         id: 'task',
-        category: this.$t('menu.task.default'), 
-        prefix: '/task-', 
+        category: this.$t('menu.task.default'),
+        prefix: '/task-',
         icon: 'las la-cogs',
         children: [
           {
@@ -285,9 +285,9 @@ export default {
             icon: 'las la-stream'
           },
           {
-            id: 'task-instance',
+            id: 'running-process',
             name: this.$t('menu.task.instance'),
-            to: '/task-instance',
+            to: '/running-process',
             icon: 'las la-recycle'
           }
         ]

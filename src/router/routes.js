@@ -62,14 +62,14 @@ const routes = [
       },
       {
         path: '/task-streaming',
-        component: () => import('pages/task/Batch.vue'),
+        component: () => import('pages/task/Streaming.vue'),
         meta: {
           authorities: ['TASK', 'ROOT']
         }
       },
       {
-        path: '/task-instance',
-        component: () => import('pages/task/Batch.vue'),
+        path: '/running-process',
+        component: () => import('pages/task/RuningProcess.vue'),
         meta: {
           authorities: ['TASK', 'ROOT']
         }

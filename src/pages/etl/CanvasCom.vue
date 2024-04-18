@@ -70,7 +70,32 @@
         </q-list>
       </q-btn-dropdown>
     </q-btn-group>
-    <div ref="graphContainer" style="width: 100%; height: calc(100vh - 200px);"/>
+    <q-splitter v-model="splitter" horizontal @input="calculateGraphHeight">
+      <template v-slot:before>
+        <div ref="graphContainer" :style="graphContainerStyle"/>
+      </template>
+      <template v-slot:separator>
+        <q-avatar color="primary" size="20px" icon="drag_indicator" />
+      </template>
+      <template v-slot:after>
+        <div :style="logContainerStyle">
+          <q-tabs dense v-model="logDialog.tabOption" align="left">
+            <q-tab name="trans" :label="$t('response.log')"/>
+            <q-tab name="step" :label="$t('response.agg')"/>
+          </q-tabs>
+          <q-tab-panels v-model="logDialog.tabOption" transition-prev="jump-up" transition-next="jump-up">
+            <q-tab-panel name="trans">
+              <pre>{{ logDialog.log }}</pre>
+            </q-tab-panel>
+            <q-tab-panel name="step">
+              <q-table dense :data="logDialog.logData" :columns="logDialog.transStepLogColumns"
+                      :rows-per-page-options="[0]" row-key="index" hide-bottom/>
+            </q-tab-panel>
+          </q-tab-panels>
+        </div>
+      </template>
+
+    </q-splitter>
     <div ref="outlineContainer" style="z-index:1;position:absolute;overflow:hidden;bottom:0px;right:0px;width:160px;height:120px;background:transparent;border-style:solid;border-color:lightgray;"/>
     <q-dialog v-model="propertiesDialog.state">
       <q-card style="width: 900px; max-width: 90vw;">
@@ -86,29 +111,6 @@
         <q-card-actions align="right">
           <q-btn outline color="primary" :label="$t('button.save')" icon="save" @click="$refs.step.submitForm()"/>
         </q-card-actions>
-      </q-card>
-    </q-dialog>
-    <q-dialog v-model="logDialog.state" position="right">
-      <q-card style="min-width: 25vw; min-height: 60vh">
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ logDialog.title }}<q-circular-progress v-if="logDialog.showProcessing" indeterminate size="sm" class="q-ma-md"/></div>
-          <q-space/>
-          <q-btn icon="close" flat round dense v-close-popup/>
-        </q-card-section>
-        <q-tabs v-model="logDialog.tabOption" class="text-cyan-8" align="left">
-          <q-tab name="trans" label="trans"/>
-          <q-tab name="step" label="step"/>
-        </q-tabs>
-        <q-tab-panels v-model="logDialog.tabOption" animated swipeable vertical transition-prev="jump-up"
-                      transition-next="jump-up">
-          <q-tab-panel name="trans">
-            <pre>{{ logDialog.log }}</pre>
-          </q-tab-panel>
-          <q-tab-panel name="step">
-            <q-table :data="logDialog.logData" :columns="logDialog.transStepLogColumns"
-                     :rows-per-page-options="[0]" row-key="index" hide-bottom/>
-          </q-tab-panel>
-        </q-tab-panels>
       </q-card>
     </q-dialog>
     <q-dialog v-model="publishDialog.state">
@@ -300,6 +302,9 @@ export default {
       connectedFn: null,
       undoMng: null,
       outline: null,
+      splitter: 85,
+      graphContainerStyle: null,
+      logContainerStyle: null,
       toolbarName:{
         stepInput: this.$t('etl.transform.stepInput.default'),
         stepOutput: this.$t('etl.transform.stepOutput.default'),
@@ -328,19 +333,21 @@ export default {
         state: false,
         title: this.$t('kettle.log'),
         tabOption: 'trans',
-        showProcessing: true,
-        log: null,
+        showProcessing: false,
+        log: '',
         logData: [],
         transStepLogColumns: [
           {
             name: 'name',
             label: this.$t('kettle.column.name'),
-            field: 'name'
+            field: 'name',
+            align: 'left'
           },
           {
             name: 'logDate',
             label: this.$t('kettle.column.logDate'),
-            field: 'logDate'
+            field: 'logDate',
+            align: 'left'
           },
           {
             name: 'stepCopy',
@@ -432,6 +439,14 @@ export default {
     }
   },
   methods: {
+    calculateGraphHeight (val) {
+      const baseHeight = window.innerHeight - 200
+      const height =  Math.floor(val / 100 * baseHeight)
+      this.graphContainerStyle = `width: 100%; height: ${height}px`
+      this.logContainerStyle = `width: 100%; height: ${baseHeight - height}px`
+      console.log(this.graphContainerStyle)
+      console.log(this.logContainerStyle)
+    },
     dragable (key, category) {
       const array = []
       if (category === '1') {
@@ -608,7 +623,7 @@ export default {
       })
     },
     execute () {
-      this.logDialog.log = null
+      this.logDialog.log = ''
       if (this.executing) {
         this.cancel(this.$t('message.kettle.cancelRunningEtl'))
         stop({
@@ -938,7 +953,7 @@ export default {
   computed: {
     showDeleteButton () {
       return this.graph ? this.graph.getSelectionCells().length : 0
-    }
+    },
   },
   activated () {
     const vm = this
@@ -1196,6 +1211,7 @@ export default {
     }
   },
   mounted () {
+    this.calculateGraphHeight(this.splitter)
     const vm = this
     mxgraph.mxConstants.VERTEX_SELECTION_COLOR = '#1976D2'
     mxgraph.mxConstants.EDGE_SELECTION_COLOR = '#1976D2'

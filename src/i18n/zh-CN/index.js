@@ -1348,6 +1348,8 @@ export default {
     }
   },
   response: {
+    log: "现场日志",
+    agg: "聚合数据",
     error: {
       10001: "未查询到数据",
       10002: "无权限操作该数据",
@@ -1493,7 +1495,7 @@ export default {
     },
     column: {
       name: "名称",
-      logDate: "名称",
+      logDate: "执行时间",
       stepCopy: "副本数",
       read: "读取数",
       written: "写入数",
