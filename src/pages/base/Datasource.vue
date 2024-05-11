@@ -364,7 +364,7 @@ export default {
         })
       })
     },
-    deleteDatasource () {
+    deleteDatasource (props) {
       this.$q.dialog({
         title: 'Confirm',
         message: this.$t('message.confirm.delete'),
@@ -378,7 +378,7 @@ export default {
         },
         persistent: true
       }).onOk(() => {
-        deleteDatasource(this.datasource.id).then(res => {
+        deleteDatasource(props.key || this.datasource.id).then(() => {
           this.searchDatasourceList()
           this.$q.notify({
             message: this.$t('response.success.delete'),
