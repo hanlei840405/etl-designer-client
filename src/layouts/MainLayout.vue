@@ -291,6 +291,20 @@ export default {
             icon: 'las la-recycle'
           }
         ]
+      },
+      {
+        id: 'bi',
+        category: this.$t('menu.bi.default'),
+        prefix: '/bi-',
+        icon: 'las la-cogs',
+        children: [
+          {
+            id: 'bi-model',
+            name: this.$t('menu.bi.model'),
+            to: '/bi-model',
+            icon: 'las la-tasks'
+          }
+        ]
       }
     ]
     me().then(res => {

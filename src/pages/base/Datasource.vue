@@ -125,7 +125,7 @@
           <q-card-actions align="right">
             <q-btn :label="$t('button.test')" outline color="orange" icon="las la-spider" @click="testDatasource"/>
             <q-btn :label="$t('button.save')" outline color="primary" icon="las la-save" @click="saveDatasource"/>
-            <q-btn :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteDatasource"/>
+            <q-btn v-if="datasource.id" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteDatasource"/>
           </q-card-actions>
       </q-card>
     </q-dialog>

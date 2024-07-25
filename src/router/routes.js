@@ -73,6 +73,13 @@ const routes = [
         meta: {
           authorities: ['TASK', 'ROOT']
         }
+      },
+      {
+        path: '/bi-model',
+        meta: {
+          authorities: ['MODEL', 'ROOT']
+        },
+        component: () => import('pages/bi/Model.vue')
       }
     ]
   },

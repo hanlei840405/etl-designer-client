@@ -51,6 +51,10 @@ export default {
       batch: "批处理任务管理",
       streaming: "流处理任务管理",
       instance: "任务子进程管理"
+    },
+    bi: {
+      default: "BI分析",
+      model: "模型管理"
     }
   },
   button: {
@@ -94,7 +98,8 @@ export default {
     resume: "恢复",
     stop: "下线",
     history: "历史",
-    historyLog: "历史执行日志"
+    historyLog: "历史执行日志",
+    select: "选择"
   },
   table: {
     empty: "无数据",
@@ -157,7 +162,7 @@ export default {
       route: "点此进入{0}",
       recover: "确认回滚?",
       deploy: "确认部署?",
-      modify: "确认更新?"
+      executeDdl: "确认执行DDL语句?"
     },
     loading: {
       save: "正在保存"
@@ -1345,6 +1350,28 @@ export default {
       includingFiles: "携带附件(转换组件中加入结果中的文件)",
       onlySendComment: "只发送正文内容",
       parallel: "并行"
+    },
+    model: {
+      default: "模型",
+      code: "自定义编码",
+      name: "名称",
+      datasource: "数据源",
+      description: "描述",
+      tableField: "字段",
+      columnOperate: "操作",
+      columnDescription: "描述",
+      columnCode: "字段编码",
+      columnName: "字段名称",
+      columnType: "字段类型",
+      columnPrimaryKey: "是否主键",
+      columnNotNull: "禁止为空",
+      columnAutoIncr: "是否自增",
+      columnLength: "字段长度",
+      columnDecimal: "包含小数",
+      columnYes: "是",
+      columnNo: "否",
+      columnTableName: "表(视图)名",
+      columnTableType: "类型"
     }
   },
   response: {
