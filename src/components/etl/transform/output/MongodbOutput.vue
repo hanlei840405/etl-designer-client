@@ -183,7 +183,7 @@
 import { collections, dbNames, writeConcerns } from 'src/service/kettle/MongodbService'
 
 const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
-const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta']
+const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta', 'UniqueRowsMeta', 'UniqueRowsByHashSetMeta']
 export default {
   name: 'MongoDbOutputMeta',
   data () {

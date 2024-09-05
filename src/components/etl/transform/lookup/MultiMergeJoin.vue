@@ -14,7 +14,7 @@
 <script>
 
 const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
-const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta']
+const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta', 'UniqueRowsMeta', 'UniqueRowsByHashSetMeta']
 export default {
   name: 'MultiMergeJoinMeta',
   data () {

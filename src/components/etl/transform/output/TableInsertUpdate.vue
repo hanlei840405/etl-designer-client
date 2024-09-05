@@ -152,7 +152,7 @@ import { structure } from 'src/service/kettle/PreviewService'
 import { mdiGlasses, mdiTableLarge } from '@quasar/extras/mdi-v5'
 
 const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
-const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta']
+const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta', 'UniqueRowsMeta', 'UniqueRowsByHashSetMeta']
 export default {
   name: 'InsertUpdateMeta',
   data () {
