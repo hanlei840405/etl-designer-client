@@ -29,12 +29,6 @@
                     <q-select autofocus outlined v-model="props.row.category" :options="categories"/>
                   </q-popup-edit>
                 </q-td>
-                <q-td key="value" :props="props">
-                  {{ props.row.value }}
-                  <q-popup-edit v-model="props.row.value" :auto-save="true">
-                    <q-input autofocus v-model="props.row.value"/>
-                  </q-popup-edit>
-                </q-td>
                 <q-td key="formatValue" :props="props">
                   {{ props.row.formatValue }}
                   <q-popup-edit v-model="props.row.formatValue" :auto-save="true">
@@ -69,6 +63,12 @@
                   {{ props.row.groupBy }}
                   <q-popup-edit v-model="props.row.groupBy" :auto-save="true">
                     <q-input autofocus v-model="props.row.groupBy"/>
+                  </q-popup-edit>
+                </q-td>
+                <q-td key="value" :props="props">
+                  {{ props.row.value }}
+                  <q-popup-edit v-model="props.row.value" :auto-save="true">
+                    <q-input autofocus v-model="props.row.value"/>
                   </q-popup-edit>
                 </q-td>
                 <q-td key="emptyValue" :props="props">
