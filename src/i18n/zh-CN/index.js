@@ -2,10 +2,10 @@
 // so you can safely delete all default props below
 
 export default {
-  failed: '操作失败',
-  success: '操作成功',
+  failed: "操作失败",
+  success: "操作成功",
   global: {
-    not_authorized: '您未经过系统授权操作本页面',
+    not_authorized: "您未经过系统授权操作本页面",
     app: "河狸小子",
     author: "新恩数造",
     language: "选择语言",
@@ -54,7 +54,8 @@ export default {
     },
     bi: {
       default: "BI分析",
-      model: "模型管理"
+      model: "模型管理",
+      report: "报表设计"
     }
   },
   button: {
@@ -308,7 +309,8 @@ export default {
       modify: "编辑",
       history: "执行历史",
       success: "成功",
-      failure: "失败"
+      failure: "失败",
+      log: "现场日志"
     },
     tableInput: {
       name: "名称",
@@ -1372,6 +1374,27 @@ export default {
       columnNo: "否",
       columnTableName: "表(视图)名",
       columnTableType: "类型"
+    },
+    report: {
+      default: "报表",
+      code: "自定义编码",
+      name: "名称",
+      model: "模型",
+      description: "描述",
+      script: "脚本",
+      chart: "图表样式",
+      line: "折线图",
+      pie: "饼图",
+      verticalBar: "垂直柱状图",
+      verticalStackedBar: "垂直堆叠柱状图",
+      verticalStackedPercentBar: "垂直堆叠百分比柱状图",
+      horizontalBar: "水平柱状图",
+      horizontalStackedBar: "水平堆叠柱状图",
+      horizontalStackedPercentBar: "水平堆叠百分比柱状图",
+      area: "堆叠面积图",
+      radar: "雷达图",
+      mix: "混合图(折线、面积、柱状图)",
+      kLine: "K线图"
     }
   },
   response: {

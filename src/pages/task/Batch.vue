@@ -79,7 +79,7 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="viewHistoryState">
-      <q-card style="width: 900px; max-width: 90vw;">
+      <q-card style="width: 60vw; max-width: 90vw;">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">{{ $t('form.task.history') }}</div>
           <q-btn icon="event" round color="primary">
@@ -96,33 +96,30 @@
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
-          <q-card-section class="q-col-gutter-xs">
-            <q-table
-              flat
-              bordered
-              :data="historyCmp.histories"
-              :columns="historyCmp.columns"
-              row-key="id"
-              separator="cell"
-              :loading="historyCmp.loading"
-              :no-data-label="$t('table.empty')"
-              @request="pageHistory"
-              :rows-per-page-options="[10, 20 ,50]"
-              :pagination.sync="historyCmp.pagination"
-            >
-              <template v-slot:body-cell-operate="props">
-                <q-td style="padding: 1px;">
-                  <q-btn-group outline>
-                    <q-btn outline color="primary" @click="viewHistoryLog(props.row.id)">{{ $t('button.historyLog') }}</q-btn>
-                    <q-btn outline color="primary" @click="shutdown(props.row.id)">{{ $t('button.shutdown') }}</q-btn>
-                  </q-btn-group>
-                </q-td>
-              </template>
-            </q-table>
-          </q-card-section>
-          <q-card-section class="q-col-gutter-xs">
-            <q-input type="text" v-model="historyCmp.logText" autogrow readonly></q-input>
-          </q-card-section>
+        <q-card-section class="q-col-gutter-xs">
+          <q-table
+            flat
+            bordered
+            :data="historyCmp.histories"
+            :columns="historyCmp.columns"
+            row-key="id"
+            separator="cell"
+            :loading="historyCmp.loading"
+            :no-data-label="$t('table.empty')"
+            @request="pageHistory"
+            :rows-per-page-options="[10, 20 ,50]"
+            :pagination.sync="historyCmp.pagination"
+          >
+            <template v-slot:body-cell-operate="props">
+              <q-td style="padding: 1px;">
+                <q-btn-group outline>
+                  <q-btn outline color="primary" @click="viewHistoryLog(props.row.id)">{{ $t('button.historyLog') }}</q-btn>
+                  <q-btn outline color="primary" @click="shutdown(props.row.id)">{{ $t('button.shutdown') }}</q-btn>
+                </q-btn-group>
+              </q-td>
+            </template>
+          </q-table>
+        </q-card-section>
       </q-card>
     </q-dialog>
     <q-dialog v-model="editTaskState">
@@ -154,6 +151,18 @@
             <q-btn type="submit" :label="$t('button.save')" outline color="primary" icon="las la-save"/>
           </q-card-actions>
         </q-form>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="logState">
+      <q-card style="width: 40vw; max-width: 80vw; height: 60vh;">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ $t('form.task.log') }}</div>
+          <q-space/>
+          <q-btn icon="close" flat round dense v-close-popup/>
+        </q-card-section>
+        <q-card-section class="items-center q-pb-none">
+          <pre>{{ historyCmp.logText }}</pre>
+        </q-card-section>
       </q-card>
     </q-dialog>
   </div>
@@ -327,6 +336,7 @@ export default {
       },
       referenceContent: null,
       editTaskState: false,
+      logState: false,
       task: {
         id: null,
         cron: null,
@@ -548,6 +558,7 @@ export default {
     viewHistoryLog (id) {
       fetchHistoryLog(id).then(res => {
         this.historyCmp.logText = res.data
+        this.logState = true
       }).catch(err => {
         if (err.status === 10002) {
           this.$q.notify({
