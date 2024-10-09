@@ -13,7 +13,7 @@
         <q-btn outline :label="$t('button.create')" color="primary" @click="newUser"/>
       </template>
       <template v-slot:item="props">
-        <div class="q-pa-xs col-xs-12 col-sm-6 col-md-3 grid-style-transition">
+        <div class="q-pa-xs col-xs-12 col-sm-4 col-md-2 grid-style-transition">
           <q-card>
             <q-separator color="primary" size="2px"/>
             <q-card-section>

@@ -100,7 +100,9 @@ export default {
     stop: "下线",
     history: "历史",
     historyLog: "历史执行日志",
-    select: "选择"
+    select: "选择",
+    copy: "复制",
+    move: "移动"
   },
   table: {
     empty: "无数据",

@@ -79,7 +79,7 @@
       </q-dialog>
     </div>
   </template>
-  
+
   <script>
   import { fetchPrivileges, grant, fetchGrantUsers, deletePrivilege } from 'src/service/auth/PrivilegeService'
   import {fetchUsers} from 'src/service/auth/UserService'
@@ -147,16 +147,15 @@
     },
     methods: {
       searchPrivileges (e) {
-        const vm = this
-        vm.table.loading = true
+        this.table.loading = true
         const query = {
-          payload: vm.table.filter,
+          payload: this.table.filter,
           pageNo: e.pagination.page,
           pageSize: e.pagination.rowsPerPage
         }
         fetchPrivileges(query).then(res => {
-          vm.table.data = res.data.items
-          vm.table.pagination = Object.assign(e.pagination, {
+          this.table.data = res.data.items
+          this.table.pagination = Object.assign(e.pagination, {
             rowsNumber: res.data.total
           })
           this.table.loading = false
@@ -316,4 +315,3 @@
     }
   }
   </script>
-  

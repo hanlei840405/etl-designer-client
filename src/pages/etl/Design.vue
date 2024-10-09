@@ -63,10 +63,14 @@
                                 <q-item-label>{{ $t('button.modify') }}</q-item-label>
                               </q-item-section>
                             </q-item>
-
                             <q-item clickable v-close-popup @click="deleteShell(shell)">
                               <q-item-section>
                                 <q-item-label>{{ $t('button.delete') }}</q-item-label>
+                              </q-item-section>
+                            </q-item>
+                            <q-item clickable v-close-popup @click="moveShell(shell)">
+                              <q-item-section>
+                                <q-item-label>{{ $t('button.move') }}</q-item-label>
                               </q-item-section>
                             </q-item>
                           </q-list>
@@ -77,11 +81,6 @@
                   <q-card flat bordered style="width: 200px;cursor: pointer;">
                     <div class="column full-width">
                       <q-btn flat bordered padding="lg" icon="las la-plus" style="height:95px" @click="newShell('0', true)"/>
-                    </div>
-                  </q-card>
-                  <q-card flat bordered v-if="selected.length > 0" style="width: 200px;cursor: pointer;">
-                    <div class="column full-width">
-                      <q-btn flat bordered padding="lg" icon="las la-copy" style="height:95px" @click="copyShell"/>
                     </div>
                   </q-card>
                   <q-card flat bordered v-if="showPasteBtn" style="width: 200px;cursor: pointer;">
@@ -170,7 +169,7 @@ export default {
         streaming: '0'
       },
       subTabs: [],
-      copies: [],
+      moveShells: [],
       showPasteBtn: false,
       activeTab: null
     }
@@ -196,13 +195,13 @@ export default {
           this.shells = res.data
           var existed = false
           out: for (var i = 0; i < this.shells.length; i++) {
-            for (var j = 0; j < this.copies.length; j++) {
-              if (this.shells[i].id === this.copies[j])
+            for (var j = 0; j < this.moveShells.length; j++) {
+              if (this.shells[i].id === this.moveShells[j])
                 existed = true
                 break out
               }
           }
-          this.showPasteBtn = this.copies.length > 0 && !existed
+          this.showPasteBtn = this.moveShells.length > 0 && !existed
         }).catch(err => {
           if (err.status === 10002) {
             this.$q.notify({
@@ -224,13 +223,13 @@ export default {
           this.shells = res.data
           var existed = false
           out: for (var i = 0; i < this.shells.length; i++) {
-            for (var j = 0; j < this.copies.length; j++) {
-              if (this.shells[i].id === this.copies[j])
+            for (var j = 0; j < this.moveShells.length; j++) {
+              if (this.shells[i].id === this.moveShells[j])
                 existed = true
                 break out
               }
           }
-          this.showPasteBtn = this.copies.length > 0 && !existed
+          this.showPasteBtn = this.moveShells.length > 0 && !existed
         }).catch(err => {
           if (err.status === 10002) {
             this.$q.notify({
@@ -257,7 +256,7 @@ export default {
       this.links = []
       this.selected = []
       if (this.showShellDialog.prevClickProjectId != this.showShellDialog.projectId) {
-        this.copies = []
+        this.moveShells = []
         this.showShellDialog.prevClickProjectId = this.showShellDialog.projectId
       }
       this.searchShells(0, this.showShellDialog.projectId)
@@ -415,22 +414,27 @@ export default {
       }
       return 'primary'
     },
-    copyShell () {
-      this.copies = this.selected.slice()
+    moveShell (shell) {
+      if (this.selected.length > 0) {
+        this.moveShells = this.selected.slice()
+      } else {
+        this.moveShells = [shell.id]
+      }
     },
     pasteShell () {
       const array = []
-      this.copies.forEach(item => {
+      this.moveShells.forEach(item => {
         array.push({id: item})
       })
-      move(this.showShellDialog.openShellId, array).then(res => {
+      const pathVar = this.showShellDialog.openShellId || 0
+      move(this.showShellDialog.openShellId || 0, array).then(res => {
         this.$q.notify({
           message: this.$t('response.success.copy'),
           position: 'top',
           color: 'teal'
         })
-        this.copies = []
-        this.searchShells(1, this.showShellDialog.openShellId)
+        this.moveShells = []
+        this.searchShells(this.showShellDialog.openShellId || 0, this.showShellDialog.openShellId || this.showShellDialog.projectId)
       }).catch(err => {
         if (err.status === 10002) {
           this.$q.notify({
