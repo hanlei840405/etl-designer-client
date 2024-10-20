@@ -1,4 +1,5 @@
-import { i18n } from 'src/boot/i18n'
+import {i18n} from 'src/boot/i18n'
+
 const METADATA_CATEGORIES = {
   mysql: ['int', 'bigint', 'varchar', 'date', 'datetime', 'time', 'decimal', 'float', 'double'],
   oracle: ['varchar2', 'number', 'integer', 'long', 'float', 'date', 'timestamp'],
@@ -153,6 +154,35 @@ const ETL_TOOLBAR = {
       name: i18n.t('etl.transform.stepConvert.ConcatFieldsMeta'),
       type: 'ConcatFieldsMeta'
     }],
+    stepProcess: [{
+      img: '/images/etl/SWC.svg',
+      name: i18n.t('etl.transform.stepProcess.SwitchCaseMeta'),
+      type: 'SwitchCaseMeta'
+    }, {
+      img: '/images/etl/DUM.svg',
+      name: i18n.t('etl.transform.stepProcess.DummyTransMeta'),
+      type: 'DummyTransMeta'
+    }, {
+      img: '/images/etl/MAIL.svg',
+      name: i18n.t('etl.transform.stepProcess.MailMeta'),
+      type: 'MailMeta'
+    }, {
+      img: '/images/etl/EMS.svg',
+      name: i18n.t('etl.transform.stepProcess.DetectEmptyStreamMeta'),
+      type: 'DetectEmptyStreamMeta'
+    }, {
+      img: '/images/etl/DLR.svg',
+      name: i18n.t('etl.transform.stepProcess.DetectLastRowMeta'),
+      type: 'DetectLastRowMeta'
+    }, {
+      img: '/images/etl/WTL.svg',
+      name: i18n.t('etl.transform.stepProcess.WriteToLogMeta'),
+      type: 'WriteToLogMeta'
+    }, {
+      img: '/images/etl/FLT.svg',
+      name: i18n.t('etl.transform.stepProcess.FilterRowsMeta'),
+      type: 'FilterRowsMeta'
+    }],
     stepScript: [{
       img: '/images/etl/janino.svg',
       name: i18n.t('etl.transform.stepScript.UserDefinedJavaClassMeta'),
@@ -187,31 +217,12 @@ const ETL_TOOLBAR = {
       name: i18n.t('etl.transform.stepLookup.RestMeta'),
       type: 'RestMeta'
     }],
-    stepProcess: [{
-      img: '/images/etl/SWC.svg',
-      name: i18n.t('etl.transform.stepProcess.SwitchCaseMeta'),
-      type: 'SwitchCaseMeta'
-    }, {
-      img: '/images/etl/DUM.svg',
-      name: i18n.t('etl.transform.stepProcess.DummyTransMeta'),
-      type: 'DummyTransMeta'
-    }, {
-      img: '/images/etl/MAIL.svg',
-      name: i18n.t('etl.transform.stepProcess.MailMeta'),
-      type: 'MailMeta'
-    }, {
-      img: '/images/etl/EMS.svg',
-      name: i18n.t('etl.transform.stepProcess.DetectEmptyStreamMeta'),
-      type: 'DetectEmptyStreamMeta'
-    }, {
-      img: '/images/etl/DLR.svg',
-      name: i18n.t('etl.transform.stepProcess.DetectLastRowMeta'),
-      type: 'DetectLastRowMeta'
-    }, {
-      img: '/images/etl/WTL.svg',
-      name: i18n.t('etl.transform.stepProcess.WriteToLogMeta'),
-      type: 'WriteToLogMeta'
-    }]
+    stepConnect: [{
+      img: '/images/etl/MJOIN.svg',
+      name: i18n.t('etl.transform.stepConnect.MergeJoinMeta'),
+      type: 'MergeJoinMeta'
+    },
+    ]
   },
   job: {
     entryCommon: [{

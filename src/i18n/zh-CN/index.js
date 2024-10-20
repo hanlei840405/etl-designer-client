@@ -30,7 +30,7 @@ export default {
     logout: "退出系统"
   },
   menu: {
-    home: "首页",
+    home: "工程管理",
     basic: {
       default: "基础数据管理",
       project: "工程管理",
@@ -54,8 +54,7 @@ export default {
     },
     bi: {
       default: "BI分析",
-      model: "模型管理",
-      report: "报表设计"
+      model: "模型管理"
     }
   },
   button: {
@@ -309,8 +308,7 @@ export default {
       modify: "编辑",
       history: "执行历史",
       success: "成功",
-      failure: "失败",
-      log: "现场日志"
+      failure: "失败"
     },
     tableInput: {
       name: "名称",
@@ -612,6 +610,32 @@ export default {
       columnType: "类型",
       columnName: "名称",
       columnOperate: "操作"
+    },
+    mergeJoin: {
+      name: "名称",
+      stepName:"步骤名称",
+      stepFirst: "第一个步骤",
+      stepSecond: "第二个步骤",
+      mergeType:"连接类型",
+      mergeFieldFirst: "第一个步骤的连接字段",
+      mergeFieldSecond: "第二个步骤的连接字段",
+      mergeField:"连接字段",
+      getMergeField:"获得连接字段",
+      operate:"操作",
+    },
+    filterRows:{
+      name:"名称",
+      operate:"操作",
+      stepTrue:"发送true数据给步骤",
+      stepFalse:"发送false数据给步骤",
+      condition:"条件",
+      columnOperate: "操作",
+      operateValue: "与上一条件关系",
+      columnName: "字段",
+      negate: "IS NOT",
+      function: "函数",
+      value: "值",
+
     },
     kafkaProducerOutput: {
       name: "名称",
@@ -1028,7 +1052,7 @@ export default {
       name: "名称",
       tabBasic: "基本",
       tabRunningConfig: "运行参数",
-      tableField: "字段",
+      // tableField: "字段",
       threads: "并行数",
       tableField: "字段",
       columnOperate: "操作",
@@ -1245,6 +1269,7 @@ export default {
       tabArgumentParameter: "位置参数",
       tabNameParameter: "命名参数",
       job: "作业",
+      transformation: "作业",
       executeEveryInputRow: "执行每一个输入行",
       passingExport: "将作业执行结果发送到从服务器上",
       expandingRemoteJob: "监控子任务或转换",
@@ -1374,27 +1399,6 @@ export default {
       columnNo: "否",
       columnTableName: "表(视图)名",
       columnTableType: "类型"
-    },
-    report: {
-      default: "报表",
-      code: "自定义编码",
-      name: "名称",
-      model: "模型",
-      description: "描述",
-      script: "脚本",
-      chart: "图表样式",
-      line: "折线图",
-      pie: "饼图",
-      verticalBar: "垂直柱状图",
-      verticalStackedBar: "垂直堆叠柱状图",
-      verticalStackedPercentBar: "垂直堆叠百分比柱状图",
-      horizontalBar: "水平柱状图",
-      horizontalStackedBar: "水平堆叠柱状图",
-      horizontalStackedPercentBar: "水平堆叠百分比柱状图",
-      area: "堆叠面积图",
-      radar: "雷达图",
-      mix: "混合图(折线、面积、柱状图)",
-      kLine: "K线图"
     }
   },
   response: {
@@ -1442,6 +1446,10 @@ export default {
   },
   etl: {
     transform: {
+      stepConnect: {
+        default: "连接",
+        MergeJoinMeta: "记录集连接",
+      },
       stepInput: {
         default: "输入",
         TableInputMeta: "表输入",
@@ -1463,7 +1471,7 @@ export default {
         default: "流处理",
         RecordsFromStreamMeta: "读取流",
         KafkaProducerOutputMeta: "Kafka producer",
-        KafkaConsumerInputMeta: "Kafka consumer"
+        KafkaConsumerInputMeta: "Kafka consumer",
       },
       stepConvert: {
         default: "转换",
@@ -1504,7 +1512,8 @@ export default {
         MailMeta: "邮件",
         DetectEmptyStreamMeta: "检测空流",
         DetectLastRowMeta: "识别流的最后一行",
-        WriteToLogMeta: "写日志"
+        WriteToLogMeta: "写日志",
+        FilterRowsMeta: "过滤记录",
       }
     },
     job: {
