@@ -46,19 +46,19 @@
             <q-td key="rightValuename" :props="props">
               {{ props.row.rightValuename }}
               <q-popup-edit v-model.number="props.row.rightValuename" :auto-save="true">
-                <q-select autofocus outlined v-model.number="props.row.rightValuename" :options="sourceFields"/>
+                <q-select autofocus outlined v-model.number="props.row.rightValuename" :options="sourceFields" @input="changeRight(props)"/>
               </q-popup-edit>
             </q-td>
             <q-td key="value" :props="props">
               {{ props.row.value }}
               <q-popup-edit v-model.number="props.row.value" :auto-save="true">
-                <q-input autofocus outlined v-model.number="props.row.value"/>
+                <q-input autofocus outlined v-model.number="props.row.value" @input="changeValue(props)"/>
               </q-popup-edit>
             </q-td>
             <q-td key="type" :props="props">
               {{ props.row.type }}
               <q-popup-edit v-model.number="props.row.type" :auto-save="true">
-                <q-input autofocus outlined v-model.number="props.row.type" :options="categories"/>
+                <q-select autofocus outlined v-model.number="props.row.type" :options="categories"/>
               </q-popup-edit>
             </q-td>
           </q-tr>
@@ -96,14 +96,6 @@ export default {
         isBusiness: "Y",
         send_true_to: "",
         send_false_to: "",
-        compare: {
-          condition: {
-            negated: "N",
-            conditions: {
-              condition: []
-            }
-          }
-        },
         fields: {
           field: []
         },
@@ -185,30 +177,33 @@ export default {
       negates: ["Y", "N"],
       operators: ["AND","OR","OR NOT","AND NOT","XOR"],
       functions: ["=", "<>", "<", "<=", ">", ">=", "REGEXP", "IS NULL", "IS NOT NULL", "IN LIST", "CONTAINS", "STARTS WITH", "ENDS WITH", "LIKE", "TRUE"],
-      leftFields: [],
-      rightFields: [],
     }
   },
   methods: {
+    changeRight(props){
+      props.row.value = ""
+      props.row.type = ""
+    },
+    changeValue(props){
+      props.row.rightValuename = ""
+    },
     filterStepTrue(val) {
-      const fields = this.stepList.filter(v => v.title === val)
-      const ext = JSON.parse(fields[0].ext)
-      if (ext.sourceFields) {
-        ext.sourceFields.forEach(field => {
-          this.rightFields.push(field)
-        })
+      const steps = this.nextSteps.filter(step => step === val)
+      if (steps.length > 0) {
+         this.form.send_true_to=steps[0]
       }
+      this.form.send_false_to=""
+      this.form.fieldMappingData=[]
     },
     filterStepFalse(val) {
-      const fields = this.stepList.filter(v => v.title === val)
-      const ext = JSON.parse(fields[0].ext)
-      if (ext.sourceFields) {
-        ext.sourceFields.forEach(field => {
-          this.leftFields.push(field)
-        })
+      const steps = this.nextSteps.filter(step => step === val)
+      if (steps.length > 0) {
+        this.form.send_false_to=steps[0]
       }
+      this.form.fieldMappingData=[]
     },
     addParameter() {
+      console.log(this.form)
       this.form.fieldMappingData.push({
         negate: '',
         operates: '',
@@ -216,17 +211,69 @@ export default {
         function: '',
         rightValuename:'',
         value:'',
+        type:'',
       })
     },
     deleteParameter(props) {
       this.form.fieldMappingData.splice(props.rowIndex, 1)
     },
     submitForm() {
+      //条件重组
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form,
       })
-    }
+    },
+
+    /**
+     * 条件数据重新组合
+     * @param Fields
+     */
+    changeFields(){
+      let conditions=[];
+      this.form.fieldMappingData.forEach(item=>{
+        console.log(item)
+        if(item.length>0){
+          let condition =[];
+          let sunCondition={};
+
+          item.children.forEach(sub=>{
+
+            condition.push({
+              negated: sub.negated,
+              operator: sub.operates,
+              leftvalue: sub.leftValuename,
+              rightvalue: sub.rightValuename,
+              function: sub.function,
+              value: {
+                name: sub.value,
+                type: sub.type,
+                text: "",
+                length: "-1",
+                precision: "-1",
+                isnull: 'N',
+                mask: ""
+              }
+            })
+          })
+          delete item.children
+          condition.push(item);
+          sunCondition['conditions']={
+            negated:item.negated,
+            operator:item.operates,
+            condition:condition,
+          }
+          conditions.push(sunCondition)
+        }else{
+          delete item.children;
+          conditions.push(item);
+        }
+
+      })
+      return conditions;
+
+    },
+
   },
   mounted() {
     const vm = this
@@ -276,15 +323,13 @@ export default {
     if (nextSteps && nextSteps.length > 0) {
       nextSteps.forEach(step => {
         if (step.value&&step.title){
-          vm.nextSteps.push({ value: step.value, label: step.title })
+          vm.nextSteps.push(step.title)
         }
       })
     }
     const mxCellValue = vm.$store.getters['etl/getMxCellForm']
     if (mxCellValue) {
-      if (vm.form.name !== mxCellValue.name) {
-        vm.form = Object.assign(vm.form, mxCellValue)
-      }
+      vm.form = Object.assign(vm.form, mxCellValue)
     }
   }
 }
