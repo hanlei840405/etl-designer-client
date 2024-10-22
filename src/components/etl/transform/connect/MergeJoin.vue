@@ -5,9 +5,9 @@
                :rules="[ val => val && val.length > 0 || '请填写名称']" hint=""/>
 
       <q-select outlined v-model="form.step1" clearable filled use-input @input="filterStepFirst"
-                :options="stepNameList" :label="$t('form.mergeJoin.stepFirst')"/>
+                :options="sourceFields" :label="$t('form.mergeJoin.stepFirst')"/>
       <q-select outlined v-model="form.step2" clearable filled use-input @input="filterStepSecond"
-                :options="stepNameList" :label="$t('form.mergeJoin.stepSecond')"/>
+                :options="sourceFields" :label="$t('form.mergeJoin.stepSecond')"/>
       <q-select outlined v-model="form.join_type" clearable filled use-input
                 :options="joinTypes" label="字符集编码"/>
       <q-table :data="form.fieldMappingData" :columns="fieldMappingColumns" :rows-per-page-options="[0]" row-key="name"
@@ -109,7 +109,7 @@ export default {
       rightFields: [],
       joinTypes: ['INNER', 'LEFT OUTER', 'RIGHT OUTER', 'FULL OUTER'],
       copyMergeType: [],
-      stepNameList: [],
+      sourceFields: [],
       targetData: {},
       sourceData: {},
       stepList: [],
@@ -192,7 +192,7 @@ export default {
         if (step.ext !== undefined && step.ext !== 'undefined' && IGNORE_REPEAT_WARNING_META.indexOf(step.type) < 0) {
           const ext = JSON.parse(step.ext)
           if (step.depth === 0 && step.title) {
-            vm.stepNameList.push(step.title)
+            vm.sourceFields.push(step.title)
             vm.stepList.push(step)
           }
           if (ext.replaceFields) {
@@ -204,9 +204,9 @@ export default {
       })
     }
     replaceFields.forEach(field => {
-      vm.stepNameList.splice(vm.stepNameList.indexOf(field), 1)
+      vm.sourceFields.splice(vm.sourceFields.indexOf(field), 1)
     })
-    if (new Set(vm.stepNameList).size !== vm.stepNameList.length) {
+    if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({
         dark: true,
         title: vm.$t('message.error.default'),
@@ -216,16 +216,14 @@ export default {
           state: true,
           mxCellProperties: this.form,
           ext: {
-            stepNameList: []
+            sourceFields: []
           }
         })
       })
     }
     const mxCellValue = vm.$store.getters['etl/getMxCellForm']
     if (mxCellValue) {
-      if (vm.form.name !== mxCellValue.name) {
-        vm.form = Object.assign(vm.form, mxCellValue)
-      }
+      vm.form = Object.assign(vm.form, mxCellValue)
     }
     // const root = vm.$store.getters['etl/getRoot']
     // fetchDatasourceList({

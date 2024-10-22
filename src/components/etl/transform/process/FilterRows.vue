@@ -5,9 +5,9 @@
                :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
 
       <q-select outlined v-model="form.send_true_to" clearable filled use-input @input="filterStepTrue"
-                :options="stepNameList" :label="$t('form.filterRows.stepTrue')"/>
+                :options="nextSteps" :label="$t('form.filterRows.stepTrue')"/>
       <q-select outlined v-model="form.send_false_to" clearable filled use-input @input="filterStepFalse"
-                :options="stepNameList" :label="$t('form.filterRows.stepFalse')"/>
+                :options="nextSteps" :label="$t('form.filterRows.stepFalse')"/>
 
       <q-table :data="form.fieldMappingData" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
                separator="cell" hide-bottom :title="$t('form.filterRows.condition')">
@@ -25,16 +25,16 @@
                 <q-select autofocus outlined v-model="props.row.negate" :options="negates"/>
               </q-popup-edit>
             </q-td>
-            <q-td key="operate" :props="props">
-              {{ props.row.operate }}
-              <q-popup-edit v-model="props.row.operate" :auto-save="true">
-                <q-select autofocus outlined v-model="props.row.operate" :options="operators"/>
+            <q-td key="operates" :props="props">
+              {{ props.row.operates }}
+              <q-popup-edit v-model="props.row.operates" :auto-save="true">
+                <q-select autofocus outlined v-model="props.row.operates" :options="operators"/>
               </q-popup-edit>
             </q-td>
             <q-td key="leftValuename" :props="props">
               {{ props.row.leftValuename }}
               <q-popup-edit v-model.number="props.row.leftValuename" :auto-save="true">
-                <q-select autofocus outlined v-model.number="props.row.leftValuename"/>
+                <q-select autofocus outlined v-model.number="props.row.leftValuename" :options="sourceFields"/>
               </q-popup-edit>
             </q-td>
             <q-td key="function" :props="props">
@@ -46,13 +46,19 @@
             <q-td key="rightValuename" :props="props">
               {{ props.row.rightValuename }}
               <q-popup-edit v-model.number="props.row.rightValuename" :auto-save="true">
-                <q-select autofocus outlined v-model.number="props.row.rightValuename" />
+                <q-select autofocus outlined v-model.number="props.row.rightValuename" :options="sourceFields"/>
               </q-popup-edit>
             </q-td>
             <q-td key="value" :props="props">
               {{ props.row.value }}
               <q-popup-edit v-model.number="props.row.value" :auto-save="true">
                 <q-input autofocus outlined v-model.number="props.row.value"/>
+              </q-popup-edit>
+            </q-td>
+            <q-td key="type" :props="props">
+              {{ props.row.type }}
+              <q-popup-edit v-model.number="props.row.type" :auto-save="true">
+                <q-input autofocus outlined v-model.number="props.row.type" :options="categories"/>
               </q-popup-edit>
             </q-td>
           </q-tr>
@@ -63,13 +69,16 @@
 </template>
 
 <script>
+
+const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
+const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta', 'UniqueRowsMeta', 'UniqueRowsByHashSetMeta', 'SetValueFieldMeta']
 export default {
   name: 'FilterRowsMeta',
   data() {
     return {
       form: {
         initFlag: true,
-        name: "过滤插件",
+        name: "过滤记录",
         type: "FilterRows",
         modelName: "",
         description: [
@@ -126,9 +135,9 @@ export default {
           headerStyle: 'width: 100px;'
         },
         {
-          name: 'operate',
+          name: 'operates',
           label: this.$t('form.filterRows.operateValue'),
-          field: 'operate',
+          field: 'operates',
           align: 'left',
           headerStyle: 'width: 20px'
         },
@@ -157,17 +166,27 @@ export default {
         {
           name: 'value',
           label: this.$t('form.filterRows.value'),
-          field: 'accuracy',
+          field: 'value',
+          align: 'left',
+          headerStyle: 'width: 100px;'
+        },
+        {
+          name: 'type',
+          label: this.$t('form.filterRows.type'),
+          field: 'type',
           align: 'left',
           headerStyle: 'width: 100px;'
         }
       ],
-      stepNameList: [],
+      sourceFields: [],
       stepList: [],
+      nextSteps: [],
       categories: ['BigNumber', 'Binary', 'Boolean', 'Date', 'Integer', 'Internet Address', 'Number', 'String', 'Timestamp'],
       negates: ["Y", "N"],
       operators: ["AND","OR","OR NOT","AND NOT","XOR"],
       functions: ["=", "<>", "<", "<=", ">", ">=", "REGEXP", "IS NULL", "IS NOT NULL", "IN LIST", "CONTAINS", "STARTS WITH", "ENDS WITH", "LIKE", "TRUE"],
+      leftFields: [],
+      rightFields: [],
     }
   },
   methods: {
@@ -176,7 +195,7 @@ export default {
       const ext = JSON.parse(fields[0].ext)
       if (ext.sourceFields) {
         ext.sourceFields.forEach(field => {
-          this.leftFields.push(field)
+          this.rightFields.push(field)
         })
       }
     },
@@ -192,7 +211,7 @@ export default {
     addParameter() {
       this.form.fieldMappingData.push({
         negate: '',
-        operate: '',
+        operates: '',
         leftValuename: '',
         function: '',
         rightValuename:'',
@@ -206,15 +225,66 @@ export default {
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form,
-        ext: {sourceFields: this.form.parameters.map(ele => ele.field)}
       })
     }
   },
   mounted() {
     const vm = this
+    const previousSteps = vm.$store.getters['etl/getPreNodes']
+    vm.sourceFields = []
+    const replaceFields = []
+    if (previousSteps && previousSteps.length > 0) {
+      previousSteps.forEach((step, i) => {
+        if (i === 0 && FORBIDDEN_NEXT_STEP_PARALLEL.indexOf(step.type) >= 0) {
+          vm.forbiddenParallel = true
+        }
+        if (step.ext !== undefined && step.ext !== 'undefined' && IGNORE_REPEAT_WARNING_META.indexOf(step.type) < 0) {
+          const ext = JSON.parse(step.ext)
+          if (ext.sourceFields) {
+            ext.sourceFields.forEach(field => {
+              vm.sourceFields.push(field)
+            })
+          }
+          if (ext.replaceFields) {
+            ext.replaceFields.forEach(field => {
+              replaceFields.push(field)
+            })
+          }
+        }
+      })
+    }
+    replaceFields.forEach(field => {
+      vm.sourceFields.splice(vm.sourceFields.indexOf(field), 1)
+    })
+    if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
+      vm.$q.dialog({
+        dark: true,
+        title: vm.$t('message.error.default'),
+        message: this.$t('message.error.duplicateSourceField')
+      }).onOk(() => {
+        this.$emit('propertiesForm', {
+          state: true,
+          mxCellProperties: this.form,
+          ext: {
+            sourceFields: []
+          }
+        })
+      })
+    }
+    const nextSteps = vm.$store.getters['etl/getNextNodes']
+    vm.nextSteps = []
+    if (nextSteps && nextSteps.length > 0) {
+      nextSteps.forEach(step => {
+        if (step.value&&step.title){
+          vm.nextSteps.push({ value: step.value, label: step.title })
+        }
+      })
+    }
     const mxCellValue = vm.$store.getters['etl/getMxCellForm']
     if (mxCellValue) {
-      vm.form = Object.assign(vm.form, mxCellValue)
+      if (vm.form.name !== mxCellValue.name) {
+        vm.form = Object.assign(vm.form, mxCellValue)
+      }
     }
   }
 }

@@ -635,6 +635,7 @@ export default {
       negate: "IS NOT",
       function: "函数",
       value: "值",
+      type: "值类型",
 
     },
     kafkaProducerOutput: {
