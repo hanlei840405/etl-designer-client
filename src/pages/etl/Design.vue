@@ -463,11 +463,10 @@ export default {
     },
     clickSubTab (item) {
       if (item.id === -1) {
-        this.showShellDialog.state=true
         this.fetchProjects()
-      } else {
-        this.activeTab = item.id
+        this.showShellDialog.state=true
       }
+      this.activeTab = item.id
     }
   },
   activated () {
