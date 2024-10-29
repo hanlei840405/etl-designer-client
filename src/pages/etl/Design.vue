@@ -8,7 +8,7 @@
       </q-tabs>
     </q-footer>
     <q-tab-panels v-model="activeTab" animated keep-alive>
-      <q-tab-panel v-for="item in subTabs" :key="item.id" :name="item.id">
+      <q-tab-panel v-for="item in subTabs" :key="item.id" :name="item.id" keep-alive>
         <canvas-com v-if="item.id > -1" :shell="item"></canvas-com>
       </q-tab-panel>
     </q-tab-panels>
@@ -448,6 +448,7 @@ export default {
       })
     },
     closeSubTab (e, id) {
+      e.preventDefault()
       var index = this.subTabs.findIndex((item) =>item.id === id)
       if (index >= 0) {
         this.subTabs.splice(index, 1)
@@ -455,15 +456,13 @@ export default {
       if (this.subTabs.length === 1) {
         this.clickSubTab({id: -1})
       }
-      e.preventDefault()
     },
     clickSubTab (item) {
       if (item.id === -1) {
-        this.showShellDialog.state=true
         this.fetchProjects()
-      } else {
-        this.activeTab = item.id
+        this.showShellDialog.state=true
       }
+      this.activeTab = item.id
     }
   },
   activated () {
