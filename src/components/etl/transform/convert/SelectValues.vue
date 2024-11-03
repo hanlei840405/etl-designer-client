@@ -693,11 +693,12 @@ export default {
     submitForm () {
       const vm = this
       const array = []
+      const notEmptyArray = []
       vm.form.selects.forEach(item => {
         if (vm.sourceFields.indexOf(item.source) >= 0) {
           vm.sourceFields.splice(vm.sourceFields.indexOf(item.source), 1)
         }
-        if (item.target && array.indexOf(item.source) < 0) {
+        if (array.indexOf(item.source) < 0) {
           array.push(item.target || item.source)
         }
       })
@@ -710,7 +711,7 @@ export default {
         mxCellProperties: this.form,
         ext: {
           sourceFields: array,
-          replaceFields: replaceFields
+          replaceFields: [...replaceFields, ...array]
         }
       })
     }
