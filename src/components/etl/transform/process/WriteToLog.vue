@@ -173,7 +173,7 @@ export default {
       }
     },
     submitForm () {
-      debugger
+
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form

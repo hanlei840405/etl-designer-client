@@ -745,7 +745,6 @@ export default {
       vm.sourceFields.splice(vm.sourceFields.indexOf(field), 1)
     })
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
-      debugger
       vm.$q.dialog({
         dark: true,
         title: vm.$t('message.error.default'),

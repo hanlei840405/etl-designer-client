@@ -163,7 +163,7 @@ export default {
       this.form.parameters.splice(props.rowIndex, 1)
     },
     submitForm () {
-      debugger
+
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form,
@@ -199,7 +199,6 @@ export default {
         }
       })
     }
-    debugger
     replaceFields.forEach(field => {
       if (vm.sourceFields.indexOf(field) > -1) {
         vm.sourceFields.splice(vm.sourceFields.indexOf(field), 1)
