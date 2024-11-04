@@ -615,15 +615,16 @@ export default {
     },
     mergeJoin: {
       name: "名称",
-      stepName:"步骤名称",
-      stepFirst: "第一个步骤",
-      stepSecond: "第二个步骤",
-      mergeType:"连接类型",
+      stepName: "步骤名称",
+      step1: "第一个步骤",
+      step2: "第二个步骤",
+      mergeType: "连接类型",
       mergeFieldFirst: "第一个步骤的连接字段",
       mergeFieldSecond: "第二个步骤的连接字段",
-      mergeField:"连接字段",
-      getMergeField:"获得连接字段",
-      operate:"操作",
+      mergeField: "连接字段",
+      getMergeField: "获得连接字段",
+      operate: "操作",
+      join: "连接方式"
     },
     filterRows:{
       name:"名称",
