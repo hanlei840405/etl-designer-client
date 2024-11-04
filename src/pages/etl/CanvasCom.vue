@@ -212,6 +212,8 @@ import RowsToResultMeta from 'src/components/etl/transform/shell/RowsToResult.vu
 import RowsFromResultMeta from 'src/components/etl/transform/shell/RowsFromResult.vue'
 import MultiMergeJoinMeta from 'src/components/etl/transform/lookup/MultiMergeJoin.vue'
 import SortRowsMeta from 'src/components/etl/transform/convert/SortRows.vue'
+import FilterRowsMeta from 'components/etl/transform/process/FilterRows.vue'
+import MergeJoinMeta from 'src/components/etl/transform/connect/MergeJoin.vue'
 import { fetchShellContent, saveShellContent, publishShell, fetchShellPublishes, fetchShellPublishContent } from 'src/service/kettle/ShellService'
 import { execute, stop } from 'src/service/kettle/DesignService'
 import { date, uid } from 'quasar'
@@ -284,7 +286,9 @@ export default {
     RowsToResultMeta,
     RowsFromResultMeta,
     MultiMergeJoinMeta,
-    SortRowsMeta
+    SortRowsMeta,
+    MergeJoinMeta,
+    FilterRowsMeta
   },
   props: {
     shell: {
@@ -314,6 +318,7 @@ export default {
         stepLookup: this.$t('etl.transform.stepLookup.default'),
         stepProcess: this.$t('etl.transform.stepProcess.default'),
         entryMail: this.$t('etl.transform.entryMail.default'),
+        stepConnect: this.$t('etl.transform.stepConnect.default'),
         entryCommon: this.$t('etl.job.entryCommon.default'),
         entryScript: this.$t('etl.job.entryScript.default'),
         conditionShell: this.$t('etl.job.conditionShell.default'),
@@ -325,7 +330,7 @@ export default {
       propertiesDialog: {
         state: false,
         title: false,
-        state: false,
+        // state: false,
       },
       init: false,
       showCellDialog: true,
@@ -875,7 +880,7 @@ export default {
       if (this.graph.getSelectionCells().length > 0) {
         this.$q.dialog({
           title: 'Confirm',
-          message: this.$t('confirm.delete'),
+          message: this.$t('message.confirm.delete'),
           cancel: {
             textColor: 'orange',
             outline: true,

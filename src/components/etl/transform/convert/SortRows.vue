@@ -162,12 +162,14 @@ export default {
     deleteParameter (props) {
       this.form.parameters.splice(props.rowIndex, 1)
     },
-    submitForm (e) {
+    submitForm () {
+
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form,
         ext: {
-          sourceFields: this.form.parameters.map(ele => ele.field)
+          // sourceFields: this.form.parameters.map(ele => ele.field)
+          sourceFields: this.sourceFields
         }
       })
     }
@@ -198,7 +200,9 @@ export default {
       })
     }
     replaceFields.forEach(field => {
-      vm.sourceFields.splice(vm.sourceFields.indexOf(field), 1)
+      if (vm.sourceFields.indexOf(field) > -1) {
+        vm.sourceFields.splice(vm.sourceFields.indexOf(field), 1)
+      }
     })
     if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
       vm.$q.dialog({

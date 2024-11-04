@@ -338,7 +338,6 @@ export default {
         })
         this.datasourceOptions.forEach(item => {
           if (item.id === res.data.datasourceId) {
-            debugger
             this.datasourceCategory = item.category
           }
         })
@@ -350,7 +349,6 @@ export default {
             color: 'negative'
           })
         } else {
-          debugger
           this.$q.notify({
             message: err.data.error,
             position: 'top',
