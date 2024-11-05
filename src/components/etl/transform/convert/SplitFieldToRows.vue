@@ -52,7 +52,8 @@ export default {
     submitForm () {
       this.$emit('propertiesForm', {
         state: true,
-        mxCellProperties: this.form
+        mxCellProperties: this.form,
+        ext: { sourceFields: [this.form.target] }
       })
     }
   },
