@@ -78,38 +78,9 @@ export default {
     return {
       form: {
         initFlag: true,
-        name: "过滤记录",
-        type: "FilterRows",
-        modelName: "",
-        description: [
-          "",
-          ""
-        ],
         fieldMappingData: [],
-        distribute: "Y",
-        custom_distribution: "",
-        copies: 1,
-        partitioning: {
-          method: "none",
-          schema_name: ""
-        },
-        isBusiness: "Y",
         send_true_to: "",
-        send_false_to: "",
-        fields: {
-          field: []
-        },
-        attributes: "",
-        cluster_schema: "",
-        remotesteps: {
-          input: "",
-          output: ""
-        },
-        GUI: {
-          xloc: 416,
-          yloc: 288,
-          draw: "Y"
-        }
+        send_false_to: ""
       },
       parameterColumns: [
         {
@@ -322,7 +293,7 @@ export default {
     vm.nextSteps = []
     if (nextSteps && nextSteps.length > 0) {
       nextSteps.forEach(step => {
-        if (step.value&&step.title){
+        if (step.value && step.title){
           vm.nextSteps.push(step.title)
         }
       })
