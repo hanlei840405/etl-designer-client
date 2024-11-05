@@ -988,7 +988,7 @@ export default {
           vm.showStepProperties(cell, cell.getAttribute('form', ''), preNodes, nextNodes)
         } else if (cell && cell.isEdge() && mouse.button === 0) {
           const form = JSON.parse(cell.source.getAttribute('form'))
-          const error = JSON.parse(cell.source.getAttribute('error')) || {}
+          const error = JSON.parse(cell.source.getAttribute('error') || "{}")
           if (error[cell.target.id]) {
             return false
           }
