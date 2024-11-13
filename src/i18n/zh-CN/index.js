@@ -1382,6 +1382,12 @@ export default {
       onlySendComment: "只发送正文内容",
       parallel: "并行"
     },
+    multiMergeJoin: {
+      name: "名称",
+      step: "步骤",
+      joinKey: "连接字段",
+      joinType: "连接类型"
+    },
     model: {
       default: "模型",
       code: "自定义编码",
@@ -1453,6 +1459,7 @@ export default {
       stepConnect: {
         default: "连接",
         MergeJoinMeta: "记录集连接",
+        MultiMergeJoinMeta: "多步骤记录集连接",
       },
       stepInput: {
         default: "输入",

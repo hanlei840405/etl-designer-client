@@ -221,7 +221,11 @@ const ETL_TOOLBAR = {
       img: '/images/etl/MJOIN.svg',
       name: i18n.t('etl.transform.stepConnect.MergeJoinMeta'),
       type: 'MergeJoinMeta'
-    },
+    }, {
+      img: '/images/etl/MJOINS.svg',
+      name: i18n.t('etl.transform.stepConnect.MultiMergeJoinMeta'),
+      type: 'MultiMergeJoinMeta'
+    }
     ]
   },
   job: {

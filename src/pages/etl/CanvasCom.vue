@@ -210,10 +210,10 @@ import SetValueFieldMeta from 'src/components/etl/transform/convert/SetValueFiel
 import MongoDbOutputMeta from 'src/components/etl/transform/output/MongodbOutput.vue'
 import RowsToResultMeta from 'src/components/etl/transform/shell/RowsToResult.vue'
 import RowsFromResultMeta from 'src/components/etl/transform/shell/RowsFromResult.vue'
-import MultiMergeJoinMeta from 'src/components/etl/transform/lookup/MultiMergeJoin.vue'
 import SortRowsMeta from 'src/components/etl/transform/convert/SortRows.vue'
 import FilterRowsMeta from 'components/etl/transform/process/FilterRows.vue'
 import MergeJoinMeta from 'src/components/etl/transform/connect/MergeJoin.vue'
+import MultiMergeJoinMeta from 'src/components/etl/transform/connect/MultiMergeJoin.vue'
 import { fetchShellContent, saveShellContent, publishShell, fetchShellPublishes, fetchShellPublishContent } from 'src/service/kettle/ShellService'
 import { execute, stop } from 'src/service/kettle/DesignService'
 import { date, uid } from 'quasar'
@@ -560,7 +560,11 @@ export default {
         const edge = outgoing[i]
         if (edge.target && edge.target.id !== node.id) {
           const targetCell = this.graph.getModel().getCell(edge.target.id)
-          nextNodes.push(targetCell)
+          nextNodes.push({
+            value: targetCell.id,
+            title: targetCell.getAttribute('title'),
+            ext: targetCell.getAttribute('ext')
+          })
         }
       }
     },
@@ -597,12 +601,13 @@ export default {
         const cells = this.graph.getSelectionCells()
         if (cells != null && cells.length > 0) {
           this.graph.removeCells(cells, true)
+          const _this = this
           cells.forEach(cell => {
             const title = cell.getAttribute('title')
             if (title) {
               const nr = title.match(/\d+$/gi) || [0]
               const name = title.replace(/\d+$/gi, '')
-              this.nodeNames[name].splice(this.nodeNames[name].indexOf(Number(nr[0])), 1)
+              _this.nodeNames[name].splice(_this.nodeNames[name].indexOf(Number(nr[0])), 1)
             }
           })
         }
@@ -914,6 +919,20 @@ export default {
         const node = xmlDocument.documentElement
         decoder.decode(node, this.graph.getModel())
         this.graph.refresh()
+        const childCount = this.graph.getModel().getChildCount(this.graph.getModel().getRoot())
+        for (let i = 0; i < childCount; i++) {
+          let parent = this.graph.getModel().getChildAt(this.graph.getModel().getRoot(), i)
+          const children = this.graph.getModel().getChildren(parent)
+          children.forEach(child => {
+            const title = child.getAttribute('title')
+            if (title) {
+              const nr = title.match(/\d+$/gi) || [0]
+              let name = title.replace(/\d+$/gi, '')
+              name = this.refreshNodeName(name, nr[0])
+              child.setAttribute('title', name)
+            }
+          })
+        }
       }
     },
     unzip (data) {
@@ -977,13 +996,6 @@ export default {
           const nextNodes = []
           vm.getPreNodes(cell, cell, 0, preNodes)
           vm.getNextNodes(cell, nextNodes)
-          nextNodes.forEach(node => {
-            nextNodes.push({
-              value: node.id,
-              title: node.getAttribute('title'),
-              ext: node.getAttribute('ext')
-            })
-          })
           vm.init = false
           vm.showStepProperties(cell, cell.getAttribute('form', ''), preNodes, nextNodes)
         } else if (cell && cell.isEdge() && mouse.button === 0) {

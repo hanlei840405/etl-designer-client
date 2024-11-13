@@ -2,7 +2,7 @@
   <div style="width: 100%;">
     <q-form class="row q-col-gutter-xs">
       <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.mergeJoin.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-      <q-select class="col-12 col-md-6" clearable outlined v-model="form.join_type" :options="joinTypes" filled :label="$t('form.mergeJoin.join')"/>
+      <q-select class="col-12 col-md-6" clearable outlined v-model="form.join_type" :options="joinTypes" :label="$t('form.mergeJoin.join')"/>
       <q-select class="col-12 col-md-6" clearable outlined v-model="form.step1" :options="previousSteps" :label="$t('form.mergeJoin.step1')" hint="" @input="selectStep1($event)"/>
       <q-select class="col-12 col-md-6" clearable outlined v-model="form.step2" :options="previousSteps" :label="$t('form.mergeJoin.step2')" hint="" @input="selectStep2($event)"/>
       <q-table class="col-12" :data="form.fieldMappingData" :columns="fieldMappingColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.mergeJoin.mergeField')">
@@ -55,7 +55,6 @@
 
 
 const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
-const IGNORE_REPEAT_WARNING_META = [ 'UniqueRowsMeta', 'UniqueRowsByHashSetMeta', 'SetValueFieldMeta']
 
 export default {
   name: 'MergeJoinMeta',
@@ -63,7 +62,6 @@ export default {
     return {
       form: {
         initFlag: true,
-        name: "记录集连接",
         type: "MergeJoin",
         description: [],
         limit: 1,
