@@ -292,7 +292,11 @@ const ETL_TOOLBAR = {
     ]
   }
 }
+const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
+const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta', 'SetValueFieldMeta']
 export default {
   METADATA_CATEGORIES,
-  ETL_TOOLBAR
+  ETL_TOOLBAR,
+  FORBIDDEN_NEXT_STEP_PARALLEL,
+  IGNORE_REPEAT_WARNING_META
 }
