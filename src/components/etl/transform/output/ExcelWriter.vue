@@ -11,9 +11,9 @@
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel class="row q-col-gutter-xs" name="basic">
           <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.excelOutput.name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model="form.filename" :label="$t('form.excelOutput.name')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.filename" :label="$t('form.excelOutput.filename')" hint=""/>
           <q-select class="col-12 col-md-6" outlined v-model="form.suffix" :options="suffixes" emit-value map-options :label="$t('form.excelOutput.suffix')" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model="form.rowNumber" :label="$t('form.excelOutput.splitEveryDataRows')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model.number="form.rowNumber" :label="$t('form.excelOutput.splitEveryDataRows')" hint=""/>
           <q-select class="col-12 col-md-6" outlined v-model="form.fileOutputMode" :options="outputModes" emit-value map-options :label="$t('form.excelOutput.existOutputFile')" hint=""/>
           <q-select class="col-12 col-md-6" outlined v-model="form.dateFormat" :options="formats" emit-value map-options :label="$t('form.excelOutput.dateFormat')" :disable="!form.useDateFormat" hint=""/>
           <q-checkbox class="col-12 col-md-4" v-model="form.useDateFormat" :label="$t('form.excelOutput.specifyDateFormat')"/>

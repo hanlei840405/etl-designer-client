@@ -1,13 +1,10 @@
 <template>
   <div style="width: 100%;">
-    <q-form class="q-gutter-md">
-      <q-input outlined v-model="form.name" :label="$t('form.filterRows.name')"
-               :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
+    <q-form class="row q-col-gutter-xs">
+      <q-input class="col-12" outlined v-model="form.name" :label="$t('form.filterRows.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
 
-      <q-select outlined v-model="form.send_true_to" clearable filled use-input @input="filterStepTrue"
-                :options="nextSteps" :label="$t('form.filterRows.stepTrue')"/>
-      <q-select outlined v-model="form.send_false_to" clearable filled use-input @input="filterStepFalse"
-                :options="nextSteps" :label="$t('form.filterRows.stepFalse')"/>
+      <q-select class="col-12 col-md-6" outlined v-model="form.send_true_to" clearable @input="filterStepTrue" :options="nextSteps" :label="$t('form.filterRows.stepTrue')" hint=""/>
+      <q-select class="col-12 col-md-6" outlined v-model="form.send_false_to" clearable @input="filterStepFalse" :options="nextSteps" :label="$t('form.filterRows.stepFalse')" hint=""/>
 
       <q-table :data="form.fieldMappingData" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
                separator="cell" hide-bottom :title="$t('form.filterRows.condition')">

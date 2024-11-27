@@ -1293,6 +1293,7 @@ export default {
     },
     excelOutput: {
       name: "名称",
+      filename: "文件名",
       tabBasic: "基本",
       tabSheet: "工作表",
       tabContent: "内容",

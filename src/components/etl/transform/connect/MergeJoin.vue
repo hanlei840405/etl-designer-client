@@ -3,8 +3,8 @@
     <q-form class="row q-col-gutter-xs">
       <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.mergeJoin.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
       <q-select class="col-12 col-md-6" clearable outlined v-model="form.join_type" :options="joinTypes" :label="$t('form.mergeJoin.join')"/>
-      <q-select class="col-12 col-md-6" clearable outlined v-model="form.step1" :options="previousSteps" :label="$t('form.mergeJoin.step1')" hint="" @input="selectStep1($event)"/>
-      <q-select class="col-12 col-md-6" clearable outlined v-model="form.step2" :options="previousSteps" :label="$t('form.mergeJoin.step2')" hint="" @input="selectStep2($event)"/>
+      <q-select class="col-12 col-md-6" clearable outlined v-model="form.step1" :options="previousSteps" emit-value map-options :label="$t('form.mergeJoin.step1')" hint="" @input="selectStep1($event)"/>
+      <q-select class="col-12 col-md-6" clearable outlined v-model="form.step2" :options="previousSteps" emit-value map-options :label="$t('form.mergeJoin.step2')" hint="" @input="selectStep2($event)"/>
       <q-table class="col-12" :data="form.fieldMappingData" :columns="fieldMappingColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.mergeJoin.mergeField')">
         <template v-slot:top-right>
           <q-btn-dropdown split outline color="primary" icon="add" @click="addFieldMapping">
@@ -167,14 +167,13 @@ export default {
         if (i === 0 && FORBIDDEN_NEXT_STEP_PARALLEL.indexOf(step.type) >= 0) {
           vm.forbiddenParallel = true
         }
-        debugger
         if (step.depth === 0) {
           const ext = JSON.parse(step.ext)
           if (ext.sourceFields && ext.sourceFields.length > 0) {
-            vm.previousSteps.push(step.title)
-            vm.stepFields[step.title] = []
+            vm.previousSteps.push({ value: step.value, label: step.title })
+            vm.stepFields[step.value] = []
             ext.sourceFields.forEach(field => {
-              vm.stepFields[step.title].push(field)
+              vm.stepFields[step.value].push(field)
             })
           }
           if (ext.replaceFields && ext.replaceFields.length > 0) {
