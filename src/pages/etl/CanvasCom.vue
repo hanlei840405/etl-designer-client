@@ -221,7 +221,8 @@ import pako from 'pako'
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 const hasErrorPortCompArray = ['TableOutputMeta', 'InsertUpdateMeta', 'UpdateMeta', 'DeleteMeta', 'DatabaseLookupMeta', 'DatabaseJoinMeta', 'JsonInputMeta', 'ElasticSearchBulkMeta', 'JavaScriptMeta', 'UserDefinedJavaClassMeta', 'ExecSQLMeta', 'RestMeta', 'MailMeta', 'FieldSplitterMeta', 'StringCutMeta', 'ReplaceStringMeta', 'SetValueFieldMeta']
-const hasCaseCompArray = ['SwitchCaseMeta']
+// const hasCaseCompArray = ['SwitchCaseMeta']
+const hasCaseCompArray = []
 const dragElt = document.createElement('div')
 dragElt.style.border = 'dashed black 1px'
 dragElt.style.width = '45px'
