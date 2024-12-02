@@ -45,7 +45,7 @@
                     <q-td key="source" :props="props">
                       {{ props.row.source }}
                       <q-popup-edit v-model="props.row.source" :auto-save="true">
-                        <q-select autofocus outlined v-model="props.row.source" :options="sourceFields" @new-value="createSourceField" use-input/>
+                        <q-select autofocus outlined v-model="props.row.source" :options="sourceFieldsForSelect" @new-value="createSourceField" use-input/>
                       </q-popup-edit>
                     </q-td>
                     <q-td key="target" :props="props">
@@ -102,7 +102,7 @@
                     <q-td key="source" :props="props">
                       {{ props.row.source }}
                       <q-popup-edit v-model="props.row.source" :auto-save="true">
-                        <q-select autofocus outlined v-model="props.row.source" :options="sourceFields"/>
+                        <q-select autofocus outlined v-model="props.row.source" :options="sourceFieldsForRemove"/>
                       </q-popup-edit>
                     </q-td>
                   </q-tr>
@@ -141,7 +141,7 @@
                     <q-td key="source" :props="props">
                       {{ props.row.source }}
                       <q-popup-edit v-model="props.row.source" :auto-save="true">
-                        <q-select autofocus outlined v-model="props.row.source" :options="sourceFields"/>
+                        <q-select autofocus outlined v-model="props.row.source" :options="sourceFieldsForMetadata"/>
                       </q-popup-edit>
                     </q-td>
                     <q-td key="target" :props="props">
@@ -263,6 +263,9 @@ export default {
         parallel: 1
       },
       sourceFields: [],
+      sourceFieldsForSelect: [],
+      sourceFieldsForRemove: [],
+      sourceFieldsForMetadata: [],
       selectColumns: [
         {
           name: 'operate',
@@ -497,6 +500,14 @@ export default {
   },
   methods: {
     addSelect () {
+      if (this.form.metaData.length > 0) {
+        this.sourceFieldsForSelect = []
+        this.form.metaData.forEach(item => {
+          this.sourceFieldsForSelect.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForSelect = this.sourceFields
+      }
       this.form.selects.push({
         source: null,
         target: null,
@@ -505,9 +516,16 @@ export default {
       })
     },
     appendDiffSelect () {
-      const vm = this
-      const items = vm.form.selects.filter(select => vm.sourceFields.indexOf(select.source) >= 0)
-      const array = vm.sourceFields
+      if (this.form.metaData.length > 0) {
+        this.sourceFieldsForSelect = []
+        this.form.metaData.forEach(item => {
+          this.sourceFieldsForSelect.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForSelect = this.sourceFields
+      }
+      const items = this.form.selects.filter(select => this.sourceFields.indexOf(select.source) >= 0)
+      const array = this.sourceFields
       items.forEach(item => {
         array.splice(array.findIndex(i => i === item.source), 1)
       })
@@ -521,9 +539,16 @@ export default {
       })
     },
     addAllSelect () {
-      const vm = this
-      vm.sourceFields.forEach(field => {
-        vm.form.selects.push({
+      if (this.form.metaData.length > 0) {
+        this.sourceFieldsForSelect = []
+        this.form.metaData.forEach(item => {
+          this.sourceFieldsForSelect.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForSelect = this.sourceFields
+      }
+      this.sourceFields.forEach(field => {
+        this.form.selects.push({
           source: field,
           target: null,
           lengthValue: -1,
@@ -539,14 +564,29 @@ export default {
       this.form.selects.splice(props.rowIndex, 1)
     },
     addRemove () {
+      if (this.form.selects.length > 0) {
+        this.sourceFieldsForRemove = []
+        this.form.selects.forEach(item => {
+          this.sourceFieldsForRemove.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForRemove = this.sourceFields
+      }
       this.form.removes.push({
         source: null
       })
     },
     appendDiffRemove () {
-      const vm = this
-      const items = vm.form.removes.filter(remove => vm.sourceFields.indexOf(remove.source) >= 0)
-      const array = vm.sourceFields
+      if (this.form.selects.length > 0) {
+        this.sourceFieldsForRemove = []
+        this.form.selects.forEach(item => {
+          this.sourceFieldsForRemove.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForRemove = this.sourceFields
+      }
+      const items = this.form.removes.filter(remove => this.sourceFields.indexOf(remove.source) >= 0)
+      const array = this.sourceFields
       items.forEach(item => {
         array.splice(array.findIndex(i => i === item.source), 1)
       })
@@ -557,9 +597,16 @@ export default {
       })
     },
     addAllRemove () {
-      const vm = this
-      vm.sourceFields.forEach(field => {
-        vm.form.removes.push({
+      if (this.form.selects.length > 0) {
+        this.sourceFieldsForRemove = []
+        this.form.selects.forEach(item => {
+          this.sourceFieldsForRemove.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForRemove = this.sourceFields
+      }
+      this.sourceFields.forEach(field => {
+        this.form.removes.push({
           source: field
         })
       })
@@ -572,6 +619,14 @@ export default {
       this.form.removes.splice(props.rowIndex, 1)
     },
     addMetaData () {
+      if (this.form.selects.length > 0) {
+        this.sourceFieldsForMetadata = []
+        this.form.selects.forEach(item => {
+          this.sourceFieldsForMetadata.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForMetadata = this.sourceFields
+      }
       this.form.metaData.push({
         source: null,
         target: null,
@@ -591,9 +646,16 @@ export default {
       })
     },
     appendDiffMetaData () {
-      const vm = this
-      const items = vm.form.metaData.filter(md => vm.sourceFields.indexOf(md.source) >= 0)
-      const array = vm.sourceFields
+      if (this.form.selects.length > 0) {
+        this.sourceFieldsForMetadata = []
+        this.form.selects.forEach(item => {
+          this.sourceFieldsForMetadata.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForMetadata = this.sourceFields
+      }
+      const items = this.form.metaData.filter(md => this.sourceFields.indexOf(md.source) >= 0)
+      const array = this.sourceFields
       items.forEach(item => {
         array.splice(array.findIndex(i => i === item.source), 1)
       })
@@ -618,9 +680,16 @@ export default {
       })
     },
     addAllMetaData () {
-      const vm = this
-      vm.sourceFields.forEach(field => {
-        vm.form.metaData.push({
+      if (this.form.selects.length > 0) {
+        this.sourceFieldsForMetadata = []
+        this.form.selects.forEach(item => {
+          this.sourceFieldsForMetadata.push(item.target || item.source)
+        })
+      } else {
+        this.sourceFieldsForMetadata = this.sourceFields
+      }
+      this.sourceFields.forEach(field => {
+        this.form.metaData.push({
           source: field,
           target: null,
           category: 'String',
@@ -691,27 +760,37 @@ export default {
       }
     },
     submitForm () {
+      const sourceFields = []
+      const replaceFields = []
+      this.form.selects.forEach(item => {
+        sourceFields.push(item.target || item.source)
+      })
+      this.form.removes.forEach(item => {
+        replaceFields.push(item.target || item.source)
+      })
+      this.form.metaData.forEach(item => {
+        const idx = sourceFields.findIndex((i) => i.source === item.source)
+        sourceFields.splice(idx, 1, item.target || item.source)
+      })
       const vm = this
-      const array = []
-      const notEmptyArray = []
-      vm.form.selects.forEach(item => {
-        if (vm.sourceFields.indexOf(item.source) >= 0) {
-          vm.sourceFields.splice(vm.sourceFields.indexOf(item.source), 1)
+      this.sourceFields.forEach(item => {
+        if(vm.form.selects.findIndex((i) => i.source === item) >= 0) {
+          if (replaceFields.indexOf(item) < 0) {
+            replaceFields.push(item)
+          }
         }
-        if (array.indexOf(item.source) < 0) {
-          array.push(item.target || item.source)
+        if(vm.form.metaData.findIndex((i) => i.source === item) >= 0) {
+          if (replaceFields.indexOf(item) < 0) {
+            replaceFields.push(item)
+          }
         }
       })
-      const replaceFields = vm.sourceFields
-      vm.form.removes.forEach(item => replaceFields.push(item.target || item.source))
-      vm.form.metaData.forEach(item => replaceFields.push(item.target || item.source))
-      // const array = [...Array.from(new Set(this.form.selects.map(ele => ele.target))), ...Array.from(new Set(this.form.metaData.map(ele => ele.target)))]
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form,
         ext: {
-          sourceFields: array,
-          replaceFields: [...replaceFields, ...array]
+          sourceFields: sourceFields,
+          replaceFields: replaceFields
         }
       })
     }

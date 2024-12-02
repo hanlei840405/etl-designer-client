@@ -30,7 +30,7 @@ export default {
     logout: "退出系统"
   },
   menu: {
-    home: "工程管理",
+    home: "首页",
     basic: {
       default: "基础数据管理",
       project: "工程管理",
@@ -54,7 +54,8 @@ export default {
     },
     bi: {
       default: "BI分析",
-      model: "模型管理"
+      model: "模型管理",
+      report: "报表设计"
     }
   },
   button: {
@@ -1056,7 +1057,6 @@ export default {
       name: "名称",
       tabBasic: "基本",
       tabRunningConfig: "运行参数",
-      // tableField: "字段",
       threads: "并行数",
       tableField: "字段",
       columnOperate: "操作",
@@ -1410,6 +1410,27 @@ export default {
       columnNo: "否",
       columnTableName: "表(视图)名",
       columnTableType: "类型"
+    },
+    report: {
+      default: "报表",
+      code: "自定义编码",
+      name: "名称",
+      model: "模型",
+      description: "描述",
+      script: "脚本",
+      chart: "图表样式",
+      line: "折线图",
+      pie: "饼图",
+      verticalBar: "垂直柱状图",
+      verticalStackedBar: "垂直堆叠柱状图",
+      verticalStackedPercentBar: "垂直堆叠百分比柱状图",
+      horizontalBar: "水平柱状图",
+      horizontalStackedBar: "水平堆叠柱状图",
+      horizontalStackedPercentBar: "水平堆叠百分比柱状图",
+      area: "堆叠面积图",
+      radar: "雷达图",
+      mix: "混合图(折线、面积、柱状图)",
+      kLine: "K线图"
     }
   },
   response: {
@@ -1483,7 +1504,7 @@ export default {
         default: "流处理",
         RecordsFromStreamMeta: "读取流",
         KafkaProducerOutputMeta: "Kafka producer",
-        KafkaConsumerInputMeta: "Kafka consumer",
+        KafkaConsumerInputMeta: "Kafka consumer"
       },
       stepConvert: {
         default: "转换",
@@ -1525,7 +1546,7 @@ export default {
         DetectEmptyStreamMeta: "检测空流",
         DetectLastRowMeta: "识别流的最后一行",
         WriteToLogMeta: "写日志",
-        FilterRowsMeta: "过滤记录",
+        FilterRowsMeta: "过滤记录"
       }
     },
     job: {

@@ -73,7 +73,7 @@ export default {
       tab: 'basic',
       form: {
         name: null,
-        printHeader: false,
+        printHeader: true,
         useLimitRows: false,
         limitRows: 0,
         level: 3,

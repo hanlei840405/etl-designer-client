@@ -96,7 +96,7 @@
       </template>
 
     </q-splitter>
-    <div ref="outlineContainer" style="z-index:1;position:absolute;overflow:hidden;bottom:0px;right:0px;width:160px;height:120px;background:transparent;border-style:solid;border-color:lightgray;"/>
+    <div ref="outlineContainer" style="z-index:1;position:absolute;overflow:hidden;bottom:0px;right:30px;width:160px;height:120px;background:transparent;border-style:solid;border-color:lightgray;"/>
     <q-dialog v-model="propertiesDialog.state">
       <q-card style="width: 900px; max-width: 90vw;">
         <q-card-section class="row items-center q-pb-none">
@@ -704,7 +704,7 @@ export default {
             if (body.running) {
               vm.logDialog.log += body.log + "\n"
             } else {
-              vm.logDialog.log = body.log
+              vm.logDialog.log = body.log || body.error
               vm.logDialog.logData = body.steps
               vm.executing = false
               vm.logDialog.showProcessing = false
