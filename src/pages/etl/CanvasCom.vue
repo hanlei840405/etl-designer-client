@@ -698,35 +698,38 @@ export default {
             vm.cancel = c
           })
         }).then(res => {
-          vm.logDialog.logData = []
-          vm.stompClient.subscribe(vm.uuid, (response) => {
+          this.logDialog.logData = []
+          this.stompClient.subscribe(this.uuid, (response) => {
             const body = JSON.parse(response.body)
             if (body.running) {
-              vm.logDialog.log += body.log + "\n"
+              this.logDialog.log += body.log + "\n"
             } else {
-              vm.logDialog.log = body.log || body.error
-              vm.logDialog.logData = body.steps
-              vm.executing = false
-              vm.logDialog.showProcessing = false
+              this.logDialog.log = body.log || body.error
+              this.logDialog.logData = body.steps
+              this.executing = false
+              this.logDialog.showProcessing = false
             }
           })
         }).catch(err => {
-          vm.executing = false
-          vm.logDialog.showProcessing = false
+          this.executing = false
+          this.logDialog.showProcessing = false
+          let msg
           if (err.status === 10009) {
-            vm.logDialog.state = true
-            vm.logDialog.log = err.data.log
-            vm.logDialog.logData = err.data.steps
+            this.logDialog.state = true
+            this.logDialog.log = err.data.log
+            this.logDialog.logData = err.data.steps
+          } else if (err.status === 10018) {
+            msg = this.$t('response.error.10018', [err.data])
+          } else if (err.status === 10017) {
+            msg = this.$t('response.error.10017')
           } else {
-            vm.$q.dialog({
-              title: vm.$t('response.error.default'),
-              ok: {
-                color: 'negative'
-              },
-              html: true,
-              message: err.data.error
-            })
+            msg = err.data.error
           }
+          this.$q.notify({
+            message: msg,
+            position: 'top',
+            color: 'negative'
+          })
         })
       }
     },
@@ -783,10 +786,9 @@ export default {
       const encoder = new MxCodec()
       const node = encoder.encode(this.graph.getModel())
       const xml = mxgraph.mxUtils.getPrettyXml(node)
-      const vm = this
       saveShellContent({
-        id: vm.shell.id,
-        content: vm.zip(xml)
+        id: this.shell.id,
+        content: this.zip(xml)
       }).then(res => {
         this.$q.loading.hide()
         this.$q.notify({
@@ -796,8 +798,14 @@ export default {
         })
       }).catch(err => {
         this.$q.loading.hide()
+        let msg
+        if (err.status === 10018) {
+          msg = this.$t('response.error.10018', [err.data])
+        } else {
+          msg = this.$t('response.error.10017')
+        }
         this.$q.notify({
-          message: err.data.error,
+          message: msg,
           position: 'top',
           color: 'negative'
         })
