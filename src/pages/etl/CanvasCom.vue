@@ -569,32 +569,37 @@ export default {
         }
       }
     },
-    refreshNodeName (name, nv, ok, ov) {
-      nv = Number(nv)
-      ov = Number(ov)
-      if (!this.nodeNames[name] || this.nodeNames[name].length === 0) {
-        this.nodeNames[name] = [nv]
-      } else {
-        let assign = false
-        for (let i = 0; i < this.nodeNames[name].length; i++) {
-          if (this.nodeNames[name][i] !== i) {
-            nv += i
-            this.nodeNames[name].push(nv)
-            assign = true
-            break
+    rebuildNodeNames () {
+      this.nodeNames = {}
+      const children = this.graph.getModel().getRoot().children
+      children.forEach(child => {
+        child.children.forEach(cell => {
+          const title = cell.getAttribute('title')
+          if (title) {
+            const nr = title.match(/\d+$/gi) || [0]
+            let name = title.replace(/\d+$/gi, '')
+            this.refreshNodeName(name, nr[0])
           }
-        }
-        if (!assign && nv === 0) {
-          nv += this.nodeNames[name].length
-          this.nodeNames[name].push(nv)
-        }
+        })
+      })
+    },
+    refreshNodeName (key, value, oldKey, oldValue) {
+      value = Number(value)
+      oldValue = Number(oldValue)
+      if (!this.nodeNames[key]) {
+        this.nodeNames[key] = []
       }
-      if (ov) {
-        this.nodeNames[ok].splice(this.nodeNames[ok].indexOf(ov), 1)
-        this.nodeNames[ok].sort()
+      if (this.nodeNames[key].indexOf(value) < 0) {
+        this.nodeNames[key].push(value)
+      } else {
+        value = this.nodeNames[key][this.nodeNames[key].length - 1] + 1
       }
-      this.nodeNames[name].sort()
-      return name + (nv === 0 ? '' : nv)
+      if (oldValue >= 0) {
+        this.nodeNames[oldKey] = this.nodeNames[oldKey].filter(item => item !== oldValue)
+        this.nodeNames[oldKey].sort()
+      }
+      this.nodeNames[key].sort()
+      return key + (value === 0 ? '' : value)
     },
     deleteSelectedVertex () {
       this.graph.getModel().beginUpdate()
@@ -1354,6 +1359,7 @@ export default {
     }
     keyHandler.bindControlShiftKey(90, function (evt) {
       vm.undoMng.redo()
+      vm.rebuildNodeNames()
     })
     keyHandler.bindControlKey(90, function (evt) {
       if (mxgraph.mxEvent.isShiftDown(evt)) {
@@ -1361,9 +1367,11 @@ export default {
       } else {
         vm.undoMng.undo()
       }
+      vm.rebuildNodeNames()
     })
     keyHandler.bindControlKey(89, function (evt) {
       vm.undoMng.redo()
+      vm.rebuildNodeNames()
     })
     keyHandler.bindControlKey(83, function (evt) {
       vm.submitForm()

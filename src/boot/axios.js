@@ -21,22 +21,26 @@ axios.interceptors.response.use((response) => {
   return response
 },
 function (error) {
-  if (error.response.status === 401) {
-    Notify.create({
-      message: '您的账号已过期，请重新登录!',
-      position: 'top',
-      color: 'negative'
-    })
-    Cookies.remove('token')
-    router.push('/login')
-  } else if (error.response.status === 403) {
-    Notify.create({
-      message: '您未经过系统授权操作本页面!',
-      position: 'top',
-      color: 'negative'
-    })
-    router.go(-1)
+  if (error.response) {
+    if (error.response.status === 401) {
+      Notify.create({
+        message: '您的账号已过期，请重新登录!',
+        position: 'top',
+        color: 'negative'
+      })
+      Cookies.remove('token')
+      router.push('/login')
+    } else if (error.response.status === 403) {
+      Notify.create({
+        message: '您未经过系统授权操作本页面!',
+        position: 'top',
+        color: 'negative'
+      })
+      router.go(-1)
+    }
+    return Promise.reject(error.response)
+  } else {
+    return Promise.reject(error.message)
   }
-  return Promise.reject(error.response)
 })
 Vue.prototype.$axios = axios

@@ -88,10 +88,16 @@ export default {
             message: vm.$t('response-error-10005'),
             color: 'negative'
           })
-        } else {
+        } else if (err.data) {
           vm.$q.notify({
             position: 'top',
             message: err.data.error,
+            color: 'negative'
+          })
+        } else {
+          vm.$q.notify({
+            position: 'top',
+            message: err,
             color: 'negative'
           })
         }
