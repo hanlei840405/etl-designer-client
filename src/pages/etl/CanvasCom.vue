@@ -1012,7 +1012,7 @@ export default {
           vm.getNextNodes(cell, nextNodes)
           vm.init = false
           vm.showStepProperties(cell, cell.getAttribute('form', ''), preNodes, nextNodes)
-        } else if (cell && cell.isEdge() && mouse.button === 0) {
+        } else if (cell && cell.isEdge() && vm.shell.category === '0' && mouse.button === 0) { // trans类型时，线段可以点击切换模式
           const form = JSON.parse(cell.source.getAttribute('form'))
           const error = JSON.parse(cell.source.getAttribute('error') || "{}")
           if (error[cell.target.id]) {
