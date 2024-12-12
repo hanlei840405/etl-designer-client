@@ -30,32 +30,32 @@
             </q-td>
             <q-td key="leftValuename" :props="props">
               {{ props.row.leftValuename }}
-              <q-popup-edit v-model.number="props.row.leftValuename" :auto-save="true">
-                <q-select autofocus outlined v-model.number="props.row.leftValuename" :options="sourceFields"/>
+              <q-popup-edit v-model="props.row.leftValuename" :auto-save="true">
+                <q-select autofocus outlined v-model="props.row.leftValuename" :options="sourceFields"/>
               </q-popup-edit>
             </q-td>
             <q-td key="function" :props="props">
               {{ props.row.function }}
-              <q-popup-edit v-model.number="props.row.function" :auto-save="true">
-                <q-select autofocus outlined v-model.number="props.row.function" :options="functions"/>
+              <q-popup-edit v-model="props.row.function" :auto-save="true">
+                <q-select autofocus outlined v-model="props.row.function" :options="functions"/>
               </q-popup-edit>
             </q-td>
             <q-td key="rightValuename" :props="props">
               {{ props.row.rightValuename }}
-              <q-popup-edit v-model.number="props.row.rightValuename" :auto-save="true">
-                <q-select autofocus outlined v-model.number="props.row.rightValuename" :options="sourceFields" @input="changeRight(props)"/>
+              <q-popup-edit v-model="props.row.rightValuename" :auto-save="true">
+                <q-select autofocus outlined v-model="props.row.rightValuename" :options="sourceFields" @input="changeRight(props)"/>
               </q-popup-edit>
             </q-td>
             <q-td key="value" :props="props">
               {{ props.row.value }}
-              <q-popup-edit v-model.number="props.row.value" :auto-save="true">
-                <q-input autofocus outlined v-model.number="props.row.value" @input="changeValue(props)"/>
+              <q-popup-edit v-model="props.row.value" :auto-save="true">
+                <q-input autofocus outlined v-model="props.row.value" @input="changeValue(props)"/>
               </q-popup-edit>
             </q-td>
             <q-td key="type" :props="props">
               {{ props.row.type }}
-              <q-popup-edit v-model.number="props.row.type" :auto-save="true">
-                <q-select autofocus outlined v-model.number="props.row.type" :options="categories"/>
+              <q-popup-edit v-model="props.row.type" :auto-save="true">
+                <q-select autofocus outlined v-model="props.row.type" :options="categories"/>
               </q-popup-edit>
             </q-td>
           </q-tr>
