@@ -474,9 +474,8 @@ export default {
           try {
             const doc = mxgraph.mxUtils.createXmlDocument()
             const data = doc.createElement('data')
-            const nr = bar.name.match(/\d+$/gi) || [0]
             let name = bar.name.replace(/\d+$/gi, '')
-            name = vm.refreshNodeName(name, nr[0])
+            name = vm.initNodeName(name)
             data.setAttribute('title', name)
             const form = {
               name: name
@@ -598,6 +597,19 @@ export default {
         this.nodeNames[oldKey] = this.nodeNames[oldKey].filter(item => item !== oldValue)
         this.nodeNames[oldKey].sort()
       }
+      this.nodeNames[key].sort()
+      return key + (value === 0 ? '' : value)
+    },
+    initNodeName(key) {
+      debugger
+      let value = 0
+      if (!this.nodeNames[key]) {
+        this.nodeNames[key] = []
+      }
+      if (this.nodeNames[key].indexOf(0) >= 0) {
+        value = this.nodeNames[key][this.nodeNames[key].length - 1] + 1
+      }
+      this.nodeNames[key].push(value)
       this.nodeNames[key].sort()
       return key + (value === 0 ? '' : value)
     },
