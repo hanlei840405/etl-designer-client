@@ -370,10 +370,17 @@ export default {
       this.form.fieldMappingData.splice(props.rowIndex, 1)
     },
     submitForm () {
+      const sourceFields = []
+      this.form.fieldMappingData.forEach(item => {
+        sourceFields.push(item.target || item.source)
+      })
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form,
-        ext: { sourceFields: this.form.fieldMappingData.map(ele => ele.fieldName ? ele.fieldName.toUpperCase() : ele.target.toUpperCase()) }
+        ext: {
+          sourceFields: sourceFields,
+          replaceFields: []
+        }
       })
     }
   },

@@ -208,21 +208,21 @@ export default {
     replaceFields.forEach(field => {
       vm.sourceFields.splice(vm.sourceFields.indexOf(field), 1)
     })
-    // if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
-    //   vm.$q.dialog({
-    //     dark: true,
-    //     title: vm.$t('message.error.default'),
-    //     message: this.$t('message.error.duplicateSourceField')
-    //   }).onOk(() => {
-    //     this.$emit('propertiesForm', {
-    //       state: true,
-    //       mxCellProperties: this.form,
-    //       ext: {
-    //         sourceFields: []
-    //       }
-    //     })
-    //   })
-    // }
+    if (new Set(vm.sourceFields).size !== vm.sourceFields.length) {
+      vm.$q.dialog({
+        dark: true,
+        title: vm.$t('message.error.default'),
+        message: this.$t('message.error.duplicateSourceField')
+      }).onOk(() => {
+        this.$emit('propertiesForm', {
+          state: true,
+          mxCellProperties: this.form,
+          ext: {
+            sourceFields: []
+          }
+        })
+      })
+    }
     const mxCellValue = vm.$store.getters['etl/getMxCellForm']
     if (mxCellValue) {
       vm.form = Object.assign(vm.form, mxCellValue)

@@ -615,10 +615,17 @@ export default {
       }
     },
     submitForm () {
+      const sourceFields = []
+      this.form.outputFields.forEach(item => {
+        sourceFields.push(item.name || item.field)
+      })
       this.$emit('propertiesForm', {
         state: true,
         mxCellProperties: this.form,
-        ext: { sourceFields: this.form.outputFields.map(ele => ele.name ? ele.name.toUpperCase() : ele.field.toUpperCase()) }
+        ext: {
+          sourceFields: sourceFields,
+          replaceFields: []
+        }
       })
     },
     showLabel (val) {

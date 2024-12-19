@@ -760,30 +760,20 @@ export default {
       }
     },
     submitForm () {
-      const sourceFields = []
-      const replaceFields = []
+      let sourceFields = []
+      let replaceFields = []
       this.form.selects.forEach(item => {
         sourceFields.push(item.target || item.source)
+      })
+      this.sourceFields.forEach(item => {
+        replaceFields.push(item)
       })
       this.form.removes.forEach(item => {
         replaceFields.push(item.target || item.source)
       })
       this.form.metaData.forEach(item => {
-        const idx = sourceFields.findIndex((i) => i.source === item.source)
+        const idx = sourceFields.findIndex((i) => i === item.source)
         sourceFields.splice(idx, 1, item.target || item.source)
-      })
-      const vm = this
-      this.sourceFields.forEach(item => {
-        if(vm.form.selects.findIndex((i) => i.source === item) >= 0) {
-          if (replaceFields.indexOf(item) < 0) {
-            replaceFields.push(item)
-          }
-        }
-        if(vm.form.metaData.findIndex((i) => i.source === item) >= 0) {
-          if (replaceFields.indexOf(item) < 0) {
-            replaceFields.push(item)
-          }
-        }
       })
       this.$emit('propertiesForm', {
         state: true,
