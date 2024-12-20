@@ -765,9 +765,11 @@ export default {
       this.form.selects.forEach(item => {
         sourceFields.push(item.target || item.source)
       })
-      this.sourceFields.forEach(item => {
-        replaceFields.push(item)
-      })
+      if (sourceFields.length > 0) {
+        this.sourceFields.forEach(item => {
+          replaceFields.push(item)
+        })
+      }
       this.form.removes.forEach(item => {
         replaceFields.push(item.target || item.source)
       })
