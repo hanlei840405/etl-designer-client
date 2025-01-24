@@ -3,64 +3,58 @@
     <q-form class="row q-col-gutter-xs">
       <q-input class="col-12" outlined v-model="form.name" :label="$t('form.filterRows.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
 
-      <q-select class="col-12 col-md-6" outlined v-model="form.send_true_to" clearable @input="filterStepTrue" :options="nextSteps" :label="$t('form.filterRows.stepTrue')" hint=""/>
-      <q-select class="col-12 col-md-6" outlined v-model="form.send_false_to" clearable @input="filterStepFalse" :options="nextSteps" :label="$t('form.filterRows.stepFalse')" hint=""/>
-
-      <q-table :data="form.fieldMappingData" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name"
-               separator="cell" hide-bottom :title="$t('form.filterRows.condition')">
-        <template v-slot:top-right>
-          <q-btn size="sm" outline color="primary" icon="add" @click="addParameter"/>
+      <q-select class="col-12 col-md-6" outlined v-model="form.sendTrueTo" clearable :options="nextSteps" map-options emit-value :label="$t('form.filterRows.stepTrue')" hint=""/>
+      <q-select class="col-12 col-md-6" outlined v-model="form.sendFalseTo" clearable :options="nextSteps" map-options emit-value :label="$t('form.filterRows.stepFalse')" hint=""/>
+      <q-tree :nodes="form.conditions" node-key="id" :selected.sync="selected" default-expand-all>
+        <template v-slot:header-root="prop">
+          <div class="row items-center">
+            <div>
+              {{ prop.node.label }}
+              <q-btn-group outline>
+                <q-btn dense outline :label="$t('button.append')" color="primary" @click="appendCondition(prop)"/>
+              </q-btn-group>
+            </div>
+          </div>
         </template>
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td key="operate" :props="props">
-              <q-btn size="xs" outline round color="negative" icon="remove" @click="deleteParameter(props)"></q-btn>
-            </q-td>
-            <q-td key="negate" :props="props">
-              {{ props.row.negate }}
-              <q-popup-edit v-model="props.row.negate" :auto-save="true">
-                <q-select autofocus outlined v-model="props.row.negate" :options="negates"/>
-              </q-popup-edit>
-            </q-td>
-            <q-td key="operates" :props="props">
-              {{ props.row.operates }}
-              <q-popup-edit v-model="props.row.operates" :auto-save="true">
-                <q-select autofocus outlined v-model="props.row.operates" :options="operators"/>
-              </q-popup-edit>
-            </q-td>
-            <q-td key="leftValuename" :props="props">
-              {{ props.row.leftValuename }}
-              <q-popup-edit v-model="props.row.leftValuename" :auto-save="true">
-                <q-select autofocus outlined v-model="props.row.leftValuename" :options="sourceFields"/>
-              </q-popup-edit>
-            </q-td>
-            <q-td key="function" :props="props">
-              {{ props.row.function }}
-              <q-popup-edit v-model="props.row.function" :auto-save="true">
-                <q-select autofocus outlined v-model="props.row.function" :options="functions"/>
-              </q-popup-edit>
-            </q-td>
-            <q-td key="rightValuename" :props="props">
-              {{ props.row.rightValuename }}
-              <q-popup-edit v-model="props.row.rightValuename" :auto-save="true">
-                <q-select autofocus outlined v-model="props.row.rightValuename" :options="sourceFields" @input="changeRight(props)"/>
-              </q-popup-edit>
-            </q-td>
-            <q-td key="value" :props="props">
-              {{ props.row.value }}
-              <q-popup-edit v-model="props.row.value" :auto-save="true">
-                <q-input autofocus outlined v-model="props.row.value" @input="changeValue(props)"/>
-              </q-popup-edit>
-            </q-td>
-            <q-td key="type" :props="props">
-              {{ props.row.type }}
-              <q-popup-edit v-model="props.row.type" :auto-save="true">
-                <q-select autofocus outlined v-model="props.row.type" :options="categories"/>
-              </q-popup-edit>
-            </q-td>
-          </q-tr>
+        <template v-slot:header-node="prop">
+          <div class="row items-center">
+            <div>
+              {{ prop.node.label }}
+              <q-btn-group outline>
+                <q-btn dense outline :label="$t('button.append')" color="primary" @click="appendCondition(prop)"/>
+                <q-btn dense outline :label="$t('button.modify')" color="dark" @click="modifyCondition(prop)"/>
+                <q-btn dense outline :label="$t('button.delete')" color="negative" @click="deleteCondition(prop)"/>
+              </q-btn-group>
+            </div>
+          </div>
         </template>
-      </q-table>
+        <template v-slot:default-body="prop">
+          <span v-if="prop.node.config" class="text-weight-light text-black">{{ $t('form.filterRows.function') }}: {{ prop.node.config.function }},<span v-if="prop.node.config.rightValuename" class="text-weight-light text-black">{{ $t('form.filterRows.columnName') }}: {{ prop.node.config.rightValuename }},</span><span v-if="prop.node.config.value" class="text-weight-light text-black">{{ $t('form.filterRows.value') }}: {{ prop.node.config.value }},</span>{{ $t('form.filterRows.category') }}: {{ prop.node.config.category }},{{ $t('form.filterRows.negate') }}: {{ prop.node.config.negate }}</span>
+        </template>
+      </q-tree>
+      <q-dialog v-model="conditionDialog.state">
+      <q-card style="width: 35vw; max-width: 50vw;">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ $t('form.filterRows.conditionDialogTitle') }}</div>
+          <q-space/>
+          <q-btn icon="close" flat round dense v-close-popup/>
+        </q-card-section>
+        <q-card-section class="row q-col-gutter-xs">
+          <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.leftValuename" :label="$t('form.filterRows.columnName')" :options="sourceFields" hint=""/>
+          <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.function" :label="$t('form.filterRows.function')" :options="functions" hint=""/>
+          <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.rightValuename" :label="$t('form.filterRows.columnName')" clearable :options="sourceFields" hint=""/>
+          <q-input class="col-12 col-md-4" outlined v-model="conditionDialog.condition.value" :label="$t('form.filterRows.value')" hint=""/>
+          <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.category" :label="$t('form.filterRows.category')" :options="categories" hint=""/>
+          <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.negate" :label="$t('form.filterRows.negate')" :options="negates" hint=""/>
+          <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.format" :label="$t('form.filterRows.format')" :options="formats[conditionDialog.condition.category]" hint=""/>
+          <q-input class="col-12 col-md-4" outlined v-model.number="conditionDialog.condition.lengthValue" :label="$t('form.filterRows.length')" hint=""/>
+          <q-input class="col-12 col-md-4" outlined v-model.number="conditionDialog.condition.accuracy" :label="$t('form.filterRows.accuracy')" hint=""/>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn type="button" :label="$t('button.save')" outline color="primary" icon="las la-save" @click="saveCondition"/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     </q-form>
   </div>
 </template>
@@ -76,115 +70,56 @@ export default {
       form: {
         initFlag: true,
         fieldMappingData: [],
-        send_true_to: "",
-        send_false_to: ""
+        sendTrueTo: null,
+        sendFalseTo: null,
+        conditions: [
+          {
+            id: 0,
+            label: this.$t('form.filterRows.conditionColumn'),
+            header: 'root',
+            expandable: true,
+            children: []
+          }
+        ]
       },
-      parameterColumns: [
-        {
-          name: 'operate',
-          label: this.$t('form.filterRows.columnOperate'),
-          field: 'operate',
-          align: 'right',
-          headerStyle: 'width: 20px'
-        },
-        {
-          name: 'negate',
-          label: this.$t('form.filterRows.negate'),
-          field: 'negate',
-          align: 'left',
-          headerStyle: 'width: 100px;'
-        },
-        {
-          name: 'operates',
-          label: this.$t('form.filterRows.operateValue'),
-          field: 'operates',
-          align: 'left',
-          headerStyle: 'width: 20px'
-        },
-        {
-          name: 'leftValuename',
-          label: this.$t('form.filterRows.columnName'),
-          field: 'leftValuename',
-          align: 'left',
-          headerStyle: 'width: 100px;'
-        },
-
-        {
-          name: 'function',
-          label: this.$t('form.filterRows.function'),
-          field: 'function',
-          align: 'left',
-          headerStyle: 'width: 100px;'
-        },
-        {
-          name: 'rightValuename',
-          label: this.$t('form.filterRows.columnName'),
-          field: 'rightValuename',
-          align: 'left',
-          headerStyle: 'width: 100px;'
-        },
-        {
-          name: 'value',
-          label: this.$t('form.filterRows.value'),
-          field: 'value',
-          align: 'left',
-          headerStyle: 'width: 100px;'
-        },
-        {
-          name: 'type',
-          label: this.$t('form.filterRows.type'),
-          field: 'type',
-          align: 'left',
-          headerStyle: 'width: 100px;'
+      selected: null,
+      selectNode: {},
+      conditionDialog: {
+        state: false,
+        action: 'add',
+        condition: {
+          negate: 'N',
+          leftValuename: null,
+          function: null,
+          rightValuename: null,
+          value: null,
+          category: 'String',
+          lengthValue: -1,
+          accuracy: -1,
+          format: null
         }
-      ],
+      },
       sourceFields: [],
-      stepList: [],
       nextSteps: [],
       categories: ['BigNumber', 'Binary', 'Boolean', 'Date', 'Integer', 'Internet Address', 'Number', 'String', 'Timestamp'],
-      negates: ["Y", "N"],
-      operators: ["AND","OR","OR NOT","AND NOT","XOR"],
-      functions: ["=", "<>", "<", "<=", ">", ">=", "REGEXP", "IS NULL", "IS NOT NULL", "IN LIST", "CONTAINS", "STARTS WITH", "ENDS WITH", "LIKE", "TRUE"],
+      negates: ['Y', 'N'],
+      operators: ['AND','OR','OR NOT','AND NOT','XOR'],
+      functions: ['=', '<>', '<', '<=', '>', '>=', 'REGEXP', 'IS NULL', 'IS NOT NULL', 'IN LIST', 'CONTAINS', 'STARTS WITH', 'ENDS WITH', 'LIKE', 'TRUE'],
+      formats: {
+        'Date': ['yyyy/MM/dd HH:mm:ss.SSS', 'yyyy/MM/dd HH:mm:ss.SSS XXX', 'yyyy/MM/dd HH:mm:ss', 'yyyy/MM/dd HH:mm:ss XXX', 'yyyyMMddHHmmss', 'yyyy/MM/dd', 'yyyy-MM-dd', 'yyyy-MM-dd HH:mm:ss', 'yyyy-MM-dd HH:mm:ss XXX',
+                'yyyyMMdd', 'MM/dd/yyyy', 'MM/dd/yyyy HH:mm:ss', 'MM-dd-yyyy', 'MM-dd-yyyy HH:mm:ss', 'MM/dd/yy', 'MM-dd-yy', 'dd/MM/yyyy', 'dd-MM-yyyy', 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX', 'yyyy-MM-dd HH:mm:ss.SSS'],
+        'Integer': ['#,##0.###', '0.00', '0000000000000', '#.#', '#', '###,###,###.#', '#######.###', '#####.###%'],
+        'Number': ['#,##0.###', '0.00', '0000000000000', '#.#', '#', '###,###,###.#', '#######.###', '#####.###%'],
+        'BigNumber': [],
+        'Binary': [],
+        'Boolean': [],
+        'Internet Address': [],
+        'String': [],
+        'Timestamp': []
+      }
     }
   },
   methods: {
-    changeRight(props){
-      props.row.value = ""
-      props.row.type = ""
-    },
-    changeValue(props){
-      props.row.rightValuename = ""
-    },
-    filterStepTrue(val) {
-      const steps = this.nextSteps.filter(step => step === val)
-      if (steps.length > 0) {
-         this.form.send_true_to=steps[0]
-      }
-      this.form.send_false_to=""
-      this.form.fieldMappingData=[]
-    },
-    filterStepFalse(val) {
-      const steps = this.nextSteps.filter(step => step === val)
-      if (steps.length > 0) {
-        this.form.send_false_to=steps[0]
-      }
-      this.form.fieldMappingData=[]
-    },
-    addParameter() {
-      console.log(this.form)
-      this.form.fieldMappingData.push({
-        negate: '',
-        operates: '',
-        leftValuename: '',
-        function: '',
-        rightValuename:'',
-        value:'',
-        type:'',
-      })
-    },
-    deleteParameter(props) {
-      this.form.fieldMappingData.splice(props.rowIndex, 1)
-    },
     submitForm() {
       //条件重组
       this.$emit('propertiesForm', {
@@ -192,56 +127,48 @@ export default {
         mxCellProperties: this.form,
       })
     },
-
-    /**
-     * 条件数据重新组合
-     * @param Fields
-     */
-    changeFields(){
-      let conditions=[];
-      this.form.fieldMappingData.forEach(item=>{
-        console.log(item)
-        if(item.length>0){
-          let condition =[];
-          let sunCondition={};
-
-          item.children.forEach(sub=>{
-
-            condition.push({
-              negated: sub.negated,
-              operator: sub.operates,
-              leftvalue: sub.leftValuename,
-              rightvalue: sub.rightValuename,
-              function: sub.function,
-              value: {
-                name: sub.value,
-                type: sub.type,
-                text: "",
-                length: "-1",
-                precision: "-1",
-                isnull: 'N',
-                mask: ""
-              }
-            })
-          })
-          delete item.children
-          condition.push(item);
-          sunCondition['conditions']={
-            negated:item.negated,
-            operator:item.operates,
-            condition:condition,
-          }
-          conditions.push(sunCondition)
-        }else{
-          delete item.children;
-          conditions.push(item);
-        }
-
-      })
-      return conditions;
-
+    appendCondition (prop) {
+      this.selectNode = prop
+      Object.assign(this.conditionDialog, this.$options.data.call(this).conditionDialog)
+      this.conditionDialog.state = true
     },
-
+    modifyCondition (prop) {
+      this.selectNode = prop
+      this.conditionDialog.action = 'modify'
+      this.conditionDialog.condition = prop.node.config
+      this.conditionDialog.state = true
+    },
+    deleteCondition (prop) {
+      this.deleteChild(this.form.conditions[0].children, prop.node.id)
+    },
+    deleteChild(children, key) {
+      children.forEach(node => {
+        if (node.id === key) {
+          children.splice(children.findIndex((item) =>item.id === node.id), 1)
+        } else {
+          this.deleteChild(node.children, key)
+        }
+      })
+    },
+    saveCondition () {
+      if (this.conditionDialog.action === 'add') {
+        this.selectNode.node.children.push({
+          id: Date.now(),
+          label: this.conditionDialog.condition.leftValuename,
+          header: 'node',
+          expandable: true,
+          children: [],
+          config: this.conditionDialog.condition
+        })
+      } else {
+        this.selectNode.node = Object.assign(this.selectNode.node, {
+          label: this.conditionDialog.condition.leftValuename,
+          config: this.conditionDialog.condition
+        })
+      }
+      this.conditionDialog.state = false
+      this.selectNode.tree.expandAll()
+    }
   },
   mounted() {
     const vm = this
@@ -290,9 +217,7 @@ export default {
     vm.nextSteps = []
     if (nextSteps && nextSteps.length > 0) {
       nextSteps.forEach(step => {
-        if (step.value && step.title){
-          vm.nextSteps.push(step.title)
-        }
+        vm.nextSteps.push({ value: step.value, label: step.title })
       })
     }
     const mxCellValue = vm.$store.getters['etl/getMxCellForm']

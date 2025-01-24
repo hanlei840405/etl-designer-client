@@ -70,7 +70,6 @@ export default {
       tab: 'basic',
       form: {
         name: null,
-        urlInStream: false,
         urlField: null,
         method: 'GET',
         methodInStream: false,

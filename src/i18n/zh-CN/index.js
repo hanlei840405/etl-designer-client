@@ -59,6 +59,7 @@ export default {
     }
   },
   button: {
+    append: "添加",
     create: "新建",
     modify: "编辑",
     delete: "删除",
@@ -629,17 +630,18 @@ export default {
     },
     filterRows:{
       name:"名称",
-      operate:"操作",
+      conditionDialogTitle: "条件设定",
+      conditionColumn: "条件字段",
       stepTrue:"发送true数据给步骤",
       stepFalse:"发送false数据给步骤",
-      condition:"条件",
-      columnOperate: "操作",
-      operateValue: "与上一条件关系",
       columnName: "字段",
-      negate: "IS NOT",
+      negate: "条件取反",
       function: "函数",
       value: "值",
-      type: "值类型",
+      category: "值类型",
+      length: "长度",
+      accuracy: "精度",
+      format: "格式",
 
     },
     kafkaProducerOutput: {
