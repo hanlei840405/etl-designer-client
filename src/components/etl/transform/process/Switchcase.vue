@@ -46,7 +46,7 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.switchcase.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.switchcase.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>

@@ -117,7 +117,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined color="primary" v-model.number="form.parallel" :label="$t('form.databaselookup.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.databaselookup.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectTables.mode">
@@ -435,8 +435,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     fetchDatasourceList({
-      id: root.projectId,
-      ignoreStatus: false
+      projectId: root.projectId
     }).then(res => {
       res.data.forEach(ele => {
         vm.datasourceOptions.push({

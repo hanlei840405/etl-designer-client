@@ -47,8 +47,8 @@
           <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.category" :label="$t('form.filterRows.category')" :options="categories" hint=""/>
           <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.negate" :label="$t('form.filterRows.negate')" :options="negates" hint=""/>
           <q-select class="col-12 col-md-4" autofocus outlined v-model="conditionDialog.condition.format" :label="$t('form.filterRows.format')" :options="formats[conditionDialog.condition.category]" hint=""/>
-          <q-input class="col-12 col-md-4" outlined v-model.number="conditionDialog.condition.lengthValue" :label="$t('form.filterRows.length')" hint=""/>
-          <q-input class="col-12 col-md-4" outlined v-model.number="conditionDialog.condition.accuracy" :label="$t('form.filterRows.accuracy')" hint=""/>
+          <q-input class="col-12 col-md-4" outlined type="number" v-model.number="conditionDialog.condition.lengthValue" :label="$t('form.filterRows.length')" hint=""/>
+          <q-input class="col-12 col-md-4" outlined type="number" v-model.number="conditionDialog.condition.accuracy" :label="$t('form.filterRows.accuracy')" hint=""/>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn type="button" :label="$t('button.save')" outline color="primary" icon="las la-save" @click="saveCondition"/>

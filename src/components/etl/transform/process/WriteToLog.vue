@@ -9,7 +9,7 @@
         <q-tab-panel class="row q-col-gutter-xs" name="basic">
           <q-input class="col-12 col-md-4" outlined v-model="form.name" :label="$t('form.writeToLog.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
           <q-select class="col-12 col-md-4" outlined v-model="form.level" emit-value map-options :options="levels" :label="$t('form.writeToLog.logLevel')" hint=""></q-select>
-          <q-input class="col-12 col-md-4" type="number" min="0" outlined v-model.number="form.limitRows" :label="$t('form.writeToLog.nrOfRowToPrint')" hint=""/>
+          <q-input class="col-12 col-md-4" type="number" outlined v-model.number="form.limitRows" :label="$t('form.writeToLog.nrOfRowToPrint')" min="0" hint=""/>
           <q-input class="col-12" outlined v-model="form.logs" type="textarea" rows="12" :label="$t('form.writeToLog.writeLog')" hint=""/>
           <div class="col-8">
             <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.writeToLog.tableField')">
@@ -55,7 +55,7 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.writeToLog.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.writeToLog.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>

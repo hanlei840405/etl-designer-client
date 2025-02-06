@@ -24,6 +24,13 @@ const routes = [
         meta: {
           authorities: ['DATASOURCE', 'ROOT']
         }
+      },,
+      {
+        path: '/basic-ftp',
+        component: () => import('pages/base/Ftp.vue'),
+        meta: {
+          authorities: ['FTP', 'ROOT']
+        }
       },
       {
         path: '/auth-privilege',

@@ -18,9 +18,9 @@
             </template>
           </q-input>
           <q-input class="col-12 col-md-6" outlined v-model="form.consumerGroup" label="Consumer group" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model.number="form.duration" :label="$t('form.kafkaConsumerInput.duration')" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model.number="form.records" :label="$t('form.kafkaConsumerInput.numberRecords')" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model.number="form.batches" :label="$t('form.kafkaConsumerInput.maxBatches')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.duration" :label="$t('form.kafkaConsumerInput.duration')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.records" :label="$t('form.kafkaConsumerInput.numberRecords')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.batches" :label="$t('form.kafkaConsumerInput.maxBatches')" hint=""/>
           <q-radio class="col-12 col-md-2" v-model="form.commitMode" val="record" :label="$t('form.kafkaConsumerInput.commitModeRecordRead')" hint=""/>
           <q-radio class="col-12 col-md-4" v-model="form.commitMode" val="batch" :label="$t('form.kafkaConsumerInput.commitModeBatch')" hint=""/>
           <q-table class="col-12" dense :data="form.topics" :columns="topicColumns" :rows-per-page-fields="[0]" row-key="topic" separator="cell" hide-bottom title="Topic">
@@ -87,7 +87,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.kafkaConsumerInput.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.kafkaConsumerInput.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
       <q-dialog v-model="selectShellDialog.state">

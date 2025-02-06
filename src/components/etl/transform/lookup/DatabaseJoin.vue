@@ -24,7 +24,7 @@
               </q-item>
             </template>
           </q-select>
-          <q-input class="col-12 col-md-4" outlined v-model.number="form.returnRows" :label="$t('form.databaseJoin.returnRowSize')" hint=""/>
+          <q-input class="col-12 col-md-4" outlined type="number" v-model.number="form.returnRows" :label="$t('form.databaseJoin.returnRowSize')" hint=""/>
           <div class="col-12 col-md-8">
             <q-input class="col-12" outlined v-model="form.sql" type="textarea" rows="12" label="SQL" :rules="[ val => val && val.length > 0 || 'Please type something']" hint="" />
             <q-checkbox class="col-12 col-md-6" v-model="form.outerJoin" :label="$t('form.databaseJoin.outerJoin')"/>
@@ -76,7 +76,7 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.databaseJoin.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.databaseJoin.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectTables.mode">
@@ -308,8 +308,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     fetchDatasourceList({
-      id: root.projectId,
-      ignoreStatus: false
+      projectId: root.projectId
     }).then(res => {
       res.data.forEach(ele => {
         vm.datasourceOptions.push({

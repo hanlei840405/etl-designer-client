@@ -56,13 +56,13 @@
                     </q-td>
                     <q-td key="lengthValue" :props="props">
                       {{ props.row.lengthValue }}
-                      <q-popup-edit v-model.number="props.row.lengthValue" :auto-save="true">
+                      <q-popup-edit type="number" v-model.number="props.row.lengthValue" :auto-save="true">
                         <q-input autofocus v-model.number="props.row.lengthValue"/>
                       </q-popup-edit>
                     </q-td>
                     <q-td key="accuracy" :props="props">
                       {{ props.row.accuracy }}
-                      <q-popup-edit v-model.number="props.row.accuracy" :auto-save="true">
+                      <q-popup-edit type="number" v-model.number="props.row.accuracy" :auto-save="true">
                         <q-input autofocus v-model.number="props.row.accuracy"/>
                       </q-popup-edit>
                     </q-td>
@@ -158,8 +158,8 @@
                     </q-td>
                     <q-td key="lengthValue" :props="props">
                       {{ props.row.lengthValue }}
-                      <q-popup-edit v-model.number="props.row.lengthValue" :auto-save="true">
-                        <q-input autofocus v-model.number="props.row.lengthValue"/>
+                      <q-popup-edit type="number" v-model.number="props.row.lengthValue" :auto-save="true">
+                        <q-input autofocus type="number" v-model.number="props.row.lengthValue"/>
                       </q-popup-edit>
                     </q-td>
                     <q-td key="accuracy" :props="props">
@@ -238,7 +238,7 @@
           </q-tab-panels>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.selectValues.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.selectValues.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>

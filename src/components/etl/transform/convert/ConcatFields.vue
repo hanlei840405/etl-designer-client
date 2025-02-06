@@ -10,7 +10,7 @@
           <q-tab-panel class="row q-col-gutter-xs" name="basic">
             <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.concatFields.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
             <q-input class="col-12 col-md-6" outlined v-model="form.target" :label="$t('form.concatFields.targetField')" hint=""/>
-            <q-input class="col-12 col-md-6" outlined v-model.number="form.lengthValue" :label="$t('form.concatFields.length')" hint=""/>
+            <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.lengthValue" :label="$t('form.concatFields.length')" hint=""/>
             <q-input class="col-12 col-md-6" outlined v-model="form.separator" :label="$t('form.concatFields.separator')" hint=""/>
             <q-input class="col-12 col-md-6" outlined v-model="form.enclosure" :label="$t('form.concatFields.enclosure')" hint=""/>
           </q-tab-panel>
@@ -62,14 +62,14 @@
                   </q-td>
                   <q-td key="lengthValue" :props="props">
                     {{ props.row.lengthValue }}
-                    <q-popup-edit v-model.number="props.row.lengthValue" :auto-save="true">
-                      <q-input autofocus v-model.number="props.row.lengthValue"/>
+                    <q-popup-edit type="number" v-model.number="props.row.lengthValue" :auto-save="true">
+                      <q-input autofocus type="number" v-model.number="props.row.lengthValue"/>
                     </q-popup-edit>
                   </q-td>
                   <q-td key="accuracy" :props="props">
                     {{ props.row.accuracy }}
-                    <q-popup-edit v-model.number="props.row.accuracy" :auto-save="true">
-                      <q-input autofocus v-model.number="props.row.accuracy"/>
+                    <q-popup-edit type="number" v-model.number="props.row.accuracy" :auto-save="true">
+                      <q-input autofocus type="number" v-model.number="props.row.accuracy"/>
                     </q-popup-edit>
                   </q-td>
                   <q-td key="currency" :props="props">
@@ -107,7 +107,7 @@
             </q-table>
           </q-tab-panel>
           <q-tab-panel name="runningConfig">
-            <q-input outlined v-model.number="form.parallel" :label="$t('form.concatFields.threads')" type="number" min="1"
+            <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.concatFields.threads')" min="1"
                      :disable="forbiddenParallel"/>
           </q-tab-panel>
         </q-tab-panels>

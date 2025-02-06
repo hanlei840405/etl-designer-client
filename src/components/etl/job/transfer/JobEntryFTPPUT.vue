@@ -2,19 +2,29 @@
   <div style="width: 100%;">
     <q-form class="row q-col-gutter-xs">
       <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.jobEntryFTPPUT.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-      <q-input class="col-12 col-md-6" outlined v-model="form.serverName" :label="$t('form.jobEntryFTPPUT.serverName')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-      <q-input class="col-12 col-md-6" outlined v-model="form.serverPort" :label="$t('form.jobEntryFTPPUT.serverPort')" hint=""/>
-      <q-input class="col-12 col-md-6" outlined v-model="form.userName" :label="$t('form.jobEntryFTPPUT.userName')" hint=""/>
-      <q-input class="col-12 col-md-6" outlined v-model="form.password" :label="$t('form.jobEntryFTPPUT.password')" hint=""/>
       <q-input class="col-12 col-md-6" outlined v-model="form.shellName" :label="$t('form.jobEntryFTPPUT.localDirectory')" hint="">
         <template v-slot:append>
           <q-btn round dense flat icon="search" color="primary" @click="openShellSelectDialog"/>
         </template>
       </q-input>
+      <q-select class="col-12 col-md-6" outlined v-model="form.server" emit-value map-options option-value="id" :options="ftpServerOptions" :label="$t('form.jobEntryFTPPUT.server')" clearable hint="">
+        <template v-slot:option="scope">
+          <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+            <q-item-section>
+              <q-item-label>{{ scope.opt.label }}</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-item-label caption>host: {{ scope.opt.host }}</q-item-label>
+              <q-item-label caption>port: {{ scope.opt.port }}</q-item-label>
+              <q-item-label caption>username: {{ scope.opt.username }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
       <q-input class="col-12 col-md-6" outlined v-model="form.wildcard" :label="$t('form.jobEntryFTPPUT.wildcard')" hint=""/>
       <q-input class="col-12 col-md-6" outlined v-model="form.remoteDirectory" :label="$t('form.jobEntryFTPPUT.remoteDirectory')" hint=""/>
-      <q-input class="col-12 col-md-6" outlined v-model.number="form.timeout" :label="$t('form.jobEntryFTPPUT.timeout')" hint=""/>
-      <q-select class="col-12 col-md-6" outlined v-model="form.controlEncoding" :options="encodingOptions" :label="$t('form.jobEntryFTPPUT.controlEncoding')" hint=""></q-select>
+      <q-input class="col-12 col-md-3" outlined type="number" v-model.number="form.timeout" :label="$t('form.jobEntryFTPPUT.timeout')" hint=""/>
+      <q-select class="col-12 col-md-3" outlined v-model="form.controlEncoding" :options="encodingOptions" :label="$t('form.jobEntryFTPPUT.controlEncoding')" hint=""></q-select>
       <q-checkbox class="col-12 col-md-3" v-model="form.activeConnection" :label="$t('form.jobEntryFTPPUT.activeConnection')"/>
       <q-checkbox class="col-12 col-md-3" v-model="form.remove" :label="$t('form.jobEntryFTPPUT.remove')"/>
       <q-checkbox class="col-12 col-md-2" v-model="form.binaryMode" :label="$t('form.jobEntryFTPPUT.binaryMode')"/>
@@ -50,6 +60,7 @@
 <script>
 
 import { fetchShellsByParent } from 'src/service/kettle/ShellService'
+import { fetchFtpList } from 'src/service/base/FtpService'
 
 export default {
   name: 'JobEntryFTPPUT',
@@ -57,10 +68,6 @@ export default {
     return {
       form: {
         name: null,
-        serverName: null,
-        serverPort: null,
-        userName: null,
-        password: null,
         binaryMode: false,
         timeout: 0,
         activeConnection: false,
@@ -73,6 +80,7 @@ export default {
         onlyPuttingNewFiles: false,
         parallel: false
       },
+      ftpServerOptions: [],
       encodingOptions: ['US-ASCII', 'ISO-8859-1', 'UTF-8', 'UTF-16BE', 'UTF-16LE', 'UTF-16'],
       selectShellDialog: {
         state: false,
@@ -127,14 +135,27 @@ export default {
     }
   },
   mounted () {
-    const vm = this
-    const mxCellValue = vm.$store.getters['etl/getMxCellForm']
-    const root = vm.$store.getters['etl/getRoot']
+    const mxCellValue = this.$store.getters['etl/getMxCellForm']
+    const root = this.$store.getters['etl/getRoot']
     if (mxCellValue) {
-      vm.form = Object.assign(vm.form, mxCellValue)
+      this.form = Object.assign(this.form, mxCellValue)
     }
     this.selectShellDialog.parentId = root.parentId
     this.selectShellDialog.projectId = root.projectId
+    fetchFtpList({
+      projectId: root.projectId,
+      category: 'FTP'
+    }).then(res => {
+      res.data.forEach(ele => {
+        this.ftpServerOptions.push({
+          id: ele.id,
+          label: ele.name,
+          host: ele.host,
+          port: ele.port,
+          username: ele.username
+        })
+      })
+    })
   }
 }
 </script>

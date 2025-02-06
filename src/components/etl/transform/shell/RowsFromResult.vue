@@ -26,14 +26,14 @@
             </q-td>
             <q-td key="lengthValue" :props="props">
               {{ props.row.lengthValue }}
-              <q-popup-edit v-model.number="props.row.lengthValue" :auto-save="true">
-                <q-input autofocus outlined v-model.number="props.row.lengthValue"/>
+              <q-popup-edit type="number" v-model.number="props.row.lengthValue" :auto-save="true">
+                <q-input autofocus outlined type="number" v-model.number="props.row.lengthValue"/>
               </q-popup-edit>
             </q-td>
             <q-td key="accuracy" :props="props">
               {{ props.row.accuracy }}
-              <q-popup-edit v-model.number="props.row.accuracy" :auto-save="true">
-                <q-input autofocus outlined v-model.number="props.row.accuracy"/>
+              <q-popup-edit type="number" v-model.number="props.row.accuracy" :auto-save="true">
+                <q-input autofocus outlined type="number" v-model.number="props.row.accuracy"/>
               </q-popup-edit>
             </q-td>
           </q-tr>

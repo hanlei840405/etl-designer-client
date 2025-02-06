@@ -293,8 +293,7 @@ export default {
       if (val) {
         this.searchModels()
         fetchDatasourceList({
-          id: this.project.id,
-          ignoreStatus: false
+          projectId: this.project.id
         }).then(res => {
           this.datasourceOptions = []
           res.data.forEach(ele => {

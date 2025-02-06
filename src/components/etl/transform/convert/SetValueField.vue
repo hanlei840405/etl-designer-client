@@ -52,7 +52,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined  v-model.number="form.parallel" :label="$t('form.setValueField.threads')" type="number" min="1"
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.setValueField.threads')" min="1"
                    :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>

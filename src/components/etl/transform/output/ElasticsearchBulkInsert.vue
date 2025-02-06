@@ -15,7 +15,7 @@
           <q-input class="col-12 col-md-6" outlined v-model="form.type" :label="$t('form.elasticSearchBulk.type')" hint=""/>
           <q-input class="col-12 col-md-6" outlined v-model="form.batchSize" :label="$t('form.elasticSearchBulk.batchSize')" hint=""/>
           <q-select class="col-12 col-md-6" clearable outlined v-model="form.idField" :options="sourceFields" :label="$t('form.elasticSearchBulk.idField')" hint=""/>
-          <q-input class="col-12 col-md-3" outlined v-model.number="form.time" :label="$t('form.elasticSearchBulk.batchTimeout')" hint=""/>
+          <q-input class="col-12 col-md-3" outlined type="number" v-model.number="form.time" :label="$t('form.elasticSearchBulk.batchTimeout')" hint=""/>
           <q-select class="col-12 col-md-3" clearable outlined v-model="form.timeUnit" :options="timeUnits" :label="$t('form.elasticSearchBulk.timeUint')" hint=""/>
           <q-checkbox class="col-12 col-md-3" v-model="form.fromJson" :label="$t('form.elasticSearchBulk.jsonInput')" hint=""/>
           <q-input class="col-12 col-md-3" outlined v-model="form.jsonField" :label="$t('form.elasticSearchBulk.jsonField')" :disable="!form.fromJson" hint=""/>
@@ -122,7 +122,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.elasticSearchBulk.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.elasticSearchBulk.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     </q-form>

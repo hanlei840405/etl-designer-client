@@ -13,7 +13,7 @@
           <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.excelOutput.name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
           <q-input class="col-12 col-md-6" outlined v-model="form.filename" :label="$t('form.excelOutput.filename')" hint=""/>
           <q-select class="col-12 col-md-6" outlined v-model="form.suffix" :options="suffixes" emit-value map-options :label="$t('form.excelOutput.suffix')" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model.number="form.rowNumber" :label="$t('form.excelOutput.splitEveryDataRows')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.rowNumber" :label="$t('form.excelOutput.splitEveryDataRows')" hint=""/>
           <q-select class="col-12 col-md-6" outlined v-model="form.fileOutputMode" :options="outputModes" emit-value map-options :label="$t('form.excelOutput.existOutputFile')" hint=""/>
           <q-select class="col-12 col-md-6" outlined v-model="form.dateFormat" :options="formats" emit-value map-options :label="$t('form.excelOutput.dateFormat')" :disable="!form.useDateFormat" hint=""/>
           <q-checkbox class="col-12 col-md-4" v-model="form.useDateFormat" :label="$t('form.excelOutput.specifyDateFormat')"/>
@@ -32,8 +32,8 @@
         <q-tab-panel class="row q-col-gutter-xs" name="content">
           <q-input class="col-12 col-md-6" outlined v-model="form.startPoint" :label="$t('form.excelOutput.startCell')" hint=""/>
           <q-select class="col-12 col-md-6" outlined v-model="form.cellOutputMode" :options="outputModes" emit-value map-options :label="$t('form.excelOutput.whenWritingRows')" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model.number="form.deleteLines" :label="$t('form.excelOutput.skipRows')" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model.number="form.emptyLines" :label="$t('form.excelOutput.beginWritingEmptyLines')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.deleteLines" :label="$t('form.excelOutput.skipRows')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.emptyLines" :label="$t('form.excelOutput.beginWritingEmptyLines')" hint=""/>
           <q-checkbox class="col-12 col-md-6" v-model="form.useHeader" :label="$t('form.excelOutput.writeHeader')"/>
           <q-checkbox class="col-12 col-md-6" v-model="form.useFooter" :label="$t('form.excelOutput.writeFooter')"/>
           <q-checkbox class="col-12 col-md-6" v-model="form.autoSize" :label="$t('form.excelOutput.autoSizeColumns')"/>
@@ -123,7 +123,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input autofocus outlined v-model.number="form.parallel" :label="$t('form.excelOutput.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input autofocus outlined type="number" v-model.number="form.parallel" :label="$t('form.excelOutput.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>

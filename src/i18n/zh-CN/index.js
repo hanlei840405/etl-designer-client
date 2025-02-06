@@ -34,7 +34,8 @@ export default {
     basic: {
       default: "基础数据管理",
       project: "工程管理",
-      datasource: "数据源管理"
+      datasource: "数据源管理",
+      ftp: "FTP服务器管理"
     },
     auth: {
       default: "系统管理",
@@ -119,11 +120,17 @@ export default {
     datasource: {
       name: "名称",
       type: "数据库类型",
-      host: "Host",
-      port: "Port",
+      host: "主机/IP",
+      port: "端口",
       schema: "Schema",
       url: "JDBC URL",
       driver: "JDBC驱动名",
+    },
+    ftp: {
+      name: "名称",
+      category: "类型",
+      host: "主机/IP",
+      port: "端口",
     },
     user: {
       name: "姓名",
@@ -215,8 +222,8 @@ export default {
       },
       name: "名称",
       type: "数据库类型",
-      host: "Host",
-      port: "Port",
+      host: "主机/IP",
+      port: "端口",
       schema: "Schema",
       tableSpace: "表空间",
       indexSpace: "索引空间",
@@ -240,6 +247,27 @@ export default {
         minIdle: "最小维持空闲连接数",
         maxWait: "最大建立连接等待时间"
       }
+    },
+    ftp: {
+      default: "FTP服务器",
+      tab: {
+        basic: "基础信息",
+        proxy: "代理",
+      },
+      name: "名称",
+      category: "类型",
+      host: "主机/IP",
+      port: "端口",
+      username: "用户名",
+      password: "密码",
+      usePrivateKey: "使用私钥",
+      privateKey: "私钥",
+      privateKeyPassword: "私钥密码",
+      proxyCategory: "代理类型",
+      proxyHost: "代理主机",
+      proxyPort: "代理端口",
+      proxyUsername: "代理用户名",
+      proxyPassword: "代理密码",
     },
     privilege: {
       default: "权限",
@@ -1342,6 +1370,7 @@ export default {
     },
     jobEntryFTPPUT: {
       name: "名称",
+      server: "FTP服务器",
       serverName: "服务器地址",
       serverPort: "服务器端口",
       userName: "用户名",

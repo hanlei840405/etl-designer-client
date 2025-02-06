@@ -11,7 +11,7 @@
           <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.jsonOutput.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
           <q-select class="col-12 col-md-6" outlined v-model="form.targetMode" :options="targetModes" emit-value map-options :label="$t('form.jsonOutput.output')" @clear="form.executeEachInputRow = false" hint=""/>
           <q-input class="col-12 col-md-6" outlined v-model="form.jsonName" :label="$t('form.jsonOutput.jsonBlocName')" hint=""/>
-          <q-input class="col-12 col-md-6" type="number" min="0" outlined v-model.number="form.rowNumber" :label="$t('form.jsonOutput.brRowsInBloc')" hint="">
+          <q-input class="col-12 col-md-6" min="0" outlined type="number" v-model.number="form.rowNumber" :label="$t('form.jsonOutput.brRowsInBloc')" hint="">
             <template v-slot:append>
               <q-icon name="help_outline" >
                 <q-tooltip>
@@ -76,7 +76,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input autofocus outlined v-model.number="form.parallel" :label="$t('form.jsonOutput.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input autofocus outlined type="number" v-model.number="form.parallel" :label="$t('form.jsonOutput.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>

@@ -29,12 +29,12 @@
           <q-input outlined v-model="form.password" label="密码"/>
         </q-tab-panel>
         <q-tab-panel name="batch">
-          <q-input outlined v-model.number="form.duration" label="每批次持续时间"/>
+          <q-input outlined type="number" v-model.number="form.duration" label="每批次持续时间"/>
           <br/>
-          <q-input outlined v-model.number="form.records" label="每批次处理条数" hint="0不限制"/>
-          <q-input outlined v-model.number="form.batches" label="每批次最大并行数"/>
+          <q-input outlined type="number" v-model.number="form.records" label="每批次处理条数" hint="0不限制"/>
+          <q-input outlined type="number" v-model.number="form.batches" label="每批次最大并行数"/>
           <br/>
-          <q-input outlined v-model.number="form.timeout" label="超时设置(ms)" hint="0不限制"/>
+          <q-input outlined type="number" v-model.number="form.timeout" label="超时设置(ms)" hint="0不限制"/>
         </q-tab-panel>
         <q-tab-panel name="fields">
           <q-table :data="form.fields" :columns="fieldColumns" :rows-per-page-fields="[0]"
@@ -63,7 +63,7 @@
           <q-select clearable outlined v-model="form.returnFieldByStepValue" :options="nextSteps" emit-value map-options label="从步骤获取字段信息" @input="setStepName"/>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form-number-thread-copies')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form-number-thread-copies')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectShellDialog.state">

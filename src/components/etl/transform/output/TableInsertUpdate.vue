@@ -33,7 +33,7 @@
               <q-btn round dense flat icon="search" @click="loadTables"/>
             </template>
           </q-input>
-          <q-input class="col-12 col-md-6" outlined type="number" min="1" v-model.number="form.commitSize" :label="$t('form.tableInsertUpdate.commitSize')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.commitSize" :label="$t('form.tableInsertUpdate.commitSize')" min="1" hint=""/>
           <q-checkbox class="col-12 col-md-6" v-model="form.noUpdating" :label="$t('form.tableInsertUpdate.noUpdate')" hint=""/>
         </q-tab-panel>
         <q-tab-panel name="lookup">
@@ -127,7 +127,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.tableInsertUpdate.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.tableInsertUpdate.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectTables.mode">
@@ -462,8 +462,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     fetchDatasourceList({
-      id: root.projectId,
-      ignoreStatus: false
+      projectId: root.projectId
     }).then(res => {
       res.data.forEach(ele => {
         vm.datasourceOptions.push({

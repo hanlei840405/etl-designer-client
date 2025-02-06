@@ -17,7 +17,7 @@
           <q-checkbox class="col-12 col-md-6" v-model="form.resetLineNo" :label="$t('form.splitFieldToRows.resetRownum')"/>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.splitFieldToRows.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.splitFieldToRows.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>

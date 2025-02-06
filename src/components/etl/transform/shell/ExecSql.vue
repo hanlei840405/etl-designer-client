@@ -54,7 +54,7 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined v-model.number="form.parallel" :label="$t('form.execSql.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.execSql.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
   </q-form>
@@ -216,8 +216,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     fetchDatasourceList({
-      id: root.projectId,
-      ignoreStatus: false
+      projectId: root.projectId
     }).then(res => {
       res.data.forEach(ele => {
         vm.datasourceOptions.push({

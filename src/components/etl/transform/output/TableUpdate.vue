@@ -33,7 +33,7 @@
               <q-btn round dense flat icon="search" @click="loadTables" color="primary"/>
             </template>
           </q-input>
-          <q-input class="col-12 col-md-6" outlined type="number" min="1" v-model.number="form.commitSize" :label="$t('form.tableUpdate.commitSize')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.commitSize" :label="$t('form.tableUpdate.commitSize')" min="1" hint=""/>
           <q-input class="col-12 col-md-6" outlined v-model="form.ignoreFlagField" :label="$t('form.tableUpdate.ignoreFlagField')" :disable="form.skipLookup && form.errorIgnore" hint=""/>
           <q-checkbox class="col-12 col-sm-4 col-md-4" outlined v-model="form.useBatchUpdate" :label="$t('form.tableUpdate.useBatch')" hint=""/>
           <q-checkbox class="col-12 col-sm-4 col-md-4" outlined v-model="form.skipLookup" :label="$t('form.tableUpdate.skipLookup')" hint=""/>
@@ -122,7 +122,7 @@
           </q-table>
         </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined color="primary" v-model.number="form.parallel" :label="$t('form.tableUpdate.threads')" type="number" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.tableUpdate.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectTables.mode">
@@ -448,8 +448,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     fetchDatasourceList({
-      id: root.projectId,
-      ignoreStatus: false
+      projectId: root.projectId
     }).then(res => {
       res.data.forEach(ele => {
         vm.datasourceOptions.push({

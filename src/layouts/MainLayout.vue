@@ -223,6 +223,12 @@ export default {
             name: this.$t('menu.basic.datasource'),
             to: '/basic-datasource',
             icon: 'las la-database'
+          },
+          {
+            id: 'basic-ftp',
+            name: this.$t('menu.basic.ftp'),
+            to: '/basic-ftp',
+            icon: 'las la-database'
           }
         ]
       },

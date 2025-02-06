@@ -36,7 +36,7 @@
         <q-tab-panel name="content">
           <q-checkbox v-model="form.header" label="显示头部" /> <q-checkbox v-model="form.notNull" label="非空记录" /> <q-checkbox v-model="form.pause" label="停在空记录" />
           <br/>
-          <q-input outlined v-model.number="form.limit" label="限制数"/>
+          <q-input outlined type="number" v-model.number="form.limit" label="限制数"/>
           <br/>
           <q-select outlined v-model="form.encoding" clearable filled use-input @filter="filterEncoding" :options="copyEncodings" label="字符集编码"/>
           <q-checkbox v-model="form.withFileName" label="添加文件名" /> <q-checkbox v-model="form.header" label="严格类型" />
@@ -67,8 +67,8 @@
                 </q-td>
                 <q-td key="lengthValue" :props="props">
                   {{ props.row.lengthValue }}
-                  <q-popup-edit v-model.number="props.row.lengthValue" :auto-save="true">
-                    <q-input autofocus outlined v-model.number="props.row.lengthValue"/>
+                  <q-popup-edit type="number" v-model.number="props.row.lengthValue" :auto-save="true">
+                    <q-input autofocus outlined type="number" v-model.number="props.row.lengthValue"/>
                   </q-popup-edit>
                 </q-td>
                 <q-td key="accuracy" :props="props">

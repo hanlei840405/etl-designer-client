@@ -247,8 +247,7 @@ export default {
     selectedProject (val) {
       if (val) {
         fetchDatasourceList({
-          id: val.id,
-          ignoreStatus: true
+          projectId: val.id
         }).then(res => {
           this.table.data = res.data
         })
@@ -258,8 +257,7 @@ export default {
     },
     searchDatasourceList () {
       fetchDatasourceList({
-        id: this.project.id,
-        ignoreStatus: true
+        projectId: this.project.id
       }).then(res => {
         this.editDatasourceDialog.state = false
         this.table.data = res.data

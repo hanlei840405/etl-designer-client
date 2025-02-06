@@ -2,7 +2,7 @@
   <div style="width: 100%;">
     <q-form class="row q-col-gutter-xs">
       <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.tableInput.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-      <q-select class="col-12 col-md-6" outlined v-model.number="form.datasource" emit-value map-options option-value="id" :options="datasourceOptions" :label="$t('form.tableInput.datasource')" clearable :rules="[ val => validate(val) || 'datasource is invalid' ]" hint="">
+      <q-select class="col-12 col-md-6" outlined type="number" v-model.number="form.datasource" emit-value map-options option-value="id" :options="datasourceOptions" :label="$t('form.tableInput.datasource')" clearable :rules="[ val => validate(val) || 'datasource is invalid' ]" hint="">
         <template v-slot:option="scope">
           <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
             <q-item-section>
@@ -19,7 +19,7 @@
         </template>
       </q-select>
       <q-select class="col-12 col-md-6" clearable outlined v-model="form.lookupFromStepValue" :options="previousSteps" emit-value map-options :label="$t('form.tableInput.previous')" @clear="form.executeEachInputRow = false" @input="setLookupFromStepName" hint=""/>
-      <q-input class="col-12 col-md-6" outlined v-model.number="form.rowLimit" :label="$t('form.tableInput.limitSize')" hint=""/>
+      <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.rowLimit" :label="$t('form.tableInput.limitSize')" hint=""/>
       <q-input class="col-12 col-md-12" outlined v-model="form.sql" type="textarea" rows="10" label="SQL" placeholder="SELECT <values> FROM <table name> WHERE <conditions>" :rules="[ val => val && val.length > 0 || 'Please type something']" hint="">
         <template v-slot:append>
           <div style="margin-top: 2vh;">
@@ -271,7 +271,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     fetchDatasourceList({
-      id: root.projectId
+      projectId: root.projectId
     }).then(res => {
       res.data.forEach(ele => {
         vm.datasourceOptions.push({
