@@ -25,11 +25,11 @@
       <q-input class="col-12 col-md-6" outlined v-model="form.remoteDirectory" :label="$t('form.jobEntryFTPPUT.remoteDirectory')" hint=""/>
       <q-input class="col-12 col-md-3" outlined type="number" v-model.number="form.timeout" :label="$t('form.jobEntryFTPPUT.timeout')" hint=""/>
       <q-select class="col-12 col-md-3" outlined v-model="form.controlEncoding" :options="encodingOptions" :label="$t('form.jobEntryFTPPUT.controlEncoding')" hint=""></q-select>
-      <q-checkbox class="col-12 col-md-3" v-model="form.activeConnection" :label="$t('form.jobEntryFTPPUT.activeConnection')"/>
+      <!-- <q-checkbox class="col-12 col-md-3" v-model="form.activeConnection" :label="$t('form.jobEntryFTPPUT.activeConnection')"/> -->
       <q-checkbox class="col-12 col-md-3" v-model="form.remove" :label="$t('form.jobEntryFTPPUT.remove')"/>
-      <q-checkbox class="col-12 col-md-2" v-model="form.binaryMode" :label="$t('form.jobEntryFTPPUT.binaryMode')"/>
-      <q-checkbox class="col-12 col-md-2" v-model="form.onlyPuttingNewFiles" :label="$t('form.jobEntryFTPPUT.onlyPuttingNewFiles')"/>
-      <q-checkbox class="col-12 col-md-2" v-model="form.parallel" :label="$t('form.jobEntryFTPPUT.parallel')"/>
+      <q-checkbox class="col-12 col-md-3" v-model="form.binaryMode" :label="$t('form.jobEntryFTPPUT.binaryMode')"/>
+      <q-checkbox class="col-12 col-md-3" v-model="form.onlyPuttingNewFiles" :label="$t('form.jobEntryFTPPUT.onlyPuttingNewFiles')"/>
+      <q-checkbox class="col-12 col-md-3" v-model="form.parallel" :label="$t('form.jobEntryFTPPUT.parallel')"/>
       <q-dialog v-model="selectShellDialog.state">
         <q-card style="min-height: 45vh; min-width: 700px;">
           <q-card-section class="row items-center q-pb-none">
@@ -70,7 +70,6 @@ export default {
         name: null,
         binaryMode: false,
         timeout: 0,
-        activeConnection: false,
         controlEncoding: null,
         shellId: null,
         shellName: null,

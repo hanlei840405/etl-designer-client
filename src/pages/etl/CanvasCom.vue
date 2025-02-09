@@ -181,6 +181,7 @@ import JobEntrySuccess from 'src/components/etl/job/common/JobEntrySuccess.vue'
 import JobEntryJob from 'src/components/etl/job/common/JobEntryJob.vue'
 import JobEntryEval from 'src/components/etl/job/shell/JobEntryEval.vue'
 import JobEntrySetVariables from 'src/components/etl/job/common/JobEntrySetVariables.vue'
+import JobEntryFTP from 'src/components/etl/job/transfer/JobEntryFTP.vue'
 import JobEntryFTPPUT from 'src/components/etl/job/transfer/JobEntryFTPPUT.vue'
 import JobEntryMail from 'src/components/etl/job/transfer/JobEntryMail.vue'
 import ValueMapperMeta from 'src/components/etl/transform/convert/ValueMapper.vue'
@@ -254,6 +255,7 @@ export default {
     JobEntrySuccess,
     JobEntryJob,
     JobEntrySetVariables,
+    JobEntryFTP,
     JobEntryFTPPUT,
     JobEntryMail,
     ValueMapperMeta,
@@ -977,7 +979,7 @@ export default {
         if (!vm.stompClient || !vm.stompClient.connected) {
           if (vm.timer) {
             vm.$q.notify({
-              message: this.$t('message.reconnectingServer'),
+              message: this.$t('message.reconnectServer'),
               position: 'top',
               color: 'negative'
             })
@@ -988,7 +990,7 @@ export default {
             vm.$q.notify({
               message: this.$t('message.connectedServer'),
               position: 'top',
-              color: 'green-10'
+              color: 'teal'
             })
           })
         }

@@ -330,6 +330,7 @@ export default {
       })
     },
     testDatasource () {
+      this.$q.loading.show()
       testDatasource({
         name: this.datasource.name,
         category: this.datasource.category,
@@ -341,6 +342,7 @@ export default {
         url: this.datasource.url,
         driver: this.datasource.driver
       }).then(res => {
+        this.$q.loading.hide()
         if (res.data) {
           this.$q.notify({
             message: this.$t('response.success.test'),
@@ -355,6 +357,7 @@ export default {
           })
         }
       }).catch(err => {
+        this.$q.loading.hide()
         this.$q.notify({
           message: err.data.error,
           position: 'top',

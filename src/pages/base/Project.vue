@@ -228,10 +228,6 @@ export default {
           name: 'action',
           label: this.$t('table.privilege.action')
         }
-      ],
-      rwOptions: [
-        {label: this.$t('form.privilege.r'), value: 'R'},
-        {label: this.$t('form.privilege.rw'), value: 'RW'}
       ]
     }
   },
