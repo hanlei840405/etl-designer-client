@@ -228,7 +228,7 @@ export default {
             id: 'basic-ftp',
             name: this.$t('menu.basic.ftp'),
             to: '/basic-ftp',
-            icon: 'las la-database'
+            icon: 'las la-folder'
           }
         ]
       },
