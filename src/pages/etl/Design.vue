@@ -103,16 +103,20 @@
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-card-section class="q-gutter-md row">
-          <q-btn outline color="primary" @click="newShell('0', false)">{{ $t('button.directory') }}</q-btn>
-          <q-btn outline color="primary" @click="newShell('2', false)">{{ $t('button.ktr') }}</q-btn>
-          <q-btn outline color="primary" @click="newShell('1', false)">{{ $t('button.kjb') }}</q-btn>
+          <q-btn outline color="primary" @click="newShell('0', false)">
+            <q-icon name="folder"  color="yellow-7"/>
+            {{ $t('button.directory') }}</q-btn>
+          <q-btn outline color="primary" @click="newShell('2', false)">
+            <q-icon name="las la-compress-arrows-alt"  color="green-7"/>{{ $t('button.ktr') }}</q-btn>
+          <q-btn outline color="primary" @click="newShell('1', false)">
+            <q-icon name="las la-arrows-alt"  color="orange-7"/>{{ $t('button.kjb') }}</q-btn>
         </q-card-section>
       </q-card>
     </q-dialog>
     <q-dialog v-model="editShellState">
       <q-card style="width: 400px; max-width: 80vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('form.shell.default') }}</div>
+          <div class="text-h6"><q-icon size="sm" :name="icon(shell.category)" :color="color(shell.category)"/>{{ this.shell.category === '0' ? $t('form.shell.directory') : (this.shell.category === '1' ? $t('form.shell.kjb') : $t('form.shell.ktr'))}}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>

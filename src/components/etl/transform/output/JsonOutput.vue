@@ -107,7 +107,8 @@ export default {
         addendTime: false,
         parameters: [],
         parallel: 1,
-        distribute: true
+        distribute: true,
+        shellId: null,
       },
       parameterColumns: [
         {
@@ -244,6 +245,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     vm.auto = root.auto
+    vm.form.shellId = root.id
   }
 }
 </script>

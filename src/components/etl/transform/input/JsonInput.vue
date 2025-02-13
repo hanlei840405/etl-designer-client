@@ -141,6 +141,7 @@ export default {
         errorMaxCount: 0,
         errorRate: 0,
         errorMinRows: 0,
+        shellId: null,
         distribute: true
       },
       parameterColumns: [
@@ -329,6 +330,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     vm.auto = root.auto
+    vm.form.shellId = root.id
   }
 }
 </script>
