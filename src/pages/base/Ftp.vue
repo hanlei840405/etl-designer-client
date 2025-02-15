@@ -83,8 +83,8 @@
             <q-input class="col-12 col-md-6" outlined v-model="ftp.username" :label="$t('form.ftp.username')" hint=""/>
             <q-input class="col-12 col-md-6" outlined v-model="ftp.password" :label="$t('form.ftp.password')" hint=""/>
             <q-checkbox class="col-12 col-md-12" outlined v-if="ftp.category === 'SFTP'" v-model="ftp.usePrivateKey" :label="$t('form.ftp.usePrivateKey')"/>
-            <q-input class="col-12 col-md-6" outlined v-if="ftp.category === 'SFTP'" v-model="ftp.privateKey" :label="$t('form.ftp.privateKey')" hint=""/>
-            <q-input class="col-12 col-md-6" outlined v-if="ftp.category === 'SFTP'" v-model="ftp.privateKeyPassword" :label="$t('form.ftp.privateKeyPassword')" hint=""/>
+            <q-input class="col-12 col-md-12" type="textarea" outlined v-if="ftp.category === 'SFTP'" v-model="ftp.privateKey" :label="$t('form.ftp.privateKey')" hint=""/>
+            <q-input class="col-12 col-md-12" outlined v-if="ftp.category === 'SFTP'" v-model="ftp.privateKeyPassword" :label="$t('form.ftp.privateKeyPassword')" hint=""/>
             </q-tab-panel>
             <q-tab-panel class="row q-col-gutter-xs" name="proxy">
               <q-select class="col-12 col-md-6" outlined v-model="ftp.proxyCategory" :options="editFtpDialog.proxyCategories" :label="$t('form.ftp.proxyCategory')" hint=""/>
@@ -264,6 +264,7 @@ export default {
     testftp () {
       this.$q.loading.show()
       testFtp({
+        projectId: this.project.id,
         category: this.ftp.category,
         host: this.ftp.host,
         port: this.ftp.port,
