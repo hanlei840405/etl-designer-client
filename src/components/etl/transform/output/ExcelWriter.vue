@@ -169,7 +169,6 @@ export default {
         parameters: [],
         parallel: 1,
         distribute: true,
-        shellId: null,
       },
       categories: ['BigNumber', 'Binary', 'Boolean', 'Date', 'Integer', 'Internet Address', 'Number', 'String', 'Timestamp'],
       formats: ['yyyy/MM/dd HH:mm:ss.SSS', 'yyyy/MM/dd HH:mm:ss.SSS XXX', 'yyyy/MM/dd HH:mm:ss', 'yyyy/MM/dd HH:mm:ss XXX', 'yyyyMMddHHmmss', 'yyyy/MM/dd', 'yyyy-MM-dd', 'yyyy-MM-dd HH:mm:ss', 'yyyy-MM-dd HH:mm:ss XXX',
@@ -379,7 +378,6 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     vm.auto = root.auto
-    vm.form.shellId = root.id
   }
 }
 </script>

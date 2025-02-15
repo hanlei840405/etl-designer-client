@@ -293,11 +293,13 @@ export default {
       resource: "授权资源"
     },
     shell: {
-      default: "目录/文件",
       name: "名称",
       description: "描述",
       confirmAddCategory: "选择新增类型",
-      history: "发布历史"
+      history: "发布历史",
+      directory: "目录",
+      kjb: "任务",
+      ktr: "转换",
     },
     shellPublish: {
       deployed: "已部署",

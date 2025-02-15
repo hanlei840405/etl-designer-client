@@ -59,7 +59,6 @@ export default {
         binaryMode: false,
         timeout: 0,
         controlEncoding: null,
-        shellId: null,
         shellName: null,
         wildcard: null,
         remoteDirectory: null,
@@ -122,7 +121,6 @@ export default {
     if (mxCellValue) {
       this.form = Object.assign(this.form, mxCellValue)
     }
-    this.form.shellId = root.id
     fetchFtpList({
       projectId: root.projectId,
       category: 'FTP'
