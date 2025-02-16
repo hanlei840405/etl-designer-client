@@ -1220,7 +1220,7 @@ export default {
     },
     jobEntryEval: {
       name: "名称",
-      parallel: "并行执行转换"
+      parallel: "允许并行执行"
     },
     jobEntrySimpleEval: {
       name: "名称",
@@ -1233,7 +1233,7 @@ export default {
       minValue: "最小值",
       maxValue: "最大值",
       successOnVariable: "变量如果满足成功条件的值",
-      parallel: "并行执行转换",
+      parallel: "允许并行执行",
       evaluateVariable: "变量",
       evaluatePrevious: "上一步结果的字段",
       successConditionEqual: "如果值等于",
@@ -1257,15 +1257,15 @@ export default {
     },
     jobEntrySuccess: {
       name: "名称",
-      parallel: "并行执行转换"
+      parallel: "允许并行执行"
     },
     jobEntrySpecial: {
       name: "名称",
-      parallel: "并行执行转换"
+      parallel: "允许并行执行"
     },
     jobEntryDummy: {
       name: "名称",
-      parallel: "并行执行转换"
+      parallel: "允许并行执行"
     },
     jobEntryTrans: {
       name: "名称",
@@ -1278,7 +1278,7 @@ export default {
       clearResultFiles: "在执行前清除结果文件列表",
       waitRemoteFinish: "等待远程任务结束",
       waitFollowLocalAbort: "本地转换终止时远程转换也通知终止",
-      parallel: "并行执行转换",
+      parallel: "允许并行执行",
       copyPreviousResultArgs: "复制上一步结果到位置参数",
       tableArgument: "位置参数列表",
       copyPreviousResultParameter: "复制上一步结果到命名参数",
@@ -1295,7 +1295,7 @@ export default {
       tableParameter: "参数",
       variableScope: "变量有效范围",
       replaceVariable: "变量替换",
-      parallel: "并行执行转换",
+      parallel: "允许并行执行",
       columnOperate: "操作",
       columnName: "变量名",
       columnValue: "值",
@@ -1313,7 +1313,7 @@ export default {
       expandingRemoteJob: "监控子任务或转换",
       waitRemoteFinished: "等待远程任务结束",
       followingAbortRemotely: "本地作业终止时远程作业也通知终止",
-      parallel: "并行执行转换",
+      parallel: "允许并行执行",
       copyPreviousResultArgs: "复制上一步结果到位置参数",
       tableArgument: "位置参数列表",
       copyPreviousResultParameter: "复制上一步结果到命名参数",
@@ -1402,7 +1402,7 @@ export default {
         failure: "失败",
       },
       appendFilename: "在结果中添加文件名",
-      parallel: "并行执行转换",
+      parallel: "允许并行执行",
     },
     jobEntryFTPPUT: {
       name: "名称",
@@ -1416,7 +1416,7 @@ export default {
       onlyPuttingNewFiles: "不覆盖目标文件",
       activeConnection: "使用活动的FTP连接",
       controlEncoding: "控制编码",
-      parallel: "并行执行转换"
+      parallel: "允许并行执行"
     },
     jobEntryMail: {
       name: "名称",
@@ -1444,13 +1444,22 @@ export default {
       comment: "正文",
       includingFiles: "携带附件(转换组件中加入结果中的文件)",
       onlySendComment: "只发送正文内容",
-      parallel: "并行执行转换"
+      parallel: "允许并行执行"
     },
     multiMergeJoin: {
       name: "名称",
       step: "步骤",
       joinKey: "连接字段",
       joinType: "连接类型"
+    },
+    jobEntrySFTPPUT: {
+      name: "名称",
+      server: "SFTP服务器",
+      remoteDirectory: "远程目录",
+      compressionOptions: "压缩算法",
+      successWhenNoFile: "没有文件时不影响执行完成",
+      createRemoteFolder: "自动创建远程目录",
+      parallel: "允许并行执行"
     },
     model: {
       default: "模型",
@@ -1636,7 +1645,7 @@ export default {
         default: "文件传输",
         JobEntryFTP: "FTP下载",
         JobEntryFTPPUT: "FTP上传",
-        JobEntryFTPDelete: "FTP删除",
+        JobEntrySFTPPUT: "SFTP上传",
         JobEntryMail: "发送邮件"
       }
     }

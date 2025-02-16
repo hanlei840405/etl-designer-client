@@ -1,13 +1,13 @@
 <template>
   <div style="width: 100%;">
     <q-form class="row q-col-gutter-xs">
-      <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.jobEntryFTPPUT.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
+      <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.jobEntrySFTPPUT.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
       <q-input class="col-12 col-md-6" outlined v-model="form.shellName" :label="$t('form.jobEntryFTPPUT.localDirectory')" hint="">
         <template v-slot:append>
           <q-btn round dense flat icon="search" color="primary" @click="openShellSelectDialog"/>
         </template>
       </q-input>
-      <q-select class="col-12 col-md-6" outlined v-model="form.server" emit-value map-options option-value="id" :options="ftpServerOptions" :label="$t('form.jobEntryFTPPUT.server')" clearable hint="">
+      <q-select class="col-12 col-md-6" outlined v-model="form.server" emit-value map-options option-value="id" :options="ftpServerOptions" :label="$t('form.jobEntrySFTPPUT.server')" clearable hint="">
         <template v-slot:option="scope">
           <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
             <q-item-section>
@@ -21,15 +21,11 @@
           </q-item>
         </template>
       </q-select>
-      <q-input class="col-12 col-md-6" outlined v-model="form.wildcard" :label="$t('form.jobEntryFTPPUT.wildcard')" hint=""/>
-      <q-input class="col-12 col-md-6" outlined v-model="form.remoteDirectory" :label="$t('form.jobEntryFTPPUT.remoteDirectory')" hint=""/>
-      <q-input class="col-12 col-md-3" outlined type="number" v-model.number="form.timeout" :label="$t('form.jobEntryFTPPUT.timeout')" hint=""/>
-      <q-select class="col-12 col-md-3" outlined v-model="form.controlEncoding" :options="encodingOptions" :label="$t('form.jobEntryFTPPUT.controlEncoding')" hint=""></q-select>
-      <!-- <q-checkbox class="col-12 col-md-3" v-model="form.activeConnection" :label="$t('form.jobEntryFTPPUT.activeConnection')"/> -->
-      <q-checkbox class="col-12 col-md-3" v-model="form.remove" :label="$t('form.jobEntryFTPPUT.remove')"/>
-      <q-checkbox class="col-12 col-md-3" v-model="form.binaryMode" :label="$t('form.jobEntryFTPPUT.binaryMode')"/>
-      <q-checkbox class="col-12 col-md-3" v-model="form.onlyPuttingNewFiles" :label="$t('form.jobEntryFTPPUT.onlyPuttingNewFiles')"/>
-      <q-checkbox class="col-12 col-md-3" v-model="form.parallel" :label="$t('form.jobEntryFTPPUT.parallel')"/>
+      <q-select class="col-12 col-md-6" outlined v-model="form.compression" :options="compressionOptions" :label="$t('form.jobEntrySFTPPUT.compressionOptions')" hint=""></q-select>
+      <q-input class="col-12 col-md-6" outlined v-model="form.remoteDirectory" :label="$t('form.jobEntrySFTPPUT.remoteDirectory')" hint=""/>
+      <q-checkbox class="col-12 col-md-3" v-model="form.createRemoteFolder" :label="$t('form.jobEntrySFTPPUT.createRemoteFolder')"/>
+      <q-checkbox class="col-12 col-md-3" v-model="form.successWhenNoFile" :label="$t('form.jobEntrySFTPPUT.successWhenNoFile')"/>
+      <q-checkbox class="col-12 col-md-3" v-model="form.parallel" :label="$t('form.jobEntrySFTPPUT.parallel')"/>
       <q-dialog v-model="selectShellDialog.state">
         <q-card style="min-height: 45vh; min-width: 700px;">
           <q-card-section class="row items-center q-pb-none">
@@ -63,25 +59,22 @@ import { fetchShellsByParent } from 'src/service/kettle/ShellService'
 import { fetchFtpList } from 'src/service/base/FtpService'
 
 export default {
-  name: 'JobEntryFTPPUT',
+  name: 'JobEntrySFTPPUT',
   data () {
     return {
       form: {
         name: null,
         server: null,
-        binaryMode: false,
-        timeout: 0,
-        controlEncoding: null,
         shellId: null,
         shellName: null,
-        wildcard: null,
         remoteDirectory: null,
-        remove: false,
-        onlyPuttingNewFiles: false,
+        successWhenNoFile: false,
+        createRemoteFolder: false,
+        compression: 'none',
         parallel: false
       },
       ftpServerOptions: [],
-      encodingOptions: ['US-ASCII', 'ISO-8859-1', 'UTF-8', 'UTF-16BE', 'UTF-16LE', 'UTF-16'],
+      compressionOptions: ['none', 'zlib'],
       selectShellDialog: {
         state: false,
         projectId: null,
@@ -144,7 +137,7 @@ export default {
     this.selectShellDialog.projectId = root.projectId
     fetchFtpList({
       projectId: root.projectId,
-      category: 'FTP'
+      category: 'SFTP'
     }).then(res => {
       res.data.forEach(ele => {
         this.ftpServerOptions.push({

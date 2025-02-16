@@ -279,11 +279,11 @@ const ETL_TOOLBAR = {
         name: i18n.t('etl.job.fileTransfer.JobEntryFTP'),
         type: 'JobEntryFTP'
       },
-      // {
-      //   img: '/images/etl/FTPD.svg',
-      //   name: i18n.t('etl.job.fileTransfer.JobEntryFTPDelete'),
-      //   type: 'JobEntryFTPDelete'
-      // },
+      {
+        img: '/images/etl/PSFTP.svg',
+        name: i18n.t('etl.job.fileTransfer.JobEntrySFTPPUT'),
+        type: 'JobEntrySFTPPUT'
+      },
       {
         img: '/images/etl/MAIL.svg',
         name: i18n.t('etl.job.fileTransfer.JobEntryMail'),

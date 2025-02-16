@@ -220,6 +220,7 @@ export default {
           port: res.data.port,
           username: res.data.username,
           password: res.data.password,
+          usePrivateKey: res.data.usePrivateKey,
           privateKey: res.data.privateKey,
           privateKeyPassword: res.data.privateKeyPassword,
           proxyCategory: res.data.proxyCategory,

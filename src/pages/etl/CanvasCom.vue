@@ -183,6 +183,7 @@ import JobEntryEval from 'src/components/etl/job/shell/JobEntryEval.vue'
 import JobEntrySetVariables from 'src/components/etl/job/common/JobEntrySetVariables.vue'
 import JobEntryFTP from 'src/components/etl/job/transfer/JobEntryFTP.vue'
 import JobEntryFTPPUT from 'src/components/etl/job/transfer/JobEntryFTPPUT.vue'
+import JobEntrySFTPPUT from 'src/components/etl/job/transfer/JobEntrySFTPPUT.vue'
 import JobEntryMail from 'src/components/etl/job/transfer/JobEntryMail.vue'
 import ValueMapperMeta from 'src/components/etl/transform/convert/ValueMapper.vue'
 import SplitFieldToRowsMeta from 'src/components/etl/transform/convert/SplitFieldToRows.vue'
@@ -258,6 +259,7 @@ export default {
     JobEntryFTP,
     JobEntryFTPPUT,
     JobEntryMail,
+    JobEntrySFTPPUT,
     ValueMapperMeta,
     SplitFieldToRowsMeta,
     DenormaliserMeta,
