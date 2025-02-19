@@ -182,6 +182,7 @@ import JobEntryJob from 'src/components/etl/job/common/JobEntryJob.vue'
 import JobEntryEval from 'src/components/etl/job/shell/JobEntryEval.vue'
 import JobEntrySetVariables from 'src/components/etl/job/common/JobEntrySetVariables.vue'
 import JobEntryFTP from 'src/components/etl/job/transfer/JobEntryFTP.vue'
+import JobEntrySFTP from 'src/components/etl/job/transfer/JobEntrySFTP.vue'
 import JobEntryFTPPUT from 'src/components/etl/job/transfer/JobEntryFTPPUT.vue'
 import JobEntrySFTPPUT from 'src/components/etl/job/transfer/JobEntrySFTPPUT.vue'
 import JobEntryMail from 'src/components/etl/job/transfer/JobEntryMail.vue'
@@ -257,6 +258,7 @@ export default {
     JobEntryJob,
     JobEntrySetVariables,
     JobEntryFTP,
+    JobEntrySFTP,
     JobEntryFTPPUT,
     JobEntryMail,
     JobEntrySFTPPUT,

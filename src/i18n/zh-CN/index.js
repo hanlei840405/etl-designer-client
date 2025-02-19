@@ -1461,6 +1461,16 @@ export default {
       createRemoteFolder: "自动创建远程目录",
       parallel: "允许并行执行"
     },
+    jobEntrySFTP: {
+      name: "名称",
+      server: "FTP服务器",
+      remoteDirectory: "远程目录",
+      wildcard: "通配符(正则)",
+      compressionOptions: "压缩算法",
+      remove: "下载后删除原文件",
+      isAddResult: "在结果中添加文件名",
+      parallel: "允许并行执行",
+    },
     model: {
       default: "模型",
       code: "自定义编码",
@@ -1646,6 +1656,7 @@ export default {
         JobEntryFTP: "FTP下载",
         JobEntryFTPPUT: "FTP上传",
         JobEntrySFTPPUT: "SFTP上传",
+        JobEntrySFTP: "SFTP下载",
         JobEntryMail: "发送邮件"
       }
     }

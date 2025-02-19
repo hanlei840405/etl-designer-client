@@ -285,6 +285,11 @@ const ETL_TOOLBAR = {
         type: 'JobEntrySFTPPUT'
       },
       {
+        img: '/images/etl/GSFTP.svg',
+        name: i18n.t('etl.job.fileTransfer.JobEntrySFTP'),
+        type: 'JobEntrySFTP'
+      },
+      {
         img: '/images/etl/MAIL.svg',
         name: i18n.t('etl.job.fileTransfer.JobEntryMail'),
         type: 'JobEntryMail'
