@@ -9,7 +9,17 @@
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel class="row q-col-gutter-xs" name="basic">
           <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.jsonInput.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-          <q-select class="col-12 col-md-6" clearable outlined v-model="form.valueField" :options="sourceFields" :label="$t('form.jsonInput.sourceFromField')" @clear="form.executeEachInputRow = false" hint=""/>
+          <q-select class="col-12 col-md-6" clearable outlined emit-value map-options v-model="form.sourceFrom" :options="sourceFromOptions" :label="$t('form.jsonInput.sourceFrom')" hint=""/>
+          <q-select class="col-12 col-md-6" clearable outlined emit-value map-options v-model="form.downloadDir" :options="downloadDirOptions" :label="$t('form.jsonInput.downloadDir')" :disable="form.sourceFrom === 'stream'" hint=""/>
+          <q-input class="col-12 col-md-3" outlined v-model="form.filemane" :label="$t('form.jsonInput.filemane')" :rules="[ val => val && val.length > 0 || 'Please type something']" :disable="form.sourceFrom === 'stream'" hint=""/>
+          <q-input class="col-12 col-md-3" outlined v-model="form.wildcard" :label="$t('form.jsonInput.wildcard')" :rules="[ val => val && val.length > 0 || 'Please type something']" :disable="form.sourceFrom === 'stream'" hint=""/>
+          <q-select class="col-12 col-md-6" clearable outlined v-model="form.valueField" :options="sourceFields" :label="$t('form.jsonInput.sourceFromField')" :disable="form.sourceFrom === 'file'" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model.number="form.rowLimit" :label="$t('form.jsonInput.limit')"/>
+          <q-checkbox class="col-12 col-md-3" outlined v-model="form.includeNullValue" :label="$t('form.jsonInput.includeNullValue')"/>
+          <q-checkbox class="col-12 col-md-3" outlined v-model="form.ignoreEmptyFile" :label="$t('form.jsonInput.ignoreEmptyFile')"/>
+          <q-checkbox class="col-12 col-md-3" outlined v-model="form.notFailIfNoFile" :label="$t('form.jsonInput.noFileNoError')"/>
+          <q-checkbox class="col-12 col-md-3" outlined v-model="form.ignoreMissingPath" :label="$t('form.jsonInput.ignoreMissingPath')"/>
+          <q-checkbox class="col-12 col-md-3" outlined v-model="form.defaultPathLeafToNull" :label="$t('form.jsonInput.defaultPathLeafToNull')" />
           <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="field" separator="cell" hide-bottom :title="$t('form.jsonInput.tableField')">
             <template v-slot:top-right>
               <q-btn size="sm" outline color="primary" icon="add" @click="addParameter"/>
@@ -89,17 +99,6 @@
             </template>
           </q-table>
         </q-tab-panel>
-        <!-- <q-tab-panel name="content">
-          <q-checkbox outlined v-model="form.ignoreEmptyFile" :label="$t('form.jsonInput.ignoreEmptyFile')" />
-          <q-checkbox outlined v-model="form.notFailIfNoFile" :label="$t('form.jsonInput.noFileNoError')" />
-          <q-checkbox outlined v-model="form.ignoreMissingPath" :label="$t('form.jsonInput.ignoreMissingPath')" />
-          <q-checkbox outlined v-model="form.defaultPathLeafToNull" label="Default path leaf to null" />
-          <q-input outlined v-model.number="form.rowLimit" :label="$t('form.jsonInput.limit')"/>
-          <q-checkbox outlined v-model="form.includeFilename" :label="$t('form.jsonInput.includeFilenameOutput')" />
-          <q-input outlined v-model="form.filenameField" :label="$t('form.jsonInput.filenameField')"/>
-          <q-checkbox outlined v-model="form.includeRowNumber" :label="$t('form.jsonInput.rownumInOutput')" />
-          <q-input outlined v-model="form.rowNumberField" :label="$t('form.jsonInput.rownumField')"/>
-        </q-tab-panel> -->
         <q-tab-panel name="runningConfig">
           <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.jsonInput.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
@@ -111,6 +110,8 @@
 <script>
 const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
 const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta', 'SetValueFieldMeta']
+import { fetchAttamentStorageDir } from 'src/service/kettle/AttachmentStorageService'
+
 export default {
   name: 'JsonInputMeta',
   data () {
@@ -118,29 +119,19 @@ export default {
       tab: 'basic',
       form: {
         name: null,
-        inFields: true,
+        filemane: null,
+        wildcard: null,
+        sourceFrom: 'file',
+        downloadDir: null,
         valueField: null,
-        sourceFileData: [],
         ignoreEmptyFile: false,
         notFailIfNoFile: true,
         ignoreMissingPath: true,
         defaultPathLeafToNull: true,
+        includeNullValue: false,
         rowLimit: 0,
-        includeFilename: false,
-        filenameField: null,
-        includeRowNumber: false,
-        rowNumberField: null,
         parameters: [],
         parallel: 1,
-        errorNext: null,
-        errorEnable: false,
-        errorCountName: null,
-        errorColumnDescription: null,
-        errorColumnName: null,
-        errorColumnCode: null,
-        errorMaxCount: 0,
-        errorRate: 0,
-        errorMinRows: 0,
         distribute: true
       },
       parameterColumns: [
@@ -229,6 +220,8 @@ export default {
           headerStyle: 'width: 100px;'
         }
       ],
+      downloadDirOptions: [],
+      sourceFromOptions: [{ label: this.$t('form.jsonInput.sourceFromFile'), value: 'file' }, { label: this.$t('form.jsonInput.sourceFromStream'), value: 'stream' }],
       removeBlanks: ['none', 'left', 'right', 'both'],
       yesOrNo: ['Y', 'N'],
       categories: ['BigNumber', 'Binary', 'Boolean', 'Date', 'Integer', 'Internet Address', 'Number', 'String', 'Timestamp'],
@@ -240,18 +233,6 @@ export default {
     }
   },
   methods: {
-    addSourceFile () {
-      this.form.sourceFileData.push({
-        path: null,
-        wildcard: null,
-        excludeWildcard: null,
-        required: null,
-        includeChildrenFolder: null
-      })
-    },
-    deleteSourceFile (props) {
-      this.form.sourceFileData.splice(props.rowIndex, 1)
-    },
     addParameter () {
       this.form.parameters.push({
         field: null,
@@ -278,6 +259,7 @@ export default {
     }
   },
   mounted () {
+    debugger
     const vm = this
     const previousSteps = vm.$store.getters['etl/getPreNodes']
     vm.sourceFields = []
@@ -329,6 +311,17 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     vm.auto = root.auto
+    const categoryDownload = '0'
+    fetchAttamentStorageDir({
+      projectId: root.projectId,
+      shellParentId: root.parentId,
+      category: categoryDownload
+    }).then(res => {
+      vm.downloadDirOptions = res.data.map(ele => {
+        return { label: ele.storageDirRelative, value: ele.storageDir }
+      })
+      console.log(vm.downloadDirOptions)
+    })
   }
 }
 </script>
