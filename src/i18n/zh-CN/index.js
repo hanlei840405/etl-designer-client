@@ -1407,15 +1407,16 @@ export default {
       name: "名称",
       server: "FTP服务器",
       remoteDirectory: "远程目录",
-      localDirectory: "生成文件的转换",
+      attachmentDir: "上传文件的目录",
       wildcard: "通配符(正则)",
-      binaryMode: "二进制模式",
+      binaryMode: "二进制模式(非文本请勾选)",
       timeout: "超时",
       remove: "上传后删除原文件",
       onlyPuttingNewFiles: "不覆盖目标文件",
       activeConnection: "使用活动的FTP连接",
       controlEncoding: "控制编码",
-      parallel: "允许并行执行"
+      parallel: "允许并行执行",
+      relativePath: "服务器相对路径",
     },
     jobEntryMail: {
       name: "名称",
@@ -1454,11 +1455,13 @@ export default {
     jobEntrySFTPPUT: {
       name: "名称",
       server: "SFTP服务器",
+      attachmentDir: "上传文件的目录",
       remoteDirectory: "远程目录",
       compressionOptions: "压缩算法",
       successWhenNoFile: "没有文件时不影响执行完成",
       createRemoteFolder: "自动创建远程目录",
-      parallel: "允许并行执行"
+      parallel: "允许并行执行",
+      relativePath: "服务器相对路径",
     },
     jobEntrySFTP: {
       name: "名称",
