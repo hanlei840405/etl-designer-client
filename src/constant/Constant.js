@@ -79,6 +79,10 @@ const ETL_TOOLBAR = {
       img: '/images/etl/XWS.svg',
       name: i18n.t('etl.transform.stepOutput.ExcelWriterMata'),
       type: 'ExcelWriterStepMeta'
+    }, {
+      img: '/images/etl/TFO.svg',
+      name: i18n.t('etl.transform.stepOutput.TextFileOutputMeta'),
+      type: 'TextFileOutputMeta'
     }],
     streaming: [{
       img: '/images/etl/get-records-from-stream.svg',

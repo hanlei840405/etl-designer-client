@@ -10,7 +10,16 @@
         <q-tab-panel class="row q-col-gutter-xs" name="basic">
           <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.jsonInput.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
           <q-select class="col-12 col-md-6" clearable outlined emit-value map-options v-model="form.sourceFrom" :options="sourceFromOptions" :label="$t('form.jsonInput.sourceFrom')" hint=""/>
-          <q-select class="col-12 col-md-6" clearable outlined emit-value map-options v-model="form.downloadDir" :options="downloadDirOptions" :label="$t('form.jsonInput.downloadDir')" :disable="form.sourceFrom === 'stream'" hint=""/>
+          <q-select class="col-12 col-md-6" clearable outlined emit-value map-options v-model="form.downloadDir" :options="downloadDirOptions" :label="$t('form.jsonInput.downloadDir')" :disable="form.sourceFrom === 'stream'" hint="">
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+                <q-item-section>
+                  <q-item-label>{{ scope.opt.label }}</q-item-label>
+                  <q-item-label caption>{{ $t('form.jsonInput.relativePath') }}: {{ scope.opt.description }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
           <q-input class="col-12 col-md-3" outlined v-model="form.filemane" :label="$t('form.jsonInput.filemane')" :rules="[ val => val && val.length > 0 || 'Please type something']" :disable="form.sourceFrom === 'stream'" hint=""/>
           <q-input class="col-12 col-md-3" outlined v-model="form.wildcard" :label="$t('form.jsonInput.wildcard')" :rules="[ val => val && val.length > 0 || 'Please type something']" :disable="form.sourceFrom === 'stream'" hint=""/>
           <q-select class="col-12 col-md-6" clearable outlined v-model="form.valueField" :options="sourceFields" :label="$t('form.jsonInput.sourceFromField')" :disable="form.sourceFrom === 'file'" hint=""/>
@@ -311,16 +320,13 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     vm.auto = root.auto
-    const categoryDownload = '0'
     fetchAttamentStorageDir({
       projectId: root.projectId,
-      shellParentId: root.parentId,
-      category: categoryDownload
+      shellParentId: root.parentId
     }).then(res => {
       vm.downloadDirOptions = res.data.map(ele => {
-        return { label: ele.storageDirRelative, value: ele.storageDir }
+        return { description: ele.storageDirRelative, label: ele.shellName, value: ele.storageDir }
       })
-      console.log(vm.downloadDirOptions)
     })
   }
 }

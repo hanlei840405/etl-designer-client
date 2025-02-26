@@ -204,6 +204,7 @@ import JobEntrySimpleEval from 'src/components/etl/job/condition/JobEntrySimpleE
 import UserDefinedJavaClassMeta from 'src/components/etl/transform/shell/UserDefinedJavaClass.vue'
 import ElasticSearchBulkMeta from 'src/components/etl/transform/output/ElasticsearchBulkInsert.vue'
 import ExcelWriterStepMeta from 'src/components/etl/transform/output/ExcelWriter.vue'
+import TextFileOutputMeta from 'src/components/etl/transform/output/TextFileOutput.vue'
 import RandomValueMeta from 'src/components/etl/transform/input/RandomValue.vue'
 import ConcatFieldsMeta from 'src/components/etl/transform/convert/ConcatFields.vue'
 import RecordsFromStreamMeta from 'src/components/etl/transform/streaming/RecordsFromStream.vue'
@@ -283,6 +284,7 @@ export default {
     UserDefinedJavaClassMeta,
     ElasticSearchBulkMeta,
     ExcelWriterStepMeta,
+    TextFileOutputMeta,
     RandomValueMeta,
     ConcatFieldsMeta,
     RecordsFromStreamMeta,
