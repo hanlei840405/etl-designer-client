@@ -102,7 +102,9 @@
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">{{ propertiesDialog.title }}</div>
           <q-space/>
-          <q-btn icon="close" flat round dense v-close-popup :disable="init"/>
+          <q-btn icon="close" flat round dense v-close-popup :disable="init">
+            <q-tooltip>{{ $t('button.toolTipCloseDisableAfterSave') }}</q-tooltip>
+          </q-btn>
         </q-card-section>
         <q-separator/>
         <q-card-section class="row items-center no-wrap">

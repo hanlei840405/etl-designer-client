@@ -106,7 +106,8 @@ export default {
     select: "选择",
     copy: "复制",
     move: "移动",
-    insert: "插入"
+    insert: "插入",
+    toolTipCloseDisableAfterSave: "初次打开页面时，需要点击保存按钮关闭页面",
   },
   table: {
     empty: "无数据",
