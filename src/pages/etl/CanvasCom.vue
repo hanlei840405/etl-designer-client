@@ -220,6 +220,8 @@ import SortRowsMeta from 'src/components/etl/transform/convert/SortRows.vue'
 import FilterRowsMeta from 'components/etl/transform/process/FilterRows.vue'
 import MergeJoinMeta from 'src/components/etl/transform/connect/MergeJoin.vue'
 import MultiMergeJoinMeta from 'src/components/etl/transform/connect/MultiMergeJoin.vue'
+import CsvInputMeta from 'src/components/etl/transform/input/CsvInput.vue'
+import ParGzipCsvInputMeta from 'src/components/etl/transform/input/ParGzipCsvInput.vue'
 import { fetchShellContent, saveShellContent, publishShell, fetchShellPublishes, fetchShellPublishContent } from 'src/service/kettle/ShellService'
 import { execute, stop } from 'src/service/kettle/DesignService'
 import { date, uid } from 'quasar'
@@ -299,7 +301,9 @@ export default {
     MultiMergeJoinMeta,
     SortRowsMeta,
     MergeJoinMeta,
-    FilterRowsMeta
+    FilterRowsMeta,
+    CsvInputMeta,
+    ParGzipCsvInputMeta
   },
   props: {
     shell: {

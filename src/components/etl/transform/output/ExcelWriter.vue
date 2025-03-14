@@ -376,8 +376,6 @@ export default {
         vm.sheets.push(vm.form.sheet)
       }
     }
-    const root = vm.$store.getters['etl/getRoot']
-    vm.auto = root.auto
   }
 }
 </script>

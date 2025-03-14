@@ -50,6 +50,14 @@ const ETL_TOOLBAR = {
       img: '/images/etl/JSI.svg',
       name: i18n.t('etl.transform.stepInput.JsonInputMeta'),
       type: 'JsonInputMeta'
+    }, {
+      img: '/images/etl/TFI.svg',
+      name: i18n.t('etl.transform.stepInput.CsvInputMeta'),
+      type: 'CsvInputMeta'
+    }, {
+      img: '/images/etl/TFI.svg',
+      name: i18n.t('etl.transform.stepInput.ParGzipCsvInputMeta'),
+      type: 'ParGzipCsvInputMeta'
     }],
     stepOutput: [{
       img: '/images/etl/Delete.svg',

@@ -244,7 +244,6 @@ export default {
       }
     }
     const root = vm.$store.getters['etl/getRoot']
-    vm.auto = root.auto
     vm.hintStorageDir = "${attachment.dir}" + `/${root.projectId}/${root.parentId}/${root.componentId}/`
   }
 }

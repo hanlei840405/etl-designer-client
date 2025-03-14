@@ -20,7 +20,7 @@
               </q-item>
             </template>
           </q-select>
-          <q-input class="col-12 col-md-3" outlined v-model="form.filemane" :label="$t('form.jsonInput.filemane')" :rules="[ val => val && val.length > 0 || 'Please type something']" :disable="form.sourceFrom === 'stream'" hint=""/>
+          <q-input class="col-12 col-md-3" outlined v-model="form.filename" :label="$t('form.jsonInput.filename')" :rules="[ val => val && val.length > 0 || 'Please type something']" :disable="form.sourceFrom === 'stream'" hint=""/>
           <q-input class="col-12 col-md-3" outlined v-model="form.wildcard" :label="$t('form.jsonInput.wildcard')" :rules="[ val => val && val.length > 0 || 'Please type something']" :disable="form.sourceFrom === 'stream'" hint=""/>
           <q-select class="col-12 col-md-6" clearable outlined v-model="form.valueField" :options="sourceFields" :label="$t('form.jsonInput.sourceFromField')" :disable="form.sourceFrom === 'file'" hint=""/>
           <q-input class="col-12 col-md-6" outlined v-model.number="form.rowLimit" :label="$t('form.jsonInput.limit')"/>
@@ -128,7 +128,7 @@ export default {
       tab: 'basic',
       form: {
         name: null,
-        filemane: null,
+        filename: null,
         wildcard: null,
         sourceFrom: 'file',
         downloadDir: null,
@@ -319,7 +319,6 @@ export default {
       }
     }
     const root = vm.$store.getters['etl/getRoot']
-    vm.auto = root.auto
     fetchAttamentStorageDir({
       projectId: root.projectId,
       shellParentId: root.parentId
