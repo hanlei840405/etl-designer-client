@@ -41,6 +41,16 @@
               </q-card-section>
               <q-card-section>
                 <div class="q-pa-md row items-start q-gutter-md">
+                  <q-card flat bordered style="width: 200px;cursor: pointer;">
+                    <div class="column full-width">
+                      <q-btn flat bordered padding="lg" icon="las la-plus" style="height:95px" @click="newShell('0', true)"/>
+                    </div>
+                  </q-card>
+                  <q-card flat bordered v-if="showPasteBtn" style="width: 200px;cursor: pointer;">
+                    <div class="column full-width">
+                      <q-btn flat bordered padding="lg" icon="las la-paste" style="height:95px" @click="pasteShell"/>
+                    </div>
+                  </q-card>
                   <q-card flat bordered v-for="shell in shells" :key="shell.id" :class="selected.indexOf(shell.id) >= 0 ? 'bg-grey-5' : ''" style="width: 200px; height: 97px;">
                     <q-item style="; cursor: pointer;" @click="openShell(shell)">
                       <q-item-section class="col-2" @click="openShell(shell)">
@@ -77,16 +87,6 @@
                         </q-btn-dropdown>
                       </q-item-section>
                     </q-item>
-                  </q-card>
-                  <q-card flat bordered style="width: 200px;cursor: pointer;">
-                    <div class="column full-width">
-                      <q-btn flat bordered padding="lg" icon="las la-plus" style="height:95px" @click="newShell('0', true)"/>
-                    </div>
-                  </q-card>
-                  <q-card flat bordered v-if="showPasteBtn" style="width: 200px;cursor: pointer;">
-                    <div class="column full-width">
-                      <q-btn flat bordered padding="lg" icon="las la-paste" style="height:95px" @click="pasteShell"/>
-                    </div>
                   </q-card>
                 </div>
               </q-card-section>
@@ -289,6 +289,7 @@ export default {
         }
         this.editShellState = false
         Object.assign(this.shell, this.$options.data.call(this).shell)
+        this.openShell(res.data)
       }).catch(err => {
         if (err.status === 10002) {
           this.$q.notify({

@@ -10,9 +10,9 @@
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel class="row q-col-gutter-xs" name="basic">
           <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.textFileOutput.name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model="form.filename" :label="$t('form.textFileOutput.filename')" hint=""/>
+            <q-input class="col-12 col-md-6" outlined v-model="form.endedLine" :label="$t('form.textFileOutput.endedLine')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.filename" :label="$t('form.textFileOutput.filename')" :hint="hintStorageDir+form.filename+'.'+form.suffix"/>
           <q-input class="col-12 col-md-6" outlined v-model="form.suffix" :label="$t('form.textFileOutput.suffix')" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model="form.endedLine" :label="$t('form.textFileOutput.endedLine')" hint=""/>
           <q-checkbox class="col-12 col-md-3" v-model="form.addStepNr" :label="$t('form.textFileOutput.addStepNr')"/>
           <q-checkbox class="col-12 col-md-3" v-model="form.addPartNr" :label="$t('form.textFileOutput.addPartNr')"/>
           <q-checkbox class="col-12 col-md-3" v-model="form.addDate" :label="$t('form.textFileOutput.addDate')"/>
@@ -265,6 +265,7 @@ export default {
       ],
       fieldFormats: ['General', '0', '0.00', '#,##0', '#,##0.00', '\'$\'#,##0_);(\'$\'#,##0)', '\'$\'#,##0_);[Red](\'$\'#,##0)', '\'$\'#,##0.00_);(\'$\'#,##0.00)', '\'$\'#,##0.00_);[Red](\'$\'#,##0.00)', '0%', '0.00%', '0.00E+00', '# ?/?', '# ??/??', 'm/d/yy', 'd-mmm-yy', 'd-mmm', 'mmm-yy', 'h:mm AM/PM', 'h:mm:ss AM/PM', 'h:mm', 'h:mm:ss', 'm/d/yy h:mm', 'reserved-0x17', 'reserved-0x18', 'reserved-0x19', 'reserved-0x1A', 'reserved-0x1B', 'reserved-0x1C', 'reserved-0x1D', 'reserved-0x1E', 'reserved-0x1F', 'reserved-0x20', 'reserved-0x21', 'reserved-0x22', 'reserved-0x23', 'reserved-0x24', '#,##0_);(#,##0)', '#,##0_);[Red](#,##0)', '#,##0.00_);(#,##0.00)', '#,##0.00_);[Red](#,##0.00)', '_(* #,##0_);_(* (#,##0);_(* \'-\'_);_(@_)', '_(\'$\'* #,##0_);_(\'$\'* (#,##0);_(\'$\'* \'-\'_);_(@_)', '_(* #,##0.00_);_(* (#,##0.00);_(* \'-\'??_);_(@_)', '_(\'$\'* #,##0.00_);_(\'$\'* (#,##0.00);_(\'$\'* \'-\'??_);_(@_)', 'mm:ss', '[h]:mm:ss', 'mm:ss.0', '##0.0E+0', '@'],
       sourceFields: [],
+      hintStorageDir: '',
       forbiddenParallel: false
     }
   },
@@ -397,6 +398,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     vm.auto = root.auto
+    vm.hintStorageDir = "${attachment.dir}" + `/${root.projectId}/${root.parentId}/${root.componentId}/`
   }
 }
 </script>

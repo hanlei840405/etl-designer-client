@@ -22,8 +22,8 @@
             </template>
           </q-input>
           <q-input class="col-12 col-md-6" outlined v-model="form.outputValue" :label="$t('form.jsonOutput.outputValue')" :disable="form.targetMode === '1'" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model="form.filename" :label="$t('form.jsonOutput.fileName')" :disable="form.targetMode === '0'" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model="form.suffix" :label="$t('form.jsonOutput.suffixName')" :disable="form.targetMode === '0'" hint=""/>
+          <q-input class="col-12 col-md-4" outlined v-model="form.filename" :label="$t('form.jsonOutput.fileName')" :disable="form.targetMode === '0'" :hint="hintStorageDir+form.filename+'.'+form.suffix"/>
+          <q-input class="col-12 col-md-2" outlined v-model="form.suffix" :label="$t('form.jsonOutput.suffixName')" :disable="form.targetMode === '0'" hint=""/>
           <q-checkbox class="col-12 col-md-3" v-model="form.compatibleMode" :label="$t('form.jsonOutput.compatibleMode')" hint=""/>
           <q-checkbox class="col-12 col-md-3" v-model="form.append" :label="$t('form.jsonOutput.append')" hint=""/>
           <q-checkbox class="col-12 col-md-3" v-model="form.makeDir" :label="$t('form.jsonOutput.notCreate')" hint=""/>
@@ -134,6 +134,7 @@ export default {
       ],
       targetModes: [{ value: '0', label: this.$t('form.jsonOutput.outputValue') }, { value: '1', label: this.$t('form.jsonOutput.outputFile') }, { value: '2', label: this.$t('form.jsonOutput.outputValueFile') }],
       sourceFields: [],
+      hintStorageDir: '',
       forbiddenParallel: false
     }
   },
@@ -244,6 +245,7 @@ export default {
     }
     const root = vm.$store.getters['etl/getRoot']
     vm.auto = root.auto
+    vm.hintStorageDir = "${attachment.dir}" + `/${root.projectId}/${root.parentId}/${root.componentId}/`
   }
 }
 </script>

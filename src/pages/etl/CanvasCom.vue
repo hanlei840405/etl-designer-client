@@ -97,12 +97,12 @@
 
     </q-splitter>
     <div ref="outlineContainer" style="z-index:1;position:absolute;overflow:hidden;bottom:0px;right:30px;width:160px;height:120px;background:transparent;border-style:solid;border-color:lightgray;"/>
-    <q-dialog v-model="propertiesDialog.state">
+    <q-dialog v-model="propertiesDialog.state" :persistent="init">
       <q-card style="width: 900px; max-width: 90vw;">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">{{ propertiesDialog.title }}</div>
           <q-space/>
-          <q-btn icon="close" flat round dense v-close-popup/>
+          <q-btn icon="close" flat round dense v-close-popup :disable="init"/>
         </q-card-section>
         <q-separator/>
         <q-card-section class="row items-center no-wrap">
@@ -479,6 +479,7 @@ export default {
         })
         const ds = mxgraph.mxUtils.makeDraggable(this.$refs[bar.type][0].$el, this.graph, function (graph, evt, target, x, y) {
           graph.getModel().beginUpdate()
+          let vertex = null
           try {
             const doc = mxgraph.mxUtils.createXmlDocument()
             const data = doc.createElement('data')
@@ -489,21 +490,26 @@ export default {
               name: name
             }
             data.setAttribute('form', JSON.stringify(form))
-            const MxCell = mxgraph.mxCell
-            const MxGeometry = mxgraph.mxGeometry
-            const cell = new MxCell(data, new MxGeometry(0, 0, 45, 45), bar.type)
-            cell.vertex = true
-            var cells = graph.importCells([cell], x, y, target)
-            if (cells != null && cells.length > 0) {
-              graph.scrollCellToVisible(cells[0])
-              graph.setSelectionCells(cells)
-              vm.init = true
-              // todo 验证完打开
-              vm.showStepProperties(cell, JSON.stringify(form), [], [])
-            }
+            vertex = graph.insertVertex(graph.getDefaultParent(), null, data, x, y, 45, 45, bar.type)
+
+            // const MxCell = mxgraph.mxCell
+            // const MxGeometry = mxgraph.mxGeometry
+            // const cell = new MxCell(data, new MxGeometry(0, 0, 45, 45), bar.type)
+            // cell.vertex = true
+            // var cells = graph.importCells([cell], x, y, target)
+            // if (cells != null && cells.length > 0) {
+            //   graph.scrollCellToVisible(cells[0])
+            //   graph.setSelectionCells(cells)
+            //   vm.init = true
+            //   // todo 验证完打开
+            //   // vm.showStepProperties(cell, JSON.stringify(form), [], [])
+            // }
           } finally {
             graph.getModel().endUpdate()
           }
+          vm.init = true
+          graph.setSelectionCell(vertex)
+          vm.showStepProperties(vertex, vertex.getAttribute('form', ''), [], [])
         }, dragElt, null, null, vm.graph.autoscroll, true)
         ds.isGuidesEnabled = function () {
           return vm.graph.graphHandler.guidesEnabled
@@ -609,7 +615,6 @@ export default {
       return key + (value === 0 ? '' : value)
     },
     initNodeName(key) {
-      debugger
       let value = 0
       if (!this.nodeNames[key]) {
         this.nodeNames[key] = []
@@ -646,6 +651,7 @@ export default {
       this.propertiesDialog.propertiesDialogCmp = item.style
       this.$store.commit('etl/setRoot', {
         id: this.shell.id,
+        componentId: item.id,
         parentId: this.shell.parentId,
         projectId: this.shell.projectId
       })
