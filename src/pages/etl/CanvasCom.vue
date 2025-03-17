@@ -222,6 +222,7 @@ import MergeJoinMeta from 'src/components/etl/transform/connect/MergeJoin.vue'
 import MultiMergeJoinMeta from 'src/components/etl/transform/connect/MultiMergeJoin.vue'
 import CsvInputMeta from 'src/components/etl/transform/input/CsvInput.vue'
 import ParGzipCsvInputMeta from 'src/components/etl/transform/input/ParGzipCsvInput.vue'
+import ExcelInputMeta from 'src/components/etl/transform/input/ExcelInput.vue'
 import { fetchShellContent, saveShellContent, publishShell, fetchShellPublishes, fetchShellPublishContent } from 'src/service/kettle/ShellService'
 import { execute, stop } from 'src/service/kettle/DesignService'
 import { date, uid } from 'quasar'
@@ -303,7 +304,8 @@ export default {
     MergeJoinMeta,
     FilterRowsMeta,
     CsvInputMeta,
-    ParGzipCsvInputMeta
+    ParGzipCsvInputMeta,
+    ExcelInputMeta
   },
   props: {
     shell: {

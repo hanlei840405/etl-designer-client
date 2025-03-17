@@ -1,93 +1,98 @@
 <template>
   <div style="width: 100%;">
     <q-form class="row q-col-gutter-xs">
-        <q-input class="col-12 col-md-4" outlined v-model="form.name" :label="$t('form.parGzipCsvInput.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-        <q-input class="col-12 col-md-4" outlined v-model="form.downloadDir" :label="$t('form.parGzipCsvInput.downloadDir')" hint=""/>
-          <q-select class="col-12 col-md-4" clearable outlined emit-value map-options v-model="form.downloadDir" :options="downloadDirOptions" :label="$t('form.jsonInput.downloadDir')" :disable="form.sourceFrom === 'stream'" hint="">
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
-                <q-item-section>
-                  <q-item-label>{{ scope.opt.label }}</q-item-label>
-                  <q-item-label caption>{{ $t('form.jsonInput.relativePath') }}: ${attachment.dir}{{ scope.opt.description }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        <q-input class="col-12 col-md-4" outlined v-model="form.filename" :label="$t('form.parGzipCsvInput.filename')" hint=""/>
-        <q-input class="col-12 col-md-4" outlined v-model="form.delimiter" :label="$t('form.parGzipCsvInput.delimiter')" hint=""/>
-        <q-input class="col-12 col-md-4" outlined v-model="form.enclosure" :label="$t('form.parGzipCsvInput.enclosure')" hint=""/>
-        <q-input class="col-12 col-md-4" outlined v-model="form.bufferSize" :label="$t('form.parGzipCsvInput.bufferSize')" hint=""/>
-        <q-input class="col-12 col-md-4" outlined v-model="form.rowNumField" :label="$t('form.parGzipCsvInput.rowNumField')" hint=""/>
-        <q-select class="col-12 col-md-4" outlined v-model="form.encoding" :options="encodingOptions" emit-value map-options :label="$t('form.parGzipCsvInput.encoding')" hint=""/>
-        <q-checkbox class="col-12 col-md-4" outlined v-model="form.header" :label="$t('form.parGzipCsvInput.header')"/>
-        <q-checkbox class="col-12 col-md-4" outlined v-model="form.lazyConversion" :label="$t('form.parGzipCsvInput.lazyConversion')"/>
-        <q-checkbox class="col-12 col-md-4" outlined v-model="form.runningInParallel" :label="$t('form.parGzipCsvInput.runningInParallel')"/>
-          <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.parGzipCsvInput.tableField')">
-            <template v-slot:top-right>
-              <q-btn size="sm" outline color="primary" icon="add" @click="addParameter"/>
-            </template>
-            <template v-slot:body="props">
-              <q-tr :props="props">
-                <q-td key="operate" :props="props">
-                  <q-btn size="xs" outline round color="negative" icon="remove" @click="deleteParameter(props)"></q-btn>
-                </q-td>
-                <q-td key="field" :props="props">
-                  {{ props.row.field }}
-                  <q-popup-edit v-model="props.row.field" :auto-save="true">
-                    <q-input autofocus v-model="props.row.field"/>
-                  </q-popup-edit>
-                </q-td>
-                <q-td key="category" :props="props">
-                  {{ props.row.category }}
-                  <q-popup-edit v-model="props.row.category" :auto-save="true">
-                    <q-select autofocus outlined v-model="props.row.category" :options="categories"/>
-                  </q-popup-edit>
-                </q-td>
-                <q-td key="formatValue" :props="props">
-                  {{ props.row.formatValue }}
-                  <q-popup-edit v-model="props.row.formatValue" :auto-save="true">
-                    <q-select autofocus outlined v-model="props.row.formatValue" :options="formats"/>
-                  </q-popup-edit>
-                </q-td>
-                <q-td key="lengthValue" :props="props">
-                  {{ props.row.lengthValue }}
-                  <q-popup-edit type="number" v-model="props.row.lengthValue" :auto-save="true">
-                    <q-input autofocus type="number" v-model="props.row.lengthValue"/>
-                  </q-popup-edit>
-                </q-td>
-                <q-td key="accuracy" :props="props">
-                  {{ props.row.accuracy }}
-                  <q-popup-edit type="number" v-model="props.row.accuracy" :auto-save="true">
-                    <q-input autofocus type="number" v-model="props.row.accuracy"/>
-                  </q-popup-edit>
-                </q-td>
-                <q-td key="currency" :props="props">
-                  {{ props.row.currency }}
-                  <q-popup-edit v-model="props.row.currency" :auto-save="true">
-                    <q-input autofocus v-model="props.row.currency"/>
-                  </q-popup-edit>
-                </q-td>
-                <q-td key="decimal" :props="props">
-                  {{ props.row.decimal }}
-                  <q-popup-edit v-model="props.row.decimal" :auto-save="true">
-                    <q-input autofocus v-model="props.row.decimal"/>
-                  </q-popup-edit>
-                </q-td>
-                <q-td key="groupBy" :props="props">
-                  {{ props.row.groupBy }}
-                  <q-popup-edit v-model="props.row.groupBy" :auto-save="true">
-                    <q-input autofocus v-model="props.row.groupBy"/>
-                  </q-popup-edit>
-                </q-td>
-                <q-td key="trimType" :props="props">
-                  {{ props.row.trimType }}
-                  <q-popup-edit v-model="props.row.trimType" :auto-save="true">
-                    <q-select autofocus outlined v-model="props.row.trimType" :options="trimTypeOptions"/>
-                  </q-popup-edit>
-                </q-td>
-              </q-tr>
-            </template>
-          </q-table>
+      <q-input class="col-12 col-md-4" outlined v-model="form.name" :label="$t('form.parGzipCsvInput.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
+        <q-select class="col-12 col-md-4" clearable outlined emit-value map-options v-model="form.downloadDir" :options="downloadDirOptions" :label="$t('form.parGzipCsvInput.downloadDir')" :disable="form.sourceFrom === 'stream'" hint="">
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+              <q-item-section>
+                <q-item-label>{{ scope.opt.label }}</q-item-label>
+                <q-item-label caption>{{ $t('form.parGzipCsvInput.relativePath') }}: ${attachment.dir}{{ scope.opt.description }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      <q-input class="col-12 col-md-4" outlined v-model="form.filename" :label="$t('form.parGzipCsvInput.filename')" hint=""/>
+      <q-input class="col-12 col-md-4" outlined v-model="form.delimiter" :label="$t('form.parGzipCsvInput.delimiter')" hint="">
+        <template v-slot:append>
+          <q-btn dense flat color="primary" @click="insertTab" :label="$t('button.insert') + 'TAB'"/>
+        </template>
+      </q-input>
+      <q-input class="col-12 col-md-4" outlined v-model="form.enclosure" :label="$t('form.parGzipCsvInput.enclosure')" hint=""/>
+      <q-input class="col-12 col-md-4" outlined v-model="form.bufferSize" :label="$t('form.parGzipCsvInput.bufferSize')" hint=""/>
+      <q-input class="col-12 col-md-4" outlined v-model="form.rowNumField" :label="$t('form.parGzipCsvInput.rowNumField')" hint=""/>
+      <q-select class="col-12 col-md-4" outlined v-model="form.encoding" :options="encodingOptions" emit-value map-options :label="$t('form.parGzipCsvInput.encoding')" hint=""/>
+      <div class="col-12 col-md-12 row">
+      <q-checkbox class="col-12 col-md-2" outlined v-model="form.header" :label="$t('form.parGzipCsvInput.header')"/>
+      <q-checkbox class="col-12 col-md-2" outlined v-model="form.lazyConversion" :label="$t('form.parGzipCsvInput.lazyConversion')"/>
+      <q-checkbox class="col-12 col-md-2" outlined v-model="form.runningInParallel" :label="$t('form.parGzipCsvInput.runningInParallel')"/>
+      </div>
+        <q-table :data="form.parameters" :columns="parameterColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.parGzipCsvInput.tableField')">
+          <template v-slot:top-right>
+            <q-btn size="sm" outline color="primary" icon="add" @click="addParameter"/>
+          </template>
+          <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td key="operate" :props="props">
+                <q-btn size="xs" outline round color="negative" icon="remove" @click="deleteParameter(props)"></q-btn>
+              </q-td>
+              <q-td key="field" :props="props">
+                {{ props.row.field }}
+                <q-popup-edit v-model="props.row.field" :auto-save="true">
+                  <q-input autofocus v-model="props.row.field"/>
+                </q-popup-edit>
+              </q-td>
+              <q-td key="category" :props="props">
+                {{ props.row.category }}
+                <q-popup-edit v-model="props.row.category" :auto-save="true">
+                  <q-select autofocus outlined v-model="props.row.category" :options="categories"/>
+                </q-popup-edit>
+              </q-td>
+              <q-td key="formatValue" :props="props">
+                {{ props.row.formatValue }}
+                <q-popup-edit v-model="props.row.formatValue" :auto-save="true">
+                  <q-select autofocus outlined v-model="props.row.formatValue" :options="formats"/>
+                </q-popup-edit>
+              </q-td>
+              <q-td key="lengthValue" :props="props">
+                {{ props.row.lengthValue }}
+                <q-popup-edit type="number" v-model="props.row.lengthValue" :auto-save="true">
+                  <q-input autofocus type="number" v-model="props.row.lengthValue"/>
+                </q-popup-edit>
+              </q-td>
+              <q-td key="accuracy" :props="props">
+                {{ props.row.accuracy }}
+                <q-popup-edit type="number" v-model="props.row.accuracy" :auto-save="true">
+                  <q-input autofocus type="number" v-model="props.row.accuracy"/>
+                </q-popup-edit>
+              </q-td>
+              <q-td key="currency" :props="props">
+                {{ props.row.currency }}
+                <q-popup-edit v-model="props.row.currency" :auto-save="true">
+                  <q-input autofocus v-model="props.row.currency"/>
+                </q-popup-edit>
+              </q-td>
+              <q-td key="decimal" :props="props">
+                {{ props.row.decimal }}
+                <q-popup-edit v-model="props.row.decimal" :auto-save="true">
+                  <q-input autofocus v-model="props.row.decimal"/>
+                </q-popup-edit>
+              </q-td>
+              <q-td key="groupBy" :props="props">
+                {{ props.row.groupBy }}
+                <q-popup-edit v-model="props.row.groupBy" :auto-save="true">
+                  <q-input autofocus v-model="props.row.groupBy"/>
+                </q-popup-edit>
+              </q-td>
+              <q-td key="trimType" :props="props">
+                {{ props.row.trimType }}
+                <q-popup-edit v-model="props.row.trimType" :auto-save="true">
+                  <q-select autofocus outlined v-model="props.row.trimType" :options="trimTypeOptions"/>
+                </q-popup-edit>
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
     </q-form>
   </div>
 </template>
@@ -205,6 +210,9 @@ export default {
     }
   },
   methods: {
+    insertTab () {
+      this.form.separator += '\t'
+    },
     addParameter () {
       this.form.parameters.push({
         field: null,

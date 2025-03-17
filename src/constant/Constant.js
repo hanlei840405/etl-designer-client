@@ -58,6 +58,10 @@ const ETL_TOOLBAR = {
       img: '/images/etl/TFI.svg',
       name: i18n.t('etl.transform.stepInput.ParGzipCsvInputMeta'),
       type: 'ParGzipCsvInputMeta'
+    }, {
+      img: '/images/etl/XLI.svg',
+      name: i18n.t('etl.transform.stepInput.ExcelInputMeta'),
+      type: 'ExcelInputMeta'
     }],
     stepOutput: [{
       img: '/images/etl/Delete.svg',

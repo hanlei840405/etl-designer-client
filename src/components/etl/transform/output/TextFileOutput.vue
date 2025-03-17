@@ -10,7 +10,7 @@
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel class="row q-col-gutter-xs" name="basic">
           <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.textFileOutput.name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-            <q-input class="col-12 col-md-6" outlined v-model="form.endedLine" :label="$t('form.textFileOutput.endedLine')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.endedLine" :label="$t('form.textFileOutput.endedLine')" hint=""/>
           <q-input class="col-12 col-md-6" outlined v-model="form.filename" :label="$t('form.textFileOutput.filename')" :hint="hintStorageDir+form.filename+'.'+form.suffix"/>
           <q-input class="col-12 col-md-6" outlined v-model="form.suffix" :label="$t('form.textFileOutput.suffix')" hint=""/>
           <q-checkbox class="col-12 col-md-3" v-model="form.addStepNr" :label="$t('form.textFileOutput.addStepNr')"/>
