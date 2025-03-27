@@ -95,6 +95,10 @@ const ETL_TOOLBAR = {
       img: '/images/etl/TFO.svg',
       name: i18n.t('etl.transform.stepOutput.TextFileOutputMeta'),
       type: 'TextFileOutputMeta'
+    }, {
+      img: '/images/etl/SAM.svg',
+      name: i18n.t('etl.transform.stepOutput.SynchronizeAfterMergeMeta'),
+      type: 'SynchronizeAfterMergeMeta'
     }],
     streaming: [{
       img: '/images/etl/get-records-from-stream.svg',
@@ -241,6 +245,10 @@ const ETL_TOOLBAR = {
       img: '/images/etl/MJOINS.svg',
       name: i18n.t('etl.transform.stepConnect.MultiMergeJoinMeta'),
       type: 'MultiMergeJoinMeta'
+    }, {
+      img: '/images/etl/MRG.svg',
+      name: i18n.t('etl.transform.stepConnect.MergeRowsMeta'),
+      type: 'MergeRowsMeta'
     }
     ]
   },

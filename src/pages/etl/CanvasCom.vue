@@ -101,6 +101,7 @@
       <q-card style="width: 900px; max-width: 90vw;">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">{{ propertiesDialog.title }}</div>
+          <q-chip square color="red" text-color="white" :label="$t('etl.component.notice.' + propertiesDialog.propertiesDialogCmp + '.default')" v-if="$te('etl.component.notice.' + propertiesDialog.propertiesDialogCmp + '.default')"/>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup :disable="init">
             <q-tooltip>{{ $t('button.toolTipCloseDisableAfterSave') }}</q-tooltip>
@@ -223,6 +224,8 @@ import MultiMergeJoinMeta from 'src/components/etl/transform/connect/MultiMergeJ
 import CsvInputMeta from 'src/components/etl/transform/input/CsvInput.vue'
 import ParGzipCsvInputMeta from 'src/components/etl/transform/input/ParGzipCsvInput.vue'
 import ExcelInputMeta from 'src/components/etl/transform/input/ExcelInput.vue'
+import MergeRowsMeta from 'src/components/etl/transform/connect/MergeRows.vue'
+import SynchronizeAfterMergeMeta from 'src/components/etl/transform/output/SynchronizeAfterMerge.vue'
 import { fetchShellContent, saveShellContent, publishShell, fetchShellPublishes, fetchShellPublishContent } from 'src/service/kettle/ShellService'
 import { execute, stop } from 'src/service/kettle/DesignService'
 import { date, uid } from 'quasar'
@@ -305,7 +308,9 @@ export default {
     FilterRowsMeta,
     CsvInputMeta,
     ParGzipCsvInputMeta,
-    ExcelInputMeta
+    ExcelInputMeta,
+    MergeRowsMeta,
+    SynchronizeAfterMergeMeta
   },
   props: {
     shell: {

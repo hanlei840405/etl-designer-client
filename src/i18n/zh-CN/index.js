@@ -1627,6 +1627,44 @@ export default {
         false: "否",
       },
     },
+    mergeRows: {
+      name: "名称",
+      oldDatasource: "旧数据源",
+      newDatasource: "新数据源",
+      flagField: "标志字段",
+      columnOperate: "操作",
+      keyField: "匹配的关键字",
+      valueField: "数据字段",
+      field: "字段",
+    },
+    synchronizeAfterMerge: {
+      name: "名称",
+      tabBasic: "基本",
+      tabLookupCondition: "查询条件",
+      tabField: "字段",
+      tabSenior: "高级",
+      tabRunningConfig: "运行参数",
+      tableField: "字段",
+      datasource: "数据源",
+      schema: "schema",
+      table: "表名",
+      commit: "批量提交大小",
+      batch: "批量更新",
+      tableNameInField: "表名在字段里",
+      tableField: "表名字段",
+      operationField: "表名字段",
+      orderInsert: "当等于...执行新增",
+      orderUpdate: "当等于...执行更新",
+      orderDelete: "当等于...执行删除",
+      performLookup: "执行查询",
+      threads: "并行数",
+      columnOperate: "操作",
+      columnTargetField: "目标字段",
+      columnCondition: "条件",
+      columnSourceField: "源字段",
+      columnSourceField2: "源字段2",
+      columnUpdate: "更新"
+    },
     model: {
       default: "模型",
       code: "自定义编码",
@@ -1722,6 +1760,7 @@ export default {
         default: "连接",
         MergeJoinMeta: "记录集连接",
         MultiMergeJoinMeta: "多步骤记录集连接",
+        MergeRowsMeta: "合并行(比较)",
       },
       stepInput: {
         default: "输入",
@@ -1742,7 +1781,8 @@ export default {
         JsonOutputMeta: "JSON输出",
         ElasticSearchBulkMeta: "elastic search输出",
         ExcelWriterMata: "EXCEL输出",
-        TextFileOutputMeta: "文本文件输出"
+        TextFileOutputMeta: "文本文件输出",
+        SynchronizeAfterMergeMeta: "数据同步",
       },
       streaming: {
         default: "流处理",
@@ -1818,6 +1858,14 @@ export default {
         JobEntrySFTPPUT: "SFTP上传",
         JobEntrySFTP: "SFTP下载",
         JobEntryMail: "发送邮件"
+      }
+    },
+    component: {
+      notice: {
+        MergeRowsMeta: {
+          default: "新旧数据源中的字段定义需要完全一致",
+          flagField: "默认值:identical, changed, new, deleted",
+        }
       }
     }
   },

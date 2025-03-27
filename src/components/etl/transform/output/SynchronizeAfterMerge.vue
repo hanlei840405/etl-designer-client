@@ -2,15 +2,17 @@
   <div style="width: 100%;">
     <q-form class="q-gutter-md">
       <q-tabs v-model="tab" align="left" narrow-indicator>
-        <q-tab name="basic" :label="$t('form.tableDelete.tabBasic')" />
-        <q-tab name="lookup" :label="$t('form.tableDelete.tabLookupCondition')" />
-        <q-tab name="runningConfig" :label="$t('form.tableDelete.tabRunningConfig')"/>
+        <q-tab name="basic" :label="$t('form.synchronizeAfterMerge.tabBasic')" />
+        <q-tab name="lookup" :label="$t('form.synchronizeAfterMerge.tabLookupCondition')" />
+        <q-tab name="field" :label="$t('form.synchronizeAfterMerge.tabField')" />
+        <q-tab name="senior" :label="$t('form.synchronizeAfterMerge.tabSenior')" />
+        <q-tab name="runningConfig" :label="$t('form.synchronizeAfterMerge.tabRunningConfig')"/>
       </q-tabs>
       <q-separator />
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel class="row q-col-gutter-xs" name="basic">
-          <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.tableDelete.name')" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-          <q-select class="col-12 col-md-6" outlined v-model="form.datasource" emit-value map-options option-value="id" :options="datasourceOptions" :label="$t('form.tableDelete.datasource')" clearable hint="">
+          <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.synchronizeAfterMerge.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
+          <q-select class="col-12 col-md-6" outlined v-model="form.datasource" emit-value map-options option-value="id" :options="datasourceOptions" :label="$t('form.synchronizeAfterMerge.datasource')" clearable hint="">
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                 <q-item-section>
@@ -26,23 +28,27 @@
               </q-item>
             </template>
           </q-select>
-          <q-input class="col-12 col-md-6" outlined v-model="form.schemaName" :label="$t('form.tableDelete.schema')" hint=""/>
-          <q-input class="col-12 col-md-6" outlined v-model="form.tableName" :label="$t('form.tableDelete.table')" hint="">
+          <q-input class="col-12 col-md-6" outlined v-model="form.schemaName" :label="$t('form.synchronizeAfterMerge.schema')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.tableName" :disable="form.tableNameInField" :label="$t('form.synchronizeAfterMerge.table')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint="">
             <template v-slot:append>
               <q-btn round dense flat icon="search" @click="loadTables"/>
             </template>
           </q-input>
-          <q-input class="col-12 col-md-6" outlined type="number" v-model.number="form.commitSize" :label="$t('form.tableDelete.commitSize')" min="1" hint=""/>
+          <q-input class="col-12 col-md-4" outlined type="number" v-model.number="form.commit" :label="$t('form.synchronizeAfterMerge.commit')" min="1" hint=""/>
+          <q-checkbox class="col-12 col-md-2" v-model="form.batch" :label="$t('form.synchronizeAfterMerge.batch')" hint=""/>
+          <q-select class="col-12 col-md-4" autofocus outlined v-model="form.tableField" :disable="!form.tableNameInField" :options="sourceFields" :label="$t('form.synchronizeAfterMerge.tableField')" hint=""/>
+          <q-checkbox class="col-12 col-md-2" v-model="form.tableNameInField" :label="$t('form.synchronizeAfterMerge.tableNameInField')" hint=""/>
         </q-tab-panel>
         <q-tab-panel name="lookup">
-          <q-table :data="form.searchMappingData" :columns="searchMappingColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.tableDelete.tableField')">
+          <q-table :data="form.searchMappingData" :columns="searchMappingColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.synchronizeAfterMerge.tableField')">
             <template v-slot:top-right>
               <q-btn size="sm" outline color="primary" icon="add" @click="addSearchMapping"/>
             </template>
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td key="operate" :props="props">
-                  <q-btn size="xs" outline round color="negative" icon="remove" @click="deleteSearchMapping(props)"></q-btn>
+                  <q-btn size="xs" outline round color="negative" icon="remove"
+                         @click="deleteSearchMapping(props)"></q-btn>
                 </q-td>
                 <q-td key="target" :props="props">
                   {{ props.row.target }}
@@ -72,14 +78,72 @@
             </template>
           </q-table>
         </q-tab-panel>
+        <q-tab-panel name="field">
+          <q-table :data="form.fieldMappingData" :columns="fieldMappingColumns" :rows-per-page-options="[0]"
+                   row-key="name" separator="cell" hide-bottom :title="$t('form.synchronizeAfterMerge.tableField')">
+            <template v-slot:top-right>
+              <q-btn-dropdown split outline color="primary" icon="add" @click="addFieldMapping">
+                <q-list>
+                  <q-item clickable v-close-popup @click="appendDiffFieldMapping">
+                    <q-item-section>
+                      <q-item-label>{{ $t('button.append') }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable v-close-popup @click="addAllFieldMapping">
+                    <q-item-section>
+                      <q-item-label>{{ $t('button.addAll') }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable v-close-popup @click="clearAndAddFieldMapping">
+                    <q-item-section>
+                      <q-item-label>{{ $t('button.removeAndAdd') }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
+            </template>
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key="operate" :props="props">
+                  <q-btn size="xs" outline round color="negative" icon="remove" @click="deleteFieldMapping(props)"></q-btn>
+                </q-td>
+                <q-td key="target" :props="props">
+                  {{ props.row.target }}
+                  <q-popup-edit v-model="props.row.target" :auto-save="true">
+                    <q-select autofocus outlined v-model="props.row.target" :options="targetFields"/>
+                  </q-popup-edit>
+                </q-td>
+                <q-td key="source" :props="props">
+                  {{ props.row.source }}
+                  <q-popup-edit v-model="props.row.source" :auto-save="true">
+                    <q-select autofocus outlined v-model="props.row.source" :options="sourceFields"/>
+                  </q-popup-edit>
+                </q-td>
+                <q-td key="update" :props="props">
+                  {{ props.row.update }}
+                  <q-popup-edit v-model="props.row.update" :auto-save="true">
+                    <q-select autofocus outlined v-model="props.row.update" :options="updates"/>
+                  </q-popup-edit>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-tab-panel>
+        <q-tab-panel class="row q-col-gutter-xs" name="senior">
+          <q-select class="col-12 col-md-6" autofocus outlined v-model="form.operationField" :options="sourceFields" :label="$t('form.synchronizeAfterMerge.operationField')" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.orderInsert" :label="$t('form.synchronizeAfterMerge.orderInsert')" :placeholder="placeholder.orderInsert" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.orderUpdate" :label="$t('form.synchronizeAfterMerge.orderUpdate')" :placeholder="placeholder.orderUpdate" hint=""/>
+          <q-input class="col-12 col-md-6" outlined v-model="form.orderDelete" :label="$t('form.synchronizeAfterMerge.orderDelete')" :placeholder="placeholder.orderDelete" hint=""/>
+          <q-checkbox class="col-12 col-md-6" v-model="form.performLookup" :label="$t('form.synchronizeAfterMerge.performLookup')" hint=""/>
+        </q-tab-panel>
         <q-tab-panel name="runningConfig">
-          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.tableDelete.threads')" min="1" :disable="forbiddenParallel"/>
+          <q-input outlined type="number" v-model.number="form.parallel" :label="$t('form.synchronizeAfterMerge.threads')" min="1" :disable="forbiddenParallel"/>
         </q-tab-panel>
       </q-tab-panels>
     <q-dialog v-model="selectTables.mode">
       <q-card style="width: 100vw;">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('form.tableDelete.datasource') }}</div>
+          <div class="text-h6">{{ $t('form.synchronizeAfterMerge.datasource') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
@@ -100,7 +164,7 @@ import { mdiGlasses, mdiTableLarge } from '@quasar/extras/mdi-v5'
 const FORBIDDEN_NEXT_STEP_PARALLEL = ['SwitchCaseMeta']
 const IGNORE_REPEAT_WARNING_META = ['SortRowsMeta', 'SetValueFieldMeta']
 export default {
-  name: 'DeleteMeta',
+  name: 'SynchronizeAfterMergeMeta',
   data () {
     return {
       tab: 'basic',
@@ -109,17 +173,37 @@ export default {
         datasource: null,
         schemaName: null,
         tableName: null,
-        commitSize: 200,
+        commit: 100,
+        batch: false,
+        tableNameInField: false,
+        tableField: null,
+        operationField: null,
+        orderInsert: null,
+        orderUpdate: null,
+        orderDelete: null,
+        performLookup: false,
         searchMappingData: [],
+        fieldMappingData: [],
         parallel: 1,
         distribute: true
       },
+      placeholder: {
+        orderInsert: 'new',
+        orderUpdate: 'changed',
+        orderDelete: 'deleted',
+      },
       searchMappingColumns: [
-        { name: 'operate', label: this.$t('form.tableDelete.columnOperate'), filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
-        { name: 'target', label: this.$t('form.tableDelete.columnTargetField'), field: 'target', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'condition', label: this.$t('form.tableDelete.columnCondition'), field: 'condition', align: 'left', headerStyle: 'width: 100px;' },
-        { name: 'source', label: this.$t('form.tableDelete.columnSourceField'), field: 'source', align: 'left', headerStyle: 'width: 150px;' },
-        { name: 'source2', label: this.$t('form.tableDelete.columnSourceField2'), field: 'source2', align: 'left', headerStyle: 'width: 150px;' }
+        { name: 'operate', label: this.$t('form.synchronizeAfterMerge.columnOperate'), filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
+        { name: 'target', label: this.$t('form.synchronizeAfterMerge.columnTargetField'), field: 'target', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'condition', label: this.$t('form.synchronizeAfterMerge.columnCondition'), field: 'condition', align: 'left', headerStyle: 'width: 100px;' },
+        { name: 'source', label: this.$t('form.synchronizeAfterMerge.columnSourceField'), field: 'source', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'source2', label: this.$t('form.synchronizeAfterMerge.columnSourceField2'), field: 'source2', align: 'left', headerStyle: 'width: 150px;' }
+      ],
+      fieldMappingColumns: [
+        { name: 'operate', label: this.$t('form.synchronizeAfterMerge.columnOperate'), filed: 'operate', align: 'right', headerStyle: 'width: 20px' },
+        { name: 'target', label: this.$t('form.synchronizeAfterMerge.columnTargetField'), field: 'target', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'source', label: this.$t('form.synchronizeAfterMerge.columnSourceField'), field: 'source', align: 'left', headerStyle: 'width: 150px;' },
+        { name: 'update', label: this.$t('form.synchronizeAfterMerge.columnUpdate'), field: 'update', align: 'left', headerStyle: 'width: 50px;' }
       ],
       state: false,
       datasourceOptions: [],
@@ -151,6 +235,7 @@ export default {
       }
       this.form.tableName = null
       this.form.searchMappingData = []
+      this.form.fieldMappingData = []
       this.targetFields = []
     },
     loadTables () {
@@ -158,7 +243,7 @@ export default {
       if (!vm.form.datasource) {
         vm.$q.notify({
           position: 'top',
-          message: vm.$t('form.tableDelete.datasource'),
+          message: vm.$t('form.synchronizeAfterMerge.datasource'),
           color: 'negative'
         })
       } else {
@@ -223,11 +308,17 @@ export default {
         vm.form.tableName = tableInfo[0]
       }
       vm.form.searchMappingData = []
+      vm.form.fieldMappingData = []
       vm.targetFields = []
       vm.$q.loading.show()
       structure({ datasourceId: vm.form.datasource, category: 'table', name: vm.form.tableName }).then(res => {
         vm.$q.loading.hide()
         res.data.forEach(element => {
+          vm.form.fieldMappingData.push({
+            target: element.name,
+            source: null,
+            update: null
+          })
           vm.form.searchMappingData.push({
             target: element.name,
             condition: null,
@@ -270,11 +361,51 @@ export default {
       this.form.searchMappingData.push({
         target: null,
         condition: null,
-        source: null
+        source: null,
+        source2: null
       })
     },
     deleteSearchMapping (props) {
       this.form.searchMappingData.splice(props.rowIndex, 1)
+    },
+    addFieldMapping () {
+      this.form.fieldMappingData.push({
+        target: null,
+        source: null,
+        update: null
+      })
+    },
+    appendDiffFieldMapping () {
+      const vm = this
+      const items = vm.form.fieldMappingData.filter(mapping => vm.sourceFields.indexOf(mapping.source) >= 0)
+      const array = vm.sourceFields
+      items.forEach(item => {
+        array.splice(array.findIndex(i => i === item.source), 1)
+      })
+      array.forEach(field => {
+        this.form.fieldMappingData.push({
+          target: null,
+          source: field,
+          update: null
+        })
+      })
+    },
+    addAllFieldMapping () {
+      const vm = this
+      vm.sourceFields.forEach(field => {
+        vm.form.fieldMappingData.push({
+          target: null,
+          source: field,
+          update: null
+        })
+      })
+    },
+    clearAndAddFieldMapping () {
+      this.form.fieldMappingData = []
+      this.addAllFieldMapping()
+    },
+    deleteFieldMapping (props) {
+      this.form.fieldMappingData.splice(props.rowIndex, 1)
     },
     createSourceField (val, done) {
       if (val.length > 0) {
@@ -307,12 +438,16 @@ export default {
           const ext = JSON.parse(step.ext)
           if (ext.sourceFields) {
             ext.sourceFields.forEach(field => {
-              vm.sourceFields.push(field)
+              if (vm.sourceFields.indexOf(field) < 0) {
+                vm.sourceFields.push(field)
+              }
             })
           }
           if (ext.replaceFields) {
             ext.replaceFields.forEach(field => {
-              replaceFields.push(field)
+              if (replaceFields.indexOf(field) < 0) {
+                replaceFields.push(field)
+              }
             })
           }
         }

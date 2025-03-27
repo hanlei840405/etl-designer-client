@@ -2,7 +2,7 @@
   <div style="width: 100%;">
     <q-form class="row q-col-gutter-xs">
       <q-input class="col-12 col-md-6" outlined v-model="form.name" :label="$t('form.mergeJoin.name')" :rules="[ val => val && val.length > 0 || 'Please type something']" hint=""/>
-      <q-select class="col-12 col-md-6" clearable outlined v-model="form.join_type" :options="joinTypes" :label="$t('form.mergeJoin.join')"/>
+      <q-select class="col-12 col-md-6" clearable outlined v-model="form.joinType" :options="joinTypes" :label="$t('form.mergeJoin.join')"/>
       <q-select class="col-12 col-md-6" clearable outlined v-model="form.step1" :options="previousSteps" emit-value map-options :label="$t('form.mergeJoin.step1')" hint="" @input="selectStep1($event)"/>
       <q-select class="col-12 col-md-6" clearable outlined v-model="form.step2" :options="previousSteps" emit-value map-options :label="$t('form.mergeJoin.step2')" hint="" @input="selectStep2($event)"/>
       <q-table class="col-12" :data="form.fieldMappingData" :columns="fieldMappingColumns" :rows-per-page-options="[0]" row-key="name" separator="cell" hide-bottom :title="$t('form.mergeJoin.mergeField')">
@@ -61,14 +61,11 @@ export default {
   data() {
     return {
       form: {
-        initFlag: true,
+        name: name,
         type: "MergeJoin",
-        description: [],
-        limit: 1,
-        parameters: [],
         distribute: true,
         fieldMappingData: [],
-        join_type: "INNER",
+        joinType: "INNER",
         step1: "",
         step2: "",
       },
@@ -106,7 +103,6 @@ export default {
   },
   methods: {
     selectStep1(e) {
-      debugger
       this.step1Field = this.stepFields[e]
     },
     selectStep2(e) {

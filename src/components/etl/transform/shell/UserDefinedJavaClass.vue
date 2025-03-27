@@ -205,15 +205,6 @@ export default {
         infoSteps: [],
         targetSteps: [],
         parallel: 1,
-        errorNext: null,
-        errorEnable: false,
-        errorCountName: null,
-        errorColumnDescription: null,
-        errorColumnName: null,
-        errorColumnCode: null,
-        errorMaxCount: 0,
-        errorRate: 0,
-        errorMinRows: 0
       },
       categories: ['BigNumber', 'Binary', 'Boolean', 'Date', 'Integer', 'Internet Address', 'Number', 'String', 'Timestamp'],
       helpDialog: {
