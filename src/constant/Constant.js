@@ -250,6 +250,13 @@ const ETL_TOOLBAR = {
       name: i18n.t('etl.transform.stepConnect.MergeRowsMeta'),
       type: 'MergeRowsMeta'
     }
+    ],
+    stepWarehouse: [
+      {
+        img: '/images/etl/DIM.svg',
+        name: i18n.t('etl.transform.stepWarehouse.DimensionLookupMeta'),
+        type: 'DimensionLookupMeta'
+      }
     ]
   },
   job: {

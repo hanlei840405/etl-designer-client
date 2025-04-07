@@ -1644,7 +1644,6 @@ export default {
       tabField: "字段",
       tabSenior: "高级",
       tabRunningConfig: "运行参数",
-      tableField: "字段",
       datasource: "数据源",
       schema: "schema",
       table: "表名",
@@ -1664,6 +1663,45 @@ export default {
       columnSourceField: "源字段",
       columnSourceField2: "源字段2",
       columnUpdate: "更新"
+    },
+    dimensionLookup: {
+      name: "名称",
+      tabBasic: "基本",
+      tabLookupCondition: "查询条件",
+      tabField: "字段",
+      tabRunningConfig: "运行参数",
+      update: "更新维度",
+      datasource: "数据源",
+      schema: "schema",
+      table: "表名",
+      commitSize: "批量提交大小",
+      preloadingCache: "预加载缓存",
+      cacheSize: "缓存大小",
+      key: "代理关键字段",
+      keyRename: "新的名称",
+      keyGenerateType: {
+        default: "创建方式",
+        autoInc: "自增",
+        sequence: "序列",
+        max: "使用表最大记录+1"
+      },
+      sequence: "序列",
+      versionField: "版本字段",
+      dateField: "流里日期字段",
+      dateFrom: "开始日期",
+      minYear: "最小年份",
+      useAltStartDate: "使用另一个可用的开始日期",
+      altStartDate: "替代开始日期",
+      altStartDateField: "替代开始日期字段",
+      dateTo: "结束日期",
+      maxYear: "最大年份",
+      threads: "并行数",
+      tableField: "字段",
+      columnOperate: "操作",
+      columnTargetField: "维字段",
+      columnCondition: "条件",
+      columnSourceField: "流里的字段",
+      columnUpdateType: "更新方式"
     },
     model: {
       default: "模型",
@@ -1831,6 +1869,10 @@ export default {
         DetectLastRowMeta: "识别流的最后一行",
         WriteToLogMeta: "写日志",
         FilterRowsMeta: "过滤记录"
+      },
+      stepWarehouse: {
+        default: "数据仓库",
+        DimensionLookupMeta: "维度查询/更新",
       }
     },
     job: {

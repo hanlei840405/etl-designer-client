@@ -226,6 +226,7 @@ import ParGzipCsvInputMeta from 'src/components/etl/transform/input/ParGzipCsvIn
 import ExcelInputMeta from 'src/components/etl/transform/input/ExcelInput.vue'
 import MergeRowsMeta from 'src/components/etl/transform/connect/MergeRows.vue'
 import SynchronizeAfterMergeMeta from 'src/components/etl/transform/output/SynchronizeAfterMerge.vue'
+import DimensionLookupMeta from 'src/components/etl/transform/warehouse/DimensionLookup.vue'
 import { fetchShellContent, saveShellContent, publishShell, fetchShellPublishes, fetchShellPublishContent } from 'src/service/kettle/ShellService'
 import { execute, stop } from 'src/service/kettle/DesignService'
 import { date, uid } from 'quasar'
@@ -310,7 +311,8 @@ export default {
     ParGzipCsvInputMeta,
     ExcelInputMeta,
     MergeRowsMeta,
-    SynchronizeAfterMergeMeta
+    SynchronizeAfterMergeMeta,
+    DimensionLookupMeta
   },
   props: {
     shell: {
@@ -341,6 +343,7 @@ export default {
         stepProcess: this.$t('etl.transform.stepProcess.default'),
         entryMail: this.$t('etl.transform.entryMail.default'),
         stepConnect: this.$t('etl.transform.stepConnect.default'),
+        stepWarehouse: this.$t('etl.transform.stepWarehouse.default'),
         entryCommon: this.$t('etl.job.entryCommon.default'),
         entryScript: this.$t('etl.job.entryScript.default'),
         conditionShell: this.$t('etl.job.conditionShell.default'),
