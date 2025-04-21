@@ -227,6 +227,7 @@ import ExcelInputMeta from 'src/components/etl/transform/input/ExcelInput.vue'
 import MergeRowsMeta from 'src/components/etl/transform/connect/MergeRows.vue'
 import SynchronizeAfterMergeMeta from 'src/components/etl/transform/output/SynchronizeAfterMerge.vue'
 import DimensionLookupMeta from 'src/components/etl/transform/warehouse/DimensionLookup.vue'
+import CombinationLookupMeta from 'src/components/etl/transform/warehouse/CombinationLookup.vue'
 import { fetchShellContent, saveShellContent, publishShell, fetchShellPublishes, fetchShellPublishContent } from 'src/service/kettle/ShellService'
 import { execute, stop } from 'src/service/kettle/DesignService'
 import { date, uid } from 'quasar'
@@ -312,7 +313,8 @@ export default {
     ExcelInputMeta,
     MergeRowsMeta,
     SynchronizeAfterMergeMeta,
-    DimensionLookupMeta
+    DimensionLookupMeta,
+    CombinationLookupMeta
   },
   props: {
     shell: {

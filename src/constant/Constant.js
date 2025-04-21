@@ -256,6 +256,11 @@ const ETL_TOOLBAR = {
         img: '/images/etl/DIM.svg',
         name: i18n.t('etl.transform.stepWarehouse.DimensionLookupMeta'),
         type: 'DimensionLookupMeta'
+      },
+      {
+        img: '/images/etl/CMB.svg',
+        name: i18n.t('etl.transform.stepWarehouse.CombinationLookupMeta'),
+        type: 'CombinationLookupMeta'
       }
     ]
   },
