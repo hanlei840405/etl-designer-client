@@ -2,14 +2,12 @@
   <div>
     <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" :filter="table.filter" @request="searchProjects" hide-header
              :no-data-label="$t('table.empty')" :rows-per-page-options="[0]" hide-bottom selection="multiple" :selected.sync="table.selected">
-      <template v-slot:top-left>
-        <q-input borderless v-model="table.filter" placeholder="Search">
+      <template v-slot:top-right>
+        <q-input round flat dense v-model="table.filter" placeholder="Search">
           <template v-slot:append>
             <q-icon name="las la-search" color="primary"/>
           </template>
         </q-input>
-      </template>
-      <template v-slot:top-right>
         <q-btn outline :label="$t('button.create')" color="primary" @click="newProject"/>
         <q-btn v-if="table.selected.length > 0" outline :label="$t('button.grant')" color="negative" @click="openGrant"/>
       </template>

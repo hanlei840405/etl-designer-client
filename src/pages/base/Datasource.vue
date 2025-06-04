@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :no-data-label="$t('table.empty')" :rows-per-page-options="[0]" hide-bottom>
+    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :no-data-label="$t('table.empty')" :rows-per-page-options="[0]">
       <template v-slot:top-left>
         <q-select
           v-model="project"
@@ -77,17 +77,18 @@
           <q-tab-panels v-model="editDatasourceDialog.tabOption" animated swipeable vertical transition-prev="jump-up" transition-next="jump-up">
             <q-tab-panel class="row q-col-gutter-xs" name="basic">
               <q-input class="col-12 col-md-6" outlined v-model="datasource.name" :label="$t('form.datasource.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.datasource.name')]"/>
-              <q-select class="col-12 col-md-6" outlined v-model="datasource.category" :options="editDatasourceDialog.categories" :label="$t('form.datasource.type')" hint=""/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.host" :label="$t('form.datasource.host')" hint="" v-if="datasource.category !== 'jdbc'"/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.port" :label="$t('form.datasource.port')" hint="" v-if="datasource.category !== 'jdbc'"/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.schemaName" :label="$t('form.datasource.schema')" hint="" v-if="datasource.category !== 'jdbc'"/>
-              <q-input class="col-12 col-md-6" outlined v-if="databaseDialogOracle && datasource.category !== 'jdbc'" v-model="datasource.dataSpace" :label="$t('form.datasource.tableSpace')" hint=""/>
-              <q-input class="col-12 col-md-6" outlined v-if="databaseDialogOracle && datasource.category !== 'jdbc'" v-model="datasource.indexSpace" :label="$t('form.datasource.indexSpace')" hint=""/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.url" :label="$t('form.datasource.url')" hint="" v-if="datasource.category === 'jdbc'"/>
-              <q-input class="col-12 col-md-6" outlined v-model="datasource.driver" :label="$t('form.datasource.driver')" hint="" v-if="datasource.category === 'jdbc'"/>
+              <q-select class="col-12 col-md-4" outlined v-model="datasource.category" :options="editDatasourceDialog.categories" :label="$t('form.datasource.type')" hint=""/>
+              <q-checkbox class="col-12 col-md-2" outlined v-model="datasource.generic" :label="$t('form.datasource.generic')"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.host" :label="$t('form.datasource.host')" hint="" v-if="!datasource.generic"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.port" :label="$t('form.datasource.port')" hint="" v-if="!datasource.generic"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.schemaName" :label="$t('form.datasource.schema')" hint="" v-if="!datasource.generic"/>
+              <q-input class="col-12 col-md-6" outlined v-if="databaseDialogOracle && !datasource.generic" v-model="datasource.dataSpace" :label="$t('form.datasource.tableSpace')" hint=""/>
+              <q-input class="col-12 col-md-6" outlined v-if="databaseDialogOracle && !datasource.generic" v-model="datasource.indexSpace" :label="$t('form.datasource.indexSpace')" hint=""/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.url" :label="$t('form.datasource.url')" hint="" v-if="datasource.generic"/>
+              <q-input class="col-12 col-md-6" outlined v-model="datasource.driver" :label="$t('form.datasource.driver')" hint="" v-if="datasource.generic"/>
               <q-input class="col-12 col-md-6" outlined v-model="datasource.username" :label="$t('form.datasource.username')" hint=""/>
               <q-input class="col-12 col-md-6" outlined v-model="datasource.password" :label="$t('form.datasource.password')" hint=""/>
-              <q-checkbox class="col-12 col-md-6" outlined v-if="databaseDialogMysql && datasource.category !== 'jdbc'" v-model="datasource.useCursor" :label="$t('form.datasource.userResultStreamCursor')"/>
+              <q-checkbox class="col-12 col-md-6" outlined v-if="databaseDialogMysql && !datasource.generic" v-model="datasource.useCursor" :label="$t('form.datasource.userResultStreamCursor')"/>
             </q-tab-panel>
             <q-tab-panel name="option">
               <q-table :data="datasource.parameter" :columns="editDatasourceDialog.parameterColumns" :title="$t('form.datasource.option.argument')" :rows-per-page-options="[]" row-key="name">
@@ -135,6 +136,7 @@
 <script>
 import { fetchProjects } from 'src/service/base/ProjectService'
 import { fetchDatasource, fetchDatasourceList, saveDatasource, deleteDatasource, testDatasource } from 'src/service/base/DatasourceService'
+import { fetchDictionaryItemList } from 'src/service/base/DictionaryService'
 
 export default {
   data () {
@@ -154,6 +156,12 @@ export default {
             name: 'category',
             label: this.$t('table.datasource.type'),
             field: 'category',
+            align: 'left'
+          },
+          {
+            name: 'generic',
+            label: this.$t('table.datasource.generic'),
+            field: 'generic',
             align: 'left'
           },
           {
@@ -191,7 +199,7 @@ export default {
       editDatasourceDialog: {
         state: false,
         tabOption: 'basic',
-        categories: ['mysql', 'postgresql', 'oracle', 'jdbc'],
+        categories: [],
         parameterColumns: [
           { name: 'name', align: 'left', label: this.$t('form.datasource.option.argumentName'), field: 'name' },
           { name: 'value', align: 'left', label: this.$t('form.datasource.option.argumentValue'), field: 'value' }
@@ -203,6 +211,7 @@ export default {
         id: null,
         name: null,
         category: null,
+        generic: false,
         host: null,
         schemaName: null,
         port: null,
@@ -270,6 +279,7 @@ export default {
           id: res.data.id,
           name: res.data.name,
           category: res.data.category,
+          generic: res.data.generic || false,
           host: res.data.host,
           schemaName: res.data.schemaName,
           port: res.data.port,
@@ -334,6 +344,7 @@ export default {
       testDatasource({
         name: this.datasource.name,
         category: this.datasource.category,
+        generic: this.datasource.generic || false,
         host: this.datasource.host,
         port: this.datasource.port,
         schemaName: this.datasource.schemaName,
@@ -425,6 +436,12 @@ export default {
   },
   mounted () {
     this.fetchProjects()
+    fetchDictionaryItemList('DATASOURCE').then(res => {
+      this.editDatasourceDialog.categories = []
+      res.data.forEach(element => {
+        this.editDatasourceDialog.categories.push(element.value)
+      });
+    })
     if (this.$route.query.projectId) {
       this.selectedProject({id: this.$route.query.projectId})
     }

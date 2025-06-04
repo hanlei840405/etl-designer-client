@@ -33,6 +33,7 @@
             </template>
             <template v-slot:after>
               <q-card-section class="row items-center q-pb-none">
+              >>
               <q-breadcrumbs>
                 <q-breadcrumbs-el :label="link.name" v-for="(link, index) in links" :key="link.id" :style="index === links.length - 1 ? '' : 'cursor: pointer;'" @click="showShellsByBreadcrumb(index)"/>
               </q-breadcrumbs>

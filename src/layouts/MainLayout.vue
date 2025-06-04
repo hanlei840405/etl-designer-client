@@ -229,6 +229,12 @@ export default {
             name: this.$t('menu.basic.ftp'),
             to: '/basic-ftp',
             icon: 'las la-folder'
+          },
+          {
+            id: 'basic-dictionary',
+            name: this.$t('menu.basic.dictionary'),
+            to: '/basic-dictionary',
+            icon: 'las la-folder'
           }
         ]
       },

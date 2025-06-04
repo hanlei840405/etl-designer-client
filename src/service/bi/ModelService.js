@@ -4,6 +4,10 @@ export function fetchModels (formData) {
   return axios.post('/modelList', formData)
 }
 
+export function paginationModels (formData) {
+  return axios.post('/modelPage', formData)
+}
+
 export function saveModel (formData) {
   return axios.post('/model', formData)
 }
@@ -16,10 +20,6 @@ export function fetchModel (pathVar) {
   return axios.get('/model/' + pathVar)
 }
 
-export function generateSql (pathVar) {
-  return axios.get('/generateSql/' + pathVar)
-}
-
-export function executeSql (pathVar) {
-  return axios.get('/executeSql/' + pathVar)
+export function sql (formData) {
+  return axios.post('/model/sql', formData)
 }

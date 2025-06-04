@@ -187,13 +187,13 @@ export default {
   },
   methods: {
     searchUsers (e) {
-        const vm = this
-        vm.table.loading = true
-        const query = {
-          payload: vm.table.filter,
-          pageNo: e.pagination.page,
-          pageSize: e.pagination.rowsPerPage
-        }
+      const vm = this
+      vm.table.loading = true
+      const query = {
+        payload: vm.table.filter,
+        pageNo: e.pagination.page,
+        pageSize: e.pagination.rowsPerPage
+      }
       fetchUsers(query).then(res => {
         vm.table.data = res.data.items
         vm.table.pagination = Object.assign(e.pagination, {
@@ -230,7 +230,7 @@ export default {
     submitForm () {
       const vm = this
       saveUser(vm.user).then(res => {
-        vm.searchUsers()
+        vm.searchUsers(vm.table)
         vm.editUserDialog.state = false
         Object.assign(this.user, vm.$options.data.call(this).user)
         vm.successDialogState = {
@@ -269,7 +269,7 @@ export default {
         persistent: true
       }).onOk(() => {
         deleteUser(props.key).then(() => {
-          vm.searchUsers()
+          vm.searchUsers(vm.table)
           vm.$q.notify({
             message: this.$t('response.success.delete'),
             position: 'top',

@@ -37,7 +37,8 @@ export default {
       default: "基础数据管理",
       project: "工程管理",
       datasource: "数据源管理",
-      ftp: "FTP服务器管理"
+      ftp: "FTP服务器管理",
+      dictionary: "字典管理",
     },
     auth: {
       default: "系统管理",
@@ -63,6 +64,7 @@ export default {
   },
   button: {
     append: "添加",
+    append10: "添加10条",
     create: "新建",
     modify: "编辑",
     delete: "删除",
@@ -108,6 +110,7 @@ export default {
     move: "移动",
     insert: "插入",
     toolTipCloseDisableAfterSave: "初次打开页面时，需要点击保存按钮关闭页面",
+    generateSql: "生成SQL",
   },
   table: {
     empty: "无数据",
@@ -123,6 +126,7 @@ export default {
     datasource: {
       name: "名称",
       type: "数据库类型",
+      generic: "自定义连接",
       host: "主机/IP",
       port: "端口",
       schema: "Schema",
@@ -165,7 +169,12 @@ export default {
     },
     shell: {
       name: "名称"
-    }
+    },
+    dictionary: {
+      name: "名称",
+      code: "编码",
+      description: "描述"
+    },
   },
   message: {
     confirm: {
@@ -225,6 +234,7 @@ export default {
       },
       name: "名称",
       type: "数据库类型",
+      generic: "自定义连接",
       host: "主机/IP",
       port: "端口",
       schema: "Schema",
@@ -1743,19 +1753,18 @@ export default {
       description: "描述",
       tableField: "字段",
       columnOperate: "操作",
-      columnDescription: "描述",
       columnCode: "字段编码",
       columnName: "字段名称",
+      columnDescription: "描述",
       columnType: "字段类型",
-      columnPrimaryKey: "是否主键",
-      columnNotNull: "禁止为空",
-      columnAutoIncr: "是否自增",
+      columnNotNull: {
+        default: "禁止为空",
+        true: "是",
+        false: "否",
+      },
       columnLength: "字段长度",
-      columnDecimal: "包含小数",
-      columnYes: "是",
-      columnNo: "否",
-      columnTableName: "表(视图)名",
-      columnTableType: "类型"
+      columnDecimal: "小数长度",
+      columnForeignModelId: "外联模型"
     },
     report: {
       default: "报表",
@@ -1777,6 +1786,17 @@ export default {
       radar: "雷达图",
       mix: "混合图(折线、面积、柱状图)",
       kLine: "K线图"
+    },
+    dictionary: {
+      default: "字典",
+      code: "自定义编码",
+      name: "名称",
+      description: "描述",
+      tableField: "字典项",
+      columnOperate: "操作",
+      columnName: "字典项键",
+      columnValue: "字典项值",
+      columnDescription: "描述",
     }
   },
   response: {

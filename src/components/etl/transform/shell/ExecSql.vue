@@ -13,10 +13,10 @@
               <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                 <q-item-section>
                   <q-item-label>{{ scope.opt.label }}</q-item-label>
-                  <q-item-label caption v-if="scope.opt.category !== 'jdbc'">host: {{ scope.opt.host }}</q-item-label>
-                  <q-item-label caption v-if="scope.opt.category !== 'jdbc'">port: {{ scope.opt.port }}</q-item-label>
-                  <q-item-label caption v-if="scope.opt.category === 'jdbc'">url: {{ scope.opt.url }}</q-item-label>
-                  <q-item-label caption v-if="scope.opt.category === 'jdbc'">driver: {{ scope.opt.driver }}</q-item-label>
+                  <q-item-label caption v-if="!scope.opt.generic">host: {{ scope.opt.host }}</q-item-label>
+                  <q-item-label caption v-if="!scope.opt.generic">port: {{ scope.opt.port }}</q-item-label>
+                  <q-item-label caption v-if="scope.opt.generic">url: {{ scope.opt.url }}</q-item-label>
+                  <q-item-label caption v-if="scope.opt.generic">driver: {{ scope.opt.driver }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-badge :label="scope.opt.category" color="primary"/>
@@ -214,6 +214,7 @@ export default {
           id: ele.id,
           label: ele.name,
           category: ele.category,
+          generic: ele.generic,
           host: ele.host,
           port: ele.port,
           url: ele.url,

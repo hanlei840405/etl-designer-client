@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :no-data-label="$t('table.empty')" :rows-per-page-options="[0]" hide-bottom>
+    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :no-data-label="$t('table.empty')" :rows-per-page-options="[0]">
       <template v-slot:top-left>
         <q-select
           v-model="project"
@@ -110,6 +110,7 @@
 <script>
 import { fetchProjects } from 'src/service/base/ProjectService'
 import { fetchFtp, fetchFtpList, saveFtp, deleteFtp, testFtp } from 'src/service/base/FtpService'
+import { fetchDictionaryItemList } from 'src/service/base/DictionaryService'
 
 export default {
   data () {
@@ -148,8 +149,8 @@ export default {
       editFtpDialog: {
         state: false,
         tabOption: 'basic',
-        categories: ['FTP', 'SFTP'],
-        proxyCategories: ['HTTP', 'SOCKS5']
+        categories: [],
+        proxyCategories: []
       },
       projects: [],
       project: null,
@@ -349,6 +350,18 @@ export default {
   },
   mounted () {
     this.fetchProjects()
+    fetchDictionaryItemList('FTP').then(res => {
+      this.editFtpDialog.categories = []
+      res.data.forEach(element => {
+        this.editFtpDialog.categories.push(element.value)
+      });
+    })
+    fetchDictionaryItemList('FTP-PROXY').then(res => {
+      this.editFtpDialog.proxyCategories = []
+      res.data.forEach(element => {
+        this.editFtpDialog.proxyCategories.push(element.value)
+      });
+    })
     if (this.$route.query.projectId) {
       this.selectedProject({id: this.$route.query.projectId})
     }
