@@ -282,7 +282,7 @@ export default {
         id: 'task',
         category: this.$t('menu.task.default'),
         prefix: '/task-',
-        icon: 'las la-cogs',
+        icon: 'las la-tasks',
         children: [
           {
             id: 'task-batch',
@@ -308,13 +308,25 @@ export default {
         id: 'bi',
         category: this.$t('menu.bi.default'),
         prefix: '/bi-',
-        icon: 'las la-cogs',
+        icon: 'las la-lightbulb',
         children: [
           {
             id: 'bi-model',
             name: this.$t('menu.bi.model'),
             to: '/bi-model',
-            icon: 'las la-tasks'
+            icon: 'lab la-buffer'
+          },
+          {
+            id: 'bi-report',
+            name: this.$t('menu.bi.report'),
+            to: '/bi-report',
+            icon: 'las la-chart-bar'
+          },
+          {
+            id: 'bi-layout',
+            name: this.$t('menu.bi.layout'),
+            to: '/bi-layout',
+            icon: 'las la-icons'
           }
         ]
       }

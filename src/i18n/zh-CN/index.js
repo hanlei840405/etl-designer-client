@@ -59,7 +59,8 @@ export default {
     bi: {
       default: "BI分析",
       model: "模型管理",
-      report: "报表设计"
+      report: "报表设计",
+      layout: "布局管理"
     }
   },
   button: {
