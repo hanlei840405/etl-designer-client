@@ -89,6 +89,13 @@ const routes = [
         }
       },
       {
+        path: '/bi-chart',
+        meta: {
+          authorities: ['CHART', 'ROOT']
+        },
+        component: () => import('pages/bi/Chart.vue')
+      },
+      {
         path: '/bi-model',
         meta: {
           authorities: ['MODEL', 'ROOT']
@@ -100,7 +107,7 @@ const routes = [
         meta: {
           authorities: ['REPORT', 'ROOT']
         },
-        component: () => import('pages/bi/Model.vue')
+        component: () => import('pages/bi/Report.vue')
       }
     ]
   },

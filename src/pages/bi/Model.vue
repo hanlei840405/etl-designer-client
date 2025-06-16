@@ -80,7 +80,7 @@
             <q-input class="col-12 col-md-4" outlined v-model="model.code" :label="$t('form.model.code')" hint="" :readonly="model.id !== null" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.model.code')]"/>
             <q-input class="col-12 col-md-4" outlined v-model="model.name" :label="$t('form.model.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.model.name')]"/>
             <q-select class="col-12 col-md-4" outlined v-model.number="model.datasourceId" emit-value map-options option-value="id" :options="datasourceOptions" :label="$t('form.model.datasource')" 
-            clearable :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.model.datasource')]" hint="" @input="selectedDatasource">
+              clearable :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.model.datasource')]" hint="" @input="selectedDatasource">
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                   <q-item-section>
@@ -214,7 +214,6 @@ import {
 } from 'src/service/bi/ModelService'
 import { fetchProjects } from 'src/service/base/ProjectService'
 import { fetchDatasourceList } from 'src/service/base/DatasourceService'
-import Constant from 'src/constant/Constant'
 import { fetchDictionaryItemList } from 'src/service/base/DictionaryService'
 
 export default {
@@ -235,19 +234,19 @@ export default {
         columns: [
           {
             name: 'code',
-            label: this.$t('form.model.columnCode'),
+            label: this.$t('form.model.code'),
             field: 'code',
             align: 'left'
           },
           {
             name: 'name',
-            label: this.$t('form.model.columnName'),
+            label: this.$t('form.model.name'),
             field: 'name',
             align: 'left'
           },
           {
             name: 'description',
-            label: this.$t('form.model.columnDescription'),
+            label: this.$t('form.model.description'),
             field: 'description',
             align: 'left'
           }
@@ -615,11 +614,6 @@ export default {
     deleteMetadata (props) {
       this.model.metadataList.splice(props.rowIndex, 1)
     },
-  },
-  computed: {
-    metadataState () {
-      return !this.model.code
-    }
   },
   mounted () {
     this.fetchProjects()

@@ -311,6 +311,12 @@ export default {
         icon: 'las la-lightbulb',
         children: [
           {
+            id: 'bi-chart',
+            name: this.$t('menu.bi.chart'),
+            to: '/bi-chart',
+            icon: 'las la-chart-pie'
+          },
+          {
             id: 'bi-model',
             name: this.$t('menu.bi.model'),
             to: '/bi-model',
@@ -326,7 +332,7 @@ export default {
             id: 'bi-layout',
             name: this.$t('menu.bi.layout'),
             to: '/bi-layout',
-            icon: 'las la-icons'
+            icon: 'las la-palette'
           }
         ]
       }

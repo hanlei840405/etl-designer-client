@@ -58,6 +58,7 @@ export default {
     },
     bi: {
       default: "BI分析",
+      chart: "报表图形",
       model: "模型管理",
       report: "报表设计",
       layout: "布局管理"
@@ -112,6 +113,7 @@ export default {
     insert: "插入",
     toolTipCloseDisableAfterSave: "初次打开页面时，需要点击保存按钮关闭页面",
     generateSql: "生成SQL",
+    effect: "效果"
   },
   table: {
     empty: "无数据",
@@ -1745,6 +1747,15 @@ export default {
       columnCondition: "条件",
       columnSourceField: "流里的字段",
       columnUpdateType: "更新方式"
+    },
+    chart: {
+      default: "报表图形",
+      code: "自定义编码",
+      name: "名称",
+      category: "类型",
+      options: "参数配置模板",
+      data: "样例数据",
+      description: "描述",
     },
     model: {
       default: "模型",
