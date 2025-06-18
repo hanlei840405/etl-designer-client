@@ -113,7 +113,8 @@ export default {
     insert: "插入",
     toolTipCloseDisableAfterSave: "初次打开页面时，需要点击保存按钮关闭页面",
     generateSql: "生成SQL",
-    effect: "效果"
+    effect: "效果",
+    showOptions: "查看/收起配置"
   },
   table: {
     empty: "无数据",
@@ -1756,6 +1757,17 @@ export default {
       options: "参数配置模板",
       data: "样例数据",
       description: "描述",
+      tableField: "模板参数",
+      columnField: "参数名称",
+      columnCategory: "参数类型",
+      columnDescription: "参数描述",
+      fieldCategory: {
+        string: "字符串",
+        number: "数字",
+        date: "日期",
+        array: "数组",
+        object: "对象"
+      },
     },
     model: {
       default: "模型",

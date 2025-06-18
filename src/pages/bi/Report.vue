@@ -77,9 +77,9 @@
         <q-separator />
         <q-form @submit="submitForm">
           <q-card-section class="row q-col-gutter-xs">
-            <q-input class="col-12 col-md-4" outlined v-model="report.code" :label="$t('form.report.code')" hint="" :readonly="report.id !== null" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.code')]"/>
-            <q-input class="col-12 col-md-4" outlined v-model="report.name" :label="$t('form.report.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.name')]"/>
-            <q-select class="col-12 col-md-4" v-model="report.modelId" autofocus outlined :options="modelOptionsCopy" use-input clearable emit-value map-options @filter="filterModel">
+            <q-input class="col-12 col-md-6" outlined v-model="report.code" :label="$t('form.report.code')" hint="" :readonly="report.id !== null" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.code')]"/>
+            <q-input class="col-12 col-md-6" outlined v-model="report.name" :label="$t('form.report.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.name')]"/>
+            <q-select class="col-12 col-md-6" v-model="report.modelId" autofocus outlined :options="modelOptionsCopy" use-input clearable emit-value map-options @filter="filterModel" @input="selectedModel" :label="$t('form.report.model')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.report.model')]" hint="">
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                   <q-item-section>
@@ -88,8 +88,7 @@
                 </q-item>
               </template>
             </q-select>
-            <q-select class="col-12 col-md-4" outlined v-model="report.chartId" emit-value map-options :options="chartOptions" :label="$t('form.report.chart')" 
-              clearable :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.report.chart')]" hint="">
+            <q-select class="col-12 col-md-6" v-model="report.chartId" autofocus outlined :options="chartOptionsCopy" use-input clearable emit-value map-options @filter="filterChart" @input="selectedChart" :label="$t('form.report.chart')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.report.chart')]" hint="">
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                   <q-item-section>
@@ -102,6 +101,46 @@
                 <q-btn round dense flat icon="visibility" @click.stop @click="viewChartDemo"/>
               </template>
             </q-select>
+            <q-table class="col-12 col-md-7" dense :data="model.metadataList" :columns="metadataColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('form.chart.tableField') + '(' + model.code + ')'">
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td key="columnCode" :props="props">
+                    {{ props.row.columnCode }}
+                  </q-td>
+                  <q-td key="columnName" :props="props">
+                    {{ props.row.columnName }}
+                  </q-td>
+                  <q-td key="columnCategory" :props="props">
+                    {{ props.row.columnCategory }}
+                  </q-td>
+                  <q-td key="columnLength" :props="props">
+                    {{ props.row.columnLength }}
+                  </q-td>
+                  <q-td key="columnDecimal" :props="props">
+                    {{ props.row.columnDecimal }}
+                  </q-td>
+                  <q-td key="columnNotNull" :props="props">
+                    {{ getYesOrNoLabel(props.row.columnNotNull) }}
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+            <q-table class="col-12 col-md-5" dense :data="chart.chartParamsList" :columns="chartParamsColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="chart.name">
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                <q-td key="field" :props="props">
+                  {{ props.row.field }}
+                </q-td>
+                <q-td key="category" :props="props">
+                  {{ props.row.category }}
+                </q-td>
+                <q-td key="description" :props="props">
+                  {{ props.row.description }}
+                </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+            <q-input v-for="chartParams in chart.chartParamsList" :key="chartParams.id" class="col-12" type="textarea" rows="2" outlined v-model="chartParams.script" :label="$t('form.report.script') + '(' + chartParams.field + ')'" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.script')]"/>
             <q-input class="col-12" type="textarea" rows="2" outlined v-model="report.description" :label="$t('form.report.description')"/>
           </q-card-section>
           <q-card-actions align="right">
@@ -115,13 +154,18 @@
       <q-card style="width: 50%; max-width: 80vw;">
         <q-card-section class="row items-center q-pb-none">
           <q-space/>
+          <q-btn :label="$t('button.showOptions')" outline color="primary" icon="visibility" @click="previewChartDialog.showOptions=!previewChartDialog.showOptions"/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-separator />
         <q-card-section>
         <div ref="chartDemo" style="width: 100%; height: 40vh;"></div>
-        {{ chart.options }}
-        {{ chart.data }}
+        <div v-show="previewChartDialog.showOptions">
+          <b>{{ $t('form.chart.options') }}</b>
+          <pre>{{ chart.options }}</pre>
+          <b>{{ $t('form.chart.data') }}</b>
+          <pre>{{ chart.data }}</pre>
+        </div>
       </q-card-section>
       </q-card>
     </q-dialog>
@@ -135,8 +179,8 @@ import {
   fetchReport,
   saveReport,
 } from 'src/service/bi/ReportService'
-import { fetchModels } from 'src/service/bi/ModelService'
-import { fetchCharts, previewChart } from 'src/service/bi/ChartService'
+import { fetchModel, fetchModels } from 'src/service/bi/ModelService'
+import { fetchChart, fetchCharts, previewChart } from 'src/service/bi/ChartService'
 import { fetchProjects } from 'src/service/base/ProjectService'
 import * as echarts from 'echarts'
 
@@ -188,16 +232,79 @@ export default {
         projectId: null,
         modelList: []
       },
-      chartOptions: [],
       previewChartDialog: {
-        state: false
+        state: false,
+        showOptions: false
       },
       modelOptions: [],
       modelOptionsCopy: [],
+      chartOptions: [],
+      chartOptionsCopy: [],
+      metadataColumns: [
+        {
+          name: 'columnCode',
+          label: this.$t('form.model.columnCode'),
+          field: 'columnCode',
+          align: 'left'
+        },
+        {
+          name: 'columnName',
+          label: this.$t('form.model.columnName'),
+          field: 'columnName',
+          align: 'left'
+        },
+        {
+          name: 'columnCategory',
+          label: this.$t('form.model.columnType'),
+          field: 'columnCategory',
+          align: 'left'
+        },
+        {
+          name: 'columnLength',
+          label: this.$t('form.model.columnLength'),
+          field: 'columnLength',
+          align: 'left'
+        },
+        {
+          name: 'columnDecimal',
+          label: this.$t('form.model.columnDecimal'),
+          field: 'columnDecimal',
+          align: 'left'
+        },
+        {
+          name: 'columnNotNull',
+          label: this.$t('form.model.columnNotNull.default'),
+          field: 'columnNotNull',
+          align: 'left'
+        }
+      ],
+      chartParamsColumns: [
+        { name: 'field', label: this.$t('form.chart.columnField'), align: 'left', field: 'field' },
+        { name: 'category', label: this.$t('form.chart.columnCategory'), align: 'left', field: 'category' },
+        { name: 'description', label: this.$t('form.chart.columnDescription'), align: 'left', field: 'description' }
+      ],
+      model: {
+        id: null,
+        code: null,
+        name: null,
+        description: null,
+        status: null,
+        projectId: null,
+        datasourceId: null,
+        metadataList: []
+      },
       chart: {
-        data: null,
+        id: null,
+        code: null,
+        name: null,
+        category: null,
         options: null,
-      }
+        data: null,
+        description: null,
+        status: null,
+        chartParamsList: []
+      },
+      yesOrNo: [{value: true, label: this.$t('form.model.columnNotNull.true')}, {value: false, label: this.$t('form.model.columnNotNull.false')}],
     }
   },
   methods: {
@@ -358,7 +465,7 @@ export default {
       })
     },
     viewChartDemo () {
-      previewChart({id: this.report.chartId}).then(res => {
+      previewChart(this.chart).then(res => {
         this.previewChartDialog.state = true
         this.$nextTick(() => {
           this.chartDemo = echarts.init(this.$refs.chartDemo)
@@ -392,6 +499,18 @@ export default {
         this.modelOptionsCopy = this.modelOptions.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
       })
     },
+    filterChart (val, update) {
+      if (val === '') {
+        update(() => {
+          this.chartOptionsCopy = this.chartOptions
+        })
+        return
+      }
+      update(() => {
+        const needle = val.toLowerCase()
+        this.chartOptionsCopy = this.chartOptions.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
+      })
+    },
     loadModelOptions () {
       this.modelOptions = []
       const query = {
@@ -405,6 +524,74 @@ export default {
           })
         })
       })
+    },
+    selectedModel (val) {
+      if (val) {
+        fetchModel(val).then(res => {
+          this.model = Object.assign(this.model, {
+            id: res.data.id,
+            code: res.data.code,
+            name: res.data.name,
+            description: res.data.description,
+            projectId: res.data.projectId,
+            datasourceId: res.data.datasourceId,
+            status: res.data.status,
+            metadataList: res.data.metadataList || []
+          })
+        }).catch(err => {
+          if (err.status === 10002) {
+            this.$q.notify({
+              message: this.$t('response.error.10002'),
+              position: 'top',
+              color: 'negative'
+            })
+          } else {
+            this.$q.notify({
+              message: err.data.error,
+              position: 'top',
+              color: 'negative'
+            })
+          }
+        })
+      }
+    },
+    selectedChart (val) {
+      if (val) {
+        fetchChart(val).then(res => {
+          this.chart = Object.assign(this.chart, {
+            id: res.data.id,
+            code: res.data.code,
+            name: res.data.name,
+            category: res.data.category,
+            options: res.data.options,
+            data: res.data.data,
+            description: res.data.description,
+            status: res.data.status,
+            chartParamsList: res.data.chartParamsList || []
+          })
+        }).catch(err => {
+          if (err.status === 10002) {
+            this.$q.notify({
+              message: this.$t('response.error.10002'),
+              position: 'top',
+              color: 'negative'
+            })
+          } else {
+            this.$q.notify({
+              message: err.data.error,
+              position: 'top',
+              color: 'negative'
+            })
+          }
+        })
+      }
+    },
+    getYesOrNoLabel (val) {
+      for (let i = 0; i < this.yesOrNo.length; i++) {
+        if (this.yesOrNo[i].value === val) {
+          return this.yesOrNo[i].label
+        }
+      }
     },
   },
   mounted () {

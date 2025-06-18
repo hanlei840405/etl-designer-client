@@ -64,6 +64,40 @@
               </template>
             </q-select>
             <q-input class="col-12" type="textarea" outlined v-model="chart.options" :label="$t('form.chart.options')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.chart.options')]"/>
+          </q-card-section>
+          <q-card-section>
+            <q-table :data="chart.chartParamsList" :columns="chartParamsColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('form.chart.tableField')">
+              <template v-slot:top-right>
+                <q-btn size="sm" outline color="primary" icon="add" @click="addChartParams"/>
+              </template>
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td key="operate" :props="props">
+                    <q-btn size="xs" outline round color="negative" icon="remove" @click="deleteMetadata(props)"></q-btn>
+                  </q-td>
+                  <q-td key="field" :props="props">
+                    {{ props.row.field }}
+                    <q-popup-edit v-model="props.row.field" :auto-save="true">
+                      <q-input autofocus outlined v-model="props.row.field"/>
+                    </q-popup-edit>
+                  </q-td>
+                  <q-td key="category" :props="props">
+                    {{ props.row.category }}
+                    <q-popup-edit v-model="props.row.category" :auto-save="true">
+                      <q-select autofocus outlined v-model="props.row.category" emit-value map-options :options="fieldCategoryOptions"/>
+                    </q-popup-edit>
+                  </q-td>
+                  <q-td key="description" :props="props">
+                    {{ props.row.description }}
+                    <q-popup-edit v-model="props.row.description" :auto-save="true">
+                      <q-input autofocus outlined v-model="props.row.description"/>
+                    </q-popup-edit>
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+          </q-card-section>
+          <q-card-section>
             <q-input class="col-12" type="textarea" outlined v-model="chart.data" :label="$t('form.chart.data')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.chart.data')]"/>
             <q-input class="col-12" type="textarea" rows="2" outlined v-model="chart.description" :label="$t('form.chart.description')"/>
           </q-card-section>
@@ -134,7 +168,7 @@ export default {
           },
           {
             name: 'description',
-            label: this.$t('form.model.description'),
+            label: this.$t('form.chart.description'),
             field: 'description',
             align: 'left'
           }
@@ -152,8 +186,22 @@ export default {
         data: null,
         description: null,
         status: null,
+        chartParamsList: []
       },
       categoryOptions: [],
+      chartParamsColumns: [
+        { name: 'operate', label: '', align: 'center', field: 'operate', sortable: false },
+        { name: 'field', label: this.$t('form.chart.columnField'), align: 'left', field: 'field' },
+        { name: 'category', label: this.$t('form.chart.columnCategory'), align: 'left', field: 'category' },
+        { name: 'description', label: this.$t('form.chart.columnDescription'), align: 'left', field: 'description' }
+      ],
+      fieldCategoryOptions: [
+        { label: this.$t('form.chart.fieldCategory.string'), value: 'string' },
+        { label: this.$t('form.chart.fieldCategory.number'), value: 'number' },
+        { label: this.$t('form.chart.fieldCategory.date'), value: 'date' },
+        { label: this.$t('form.chart.fieldCategory.array'), value: 'array' },
+        { label: this.$t('form.chart.fieldCategory.object'), value: 'object' }
+      ],
       previewChartDialog: {
         state: false
       },
@@ -191,6 +239,7 @@ export default {
           data: res.data.data,
           description: res.data.description,
           status: res.data.status,
+          chartParamsList: res.data.chartParamsList || []
         })
       }).catch(err => {
         if (err.status === 10002) {
@@ -275,6 +324,20 @@ export default {
           }
         })
       })
+    },
+    addChartParams () {
+        this.chart.chartParamsList.push({
+          columnName: null,
+          columnCode: null,
+          columnCategory: null,
+          columnLength: null,
+          columnDecimal: null,
+          columnNotNull: null,
+          columnForeignModelId: null
+        })
+    },
+    deleteChartParams (props) {
+      this.chart.chartParamsList.splice(props.rowIndex, 1)
     },
     preview () {
       previewChart(this.chart).then(res => {

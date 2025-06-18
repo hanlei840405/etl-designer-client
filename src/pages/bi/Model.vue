@@ -101,9 +101,9 @@
           <q-card-section>
             <q-table :data="model.metadataList" :columns="metadataColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('form.model.tableField')">
               <template v-slot:top-right>
-              <q-btn-dropdown split outline color="primary" icon="add" @click="addFieldMapping">
+              <q-btn-dropdown split outline color="primary" icon="add" @click="addMetadata">
                 <q-list>
-                  <q-item clickable v-close-popup @click="add10FieldMapping">
+                  <q-item clickable v-close-popup @click="add10Metadata">
                     <q-item-section>
                       <q-item-label>{{ $t('button.append10') }}</q-item-label>
                     </q-item-section>
@@ -152,7 +152,7 @@
                       <q-select autofocus outlined v-model="props.row.columnNotNull" emit-value map-options :options="yesOrNo"/>
                     </q-popup-edit>
                   </q-td>
-                  <q-td key="columnForeignModelId" :props="props">
+                  <!-- <q-td key="columnForeignModelId" :props="props">
                     {{ getForeignLabel(props.row.columnForeignModelId) }}
                     <q-popup-edit v-model="props.row.columnForeignModelId" :auto-save="true">
                       <q-select
@@ -175,7 +175,7 @@
                         </template>
                       </q-select>
                     </q-popup-edit>
-                  </q-td>
+                  </q-td> -->
                 </q-tr>
               </template>
             </q-table>
@@ -311,12 +311,12 @@ export default {
           field: 'columnNotNull',
           align: 'left'
         },
-        {
-          name: 'columnForeignModelId',
-          label: this.$t('form.model.columnForeignModelId'),
-          field: 'columnForeignModelId',
-          align: 'left'
-        }
+        // {
+        //   name: 'columnForeignModelId',
+        //   label: this.$t('form.model.columnForeignModelId'),
+        //   field: 'columnForeignModelId',
+        //   align: 'left'
+        // }
       ],
       METADATA_CATEGORIES: [],
       modelOptions: [],
@@ -571,7 +571,7 @@ export default {
         })
       })
     },
-    addFieldMapping () {
+    addMetadata () {
       if (!this.model.datasourceId) {
         this.$q.notify({
           position: 'top',
@@ -590,7 +590,7 @@ export default {
         })
       }
     },
-    add10FieldMapping () {
+    add10Metadata () {
       if (!this.model.datasourceId) {
         this.$q.notify({
           position: 'top',
