@@ -15,3 +15,7 @@ export function headers (params) {
 export function sheets (params) {
   return axios.post('/sheets', params)
 }
+
+export function query (params) {
+  return axios.post('/query', params)
+}

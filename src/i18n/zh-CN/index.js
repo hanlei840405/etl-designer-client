@@ -1757,7 +1757,7 @@ export default {
       options: "参数配置模板",
       data: "样例数据",
       description: "描述",
-      tableField: "模板参数",
+      modelTableName: "模板表名:{0}",
       columnField: "参数名称",
       columnCategory: "参数类型",
       columnDescription: "参数描述",

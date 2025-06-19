@@ -56,7 +56,6 @@
             <q-separator color="primary" size="2px"/>
             <q-card-actions align="right">
               <q-btn outline dense color="primary" @click="loadReport(props)">{{ $t('button.modify') }}</q-btn>
-              <q-btn outline dense color="primary" @click="generateSql(props)">{{ $t('button.generateSql') }}</q-btn>
               <q-btn outline dense color="negative" @click="deleteReport(props)">{{ $t('button.delete') }}</q-btn>
             </q-card-actions>
           </q-card>
@@ -101,7 +100,7 @@
                 <q-btn round dense flat icon="visibility" @click.stop @click="viewChartDemo"/>
               </template>
             </q-select>
-            <q-table v-show="report.modelId" class="col-12" dense :data="model.metadataList" :columns="metadataColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('form.chart.tableField') + '(' + model.code + ')'">
+            <q-table v-show="report.modelId" class="col-12" dense :data="model.metadataList" :columns="metadataColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="this.$t('form.chart.modelTableName', [model.code])">
               <template v-slot:body="props">
                 <q-tr :props="props">
                   <q-td key="columnCode" :props="props">
@@ -129,7 +128,7 @@
               <template v-slot:body="props">
                 <q-tr :props="props">
                 <q-td key="operate" :props="props">
-                  <q-btn size="xs" outline round icon="visibility" @click="prewSql(props)"></q-btn>
+                  <q-btn v-if="props.row.category === 'sql'" size="xs" outline round icon="visibility" @click="prewSql(props)"></q-btn>
                 </q-td>
                 <q-td key="field" :props="props">
                   {{ props.row.field }}
@@ -159,22 +158,23 @@
           </q-card-section>
           <q-card-actions align="right">
             <q-btn type="submit" :label="$t('button.save')" outline color="primary" icon="las la-save"/>
+            <q-btn  v-if="report.reportChartParamsList.length > 0" :label="$t('button.preview')" outline color="orange" icon="visibility" @click="previewReportChart"/>
             <q-btn v-if="report.id" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteReport"/>
           </q-card-actions>
         </q-form>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="previewChartDialog.state">
+    <q-dialog v-model="previewChartDemoDialog.state">
       <q-card style="width: 50%; max-width: 80vw;">
         <q-card-section class="row items-center q-pb-none">
           <q-space/>
-          <q-btn :label="$t('button.showOptions')" outline color="primary" icon="visibility" @click="previewChartDialog.showOptions=!previewChartDialog.showOptions"/>
+          <q-btn :label="$t('button.showOptions')" outline color="primary" icon="visibility" @click="previewChartDemoDialog.showOptions=!previewChartDemoDialog.showOptions"/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-separator />
         <q-card-section>
         <div ref="chartDemo" style="width: 100%; height: 40vh;"></div>
-        <div v-show="previewChartDialog.showOptions">
+        <div v-show="previewChartDemoDialog.showOptions">
           <b>{{ $t('form.chart.options') }}</b>
           <pre>{{ chart.options }}</pre>
           <b>{{ $t('form.chart.data') }}</b>
@@ -210,6 +210,18 @@
           </q-card-section>
         </q-card>
       </q-dialog>
+    <q-dialog v-model="previewReportDialog.state">
+      <q-card style="width: 50%; max-width: 80vw;">
+        <q-card-section class="row items-center q-pb-none">
+          <q-space/>
+          <q-btn icon="close" flat round dense v-close-popup/>
+        </q-card-section>
+        <q-separator />
+        <q-card-section>
+        <div ref="reportChart" style="width: 100%; height: 40vh;"></div>
+      </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -219,12 +231,13 @@ import {
   paginationReports,
   fetchReport,
   saveReport,
+  paintReport
 } from 'src/service/bi/ReportService'
 import { fetchModel, fetchModels } from 'src/service/bi/ModelService'
 import { fetchChart, fetchCharts, previewChart } from 'src/service/bi/ChartService'
 import { fetchProjects } from 'src/service/base/ProjectService'
 import * as echarts from 'echarts'
-import { preview } from 'src/service/kettle/PreviewService'
+import { preview, query } from 'src/service/kettle/PreviewService'
 
 export default {
   data () {
@@ -276,9 +289,10 @@ export default {
         modelId: null,
         reportChartParamsList: []
       },
-      previewChartDialog: {
+      previewChartDemoDialog: {
         state: false,
-        showOptions: false
+        showOptions: false,
+        chartDemo: null
       },
       modelOptions: [],
       modelOptionsCopy: [],
@@ -355,6 +369,10 @@ export default {
         columns: [],
         loading: false
       },
+      previewReportDialog: {
+        state: false,
+        reportChart: null
+      }
     }
   },
   methods: {
@@ -393,8 +411,21 @@ export default {
               description: item.description
             }
           })
+          this.chartOptionsCopy = this.chartOptions
         })
-        this.loadModelOptions()
+        this.modelOptions = []
+        const query = {
+          projectId: this.project.id,
+        }
+        fetchModels(query).then(res => {
+          res.data.forEach(item => {
+            this.modelOptions.push({
+              value: item.id,
+              label: item.name
+            })
+          })
+          this.modelOptionsCopy = this.modelOptions
+        })
       } else {
         this.table.data = []
       }
@@ -429,6 +460,8 @@ export default {
           status: res.data.status,
           reportChartParamsList: res.data.reportChartParamsList || []
         })
+        this.selectedModel(res.data.modelId)
+        this.selectedChart(res.data.chartId, true)
       }).catch(err => {
         if (err.status === 10002) {
           this.$q.notify({
@@ -444,8 +477,6 @@ export default {
           })
         }
       })
-    },
-    generateSql (props) {
     },
     newReport () {
       this.editReportDialog.state = true
@@ -518,10 +549,10 @@ export default {
     },
     viewChartDemo () {
       previewChart(this.chart).then(res => {
-        this.previewChartDialog.state = true
+        this.previewChartDemoDialog.state = true
         this.$nextTick(() => {
-          this.chartDemo = echarts.init(this.$refs.chartDemo)
-          this.chartDemo.setOption(res.data)
+          this.previewChartDemoDialog.chartDemo = echarts.init(this.$refs.chartDemo)
+          this.previewChartDemoDialog.chartDemo.setOption(res.data)
         })
       }).catch(err => {
         if (err.status === 10002) {
@@ -563,20 +594,6 @@ export default {
         this.chartOptionsCopy = this.chartOptions.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
       })
     },
-    loadModelOptions () {
-      this.modelOptions = []
-      const query = {
-        projectId: this.project.id,
-      }
-      fetchModels(query).then(res => {
-        res.data.forEach(item => {
-          this.modelOptions.push({
-            value: item.id,
-            label: item.name
-          })
-        })
-      })
-    },
     selectedModel (val) {
       if (val) {
         fetchModel(val).then(res => {
@@ -607,7 +624,7 @@ export default {
         })
       }
     },
-    selectedChart (val) {
+    selectedChart (val, update) {
       if (val) {
         fetchChart(val).then(res => {
           this.chart = Object.assign(this.chart, {
@@ -618,16 +635,18 @@ export default {
             options: res.data.options,
             data: res.data.data,
           })
-          this.report.reportChartParamsList = res.data.chartParamsList.map(item => {
-            return {
-              chartParamsId: item.id,
-              field: item.field,
-              fieldCategory: item.category,
-              description: item.description,
-              category: null,
-              script: null
-            }
-          })
+          if (!update) {
+            this.report.reportChartParamsList = res.data.chartParamsList.map(item => {
+              return {
+                chartParamsId: item.id,
+                field: item.field,
+                fieldCategory: item.category,
+                description: item.description,
+                category: null,
+                script: null
+              }
+            })
+          }
         }).catch(err => {
           if (err.status === 10002) {
             this.$q.notify({
@@ -695,7 +714,16 @@ export default {
           })
         })
       }
-    }
+    },
+    previewReportChart () {
+      paintReport(this.report).then(res => {
+        this.previewReportDialog.state = true
+        this.$nextTick(() => {
+          this.previewReportDialog.reportChart = echarts.init(this.$refs.reportChart)
+          this.previewReportDialog.reportChart.setOption(res.data)
+        })
+      })
+    },
   },
   mounted () {
     this.fetchProjects()

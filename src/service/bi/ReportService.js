@@ -23,3 +23,7 @@ export function fetchReport (pathVar) {
 export function viewReport (formData) {
   return axios.post('/report/view', formData)
 }
+
+export function paintReport (formData) {
+  return axios.post('/report/paint', formData)
+}
