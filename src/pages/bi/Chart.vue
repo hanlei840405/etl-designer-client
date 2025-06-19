@@ -66,7 +66,7 @@
             <q-input class="col-12" type="textarea" outlined v-model="chart.options" :label="$t('form.chart.options')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.chart.options')]"/>
           </q-card-section>
           <q-card-section>
-            <q-table :data="chart.chartParamsList" :columns="chartParamsColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('form.chart.tableField')">
+            <q-table :data="chart.chartParamsList" :columns="chartParamsColumns" :rows-per-page-options="[0]" row-key="id" separator="cell" hide-bottom :title="$t('form.chart.parameters')">
               <template v-slot:top-right>
                 <q-btn size="sm" outline color="primary" icon="add" @click="addChartParams"/>
               </template>
