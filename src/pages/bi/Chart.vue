@@ -341,6 +341,9 @@ export default {
     },
     preview () {
       previewChart(this.chart).then(res => {
+        if (this.chartDemo) {
+          this.chartDemo.dispose()
+        }
         this.previewChartDialog.state = true
         this.$nextTick(() => {
           this.chartDemo = echarts.init(this.$refs.chartDemo)

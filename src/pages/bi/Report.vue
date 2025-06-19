@@ -552,6 +552,9 @@ export default {
     viewChartDemo () {
       previewChart(this.chart).then(res => {
         this.previewChartDemoDialog.state = true
+        if (this.previewChartDemoDialog.chartDemo) {
+          this.previewChartDemoDialog.chartDemo.dispose()
+        }
         this.$nextTick(() => {
           this.previewChartDemoDialog.chartDemo = echarts.init(this.$refs.chartDemo)
           this.previewChartDemoDialog.chartDemo.setOption(res.data)
@@ -720,6 +723,9 @@ export default {
     previewReportChartByGet (props) {
       paintReportByGet(props.key).then(res => {
         this.previewReportDialog.state = true
+        if (this.previewReportDialog.reportChart) {
+          this.previewReportDialog.reportChart.dispose()
+        }
         this.$nextTick(() => {
           this.previewReportDialog.reportChart = echarts.init(this.$refs.reportChart)
           this.previewReportDialog.reportChart.setOption(res.data)
@@ -729,6 +735,9 @@ export default {
     previewReportChartByPost () {
       paintReportByPost(this.report).then(res => {
         this.previewReportDialog.state = true
+        if (this.previewReportDialog.reportChart) {
+          this.previewReportDialog.reportChart.dispose()
+        }
         this.$nextTick(() => {
           this.previewReportDialog.reportChart = echarts.init(this.$refs.reportChart)
           this.previewReportDialog.reportChart.setOption(res.data)
