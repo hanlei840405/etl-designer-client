@@ -24,6 +24,10 @@ export function viewReport (formData) {
   return axios.post('/report/view', formData)
 }
 
-export function paintReport (formData) {
+export function paintReportByPost (formData) {
   return axios.post('/report/paint', formData)
+}
+
+export function paintReportByGet (pathVar) {
+  return axios.get('/report/paint/' + pathVar)
 }

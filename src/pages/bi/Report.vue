@@ -56,6 +56,7 @@
             <q-separator color="primary" size="2px"/>
             <q-card-actions align="right">
               <q-btn outline dense color="primary" @click="loadReport(props)">{{ $t('button.modify') }}</q-btn>
+              <q-btn outline dense color="orange" @click="previewReportChartByGet(props)">{{ $t('button.preview') }}</q-btn>
               <q-btn outline dense color="negative" @click="deleteReport(props)">{{ $t('button.delete') }}</q-btn>
             </q-card-actions>
           </q-card>
@@ -76,8 +77,8 @@
         <q-separator />
         <q-form @submit="submitForm">
           <q-card-section class="row q-col-gutter-xs">
-            <q-input class="col-12 col-md-6" outlined v-model="report.code" :label="$t('form.report.code')" hint="" :readonly="report.id !== null" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.code')]"/>
-            <q-input class="col-12 col-md-6" outlined v-model="report.name" :label="$t('form.report.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.name')]"/>
+            <q-input class="col-12 col-md-6" outlined v-model="report.code" autofocus :label="$t('form.report.code')" hint="" :readonly="report.id !== null" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.code')]"/>
+            <q-input class="col-12 col-md-6" outlined v-model="report.name" autofocus :label="$t('form.report.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.name')]"/>
             <q-select class="col-12 col-md-6" v-model="report.modelId" autofocus outlined :options="modelOptionsCopy" use-input emit-value map-options @filter="filterModel" @input="selectedModel" :label="$t('form.report.model')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.report.model')]" hint="">
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
@@ -158,7 +159,7 @@
           </q-card-section>
           <q-card-actions align="right">
             <q-btn type="submit" :label="$t('button.save')" outline color="primary" icon="las la-save"/>
-            <q-btn  v-if="report.reportChartParamsList.length > 0" :label="$t('button.preview')" outline color="orange" icon="visibility" @click="previewReportChart"/>
+            <q-btn  v-if="report.reportChartParamsList.length > 0" :label="$t('button.preview')" outline color="orange" icon="visibility" @click="previewReportChartByPost"/>
             <q-btn v-if="report.id" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteReport"/>
           </q-card-actions>
         </q-form>
@@ -231,7 +232,8 @@ import {
   paginationReports,
   fetchReport,
   saveReport,
-  paintReport
+  paintReportByGet,
+  paintReportByPost
 } from 'src/service/bi/ReportService'
 import { fetchModel, fetchModels } from 'src/service/bi/ModelService'
 import { fetchChart, fetchCharts, previewChart } from 'src/service/bi/ChartService'
@@ -715,8 +717,17 @@ export default {
         })
       }
     },
-    previewReportChart () {
-      paintReport(this.report).then(res => {
+    previewReportChartByGet (props) {
+      paintReportByGet(props.key).then(res => {
+        this.previewReportDialog.state = true
+        this.$nextTick(() => {
+          this.previewReportDialog.reportChart = echarts.init(this.$refs.reportChart)
+          this.previewReportDialog.reportChart.setOption(res.data)
+        })
+      })
+    },
+    previewReportChartByPost () {
+      paintReportByPost(this.report).then(res => {
         this.previewReportDialog.state = true
         this.$nextTick(() => {
           this.previewReportDialog.reportChart = echarts.init(this.$refs.reportChart)
