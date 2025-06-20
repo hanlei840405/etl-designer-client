@@ -56,8 +56,9 @@
             <q-separator color="primary" size="2px"/>
             <q-card-actions align="right">
               <q-btn outline dense color="primary" @click="loadModel(props)">{{ $t('button.modify') }}</q-btn>
-              <q-btn outline dense color="primary" @click="generateSql(props)">{{ $t('button.generateSql') }}</q-btn>
-              <q-btn outline dense color="negative" @click="deleteModel(props)">{{ $t('button.delete') }}</q-btn>
+              <q-btn v-if="!props.row.publish" outline dense color="orange" @click="publishModel(props)">{{ $t('button.publish') }}</q-btn>
+              <q-btn outline dense color="positive" @click="generateSql(props)">{{ $t('button.generateSql') }}</q-btn>
+              <q-btn v-if="!props.row.publishTime" outline dense color="negative" @click="deleteModel(props)">{{ $t('button.delete') }}</q-btn>
             </q-card-actions>
           </q-card>
         </div>
@@ -114,7 +115,7 @@
               <template v-slot:body="props">
                 <q-tr :props="props">
                   <q-td key="operate" :props="props">
-                    <q-btn size="xs" outline round color="negative" icon="remove" @click="deleteMetadata(props)"></q-btn>
+                    <q-btn v-if="!props.row.id || !model.publishTime || props.row.createTime > model.publishTime" size="xs" outline round color="negative" icon="remove" @click="deleteMetadata(props)"></q-btn>
                   </q-td>
                   <q-td key="columnCode" :props="props">
                     {{ props.row.columnCode }}
@@ -182,7 +183,7 @@
           </q-card-section>
           <q-card-actions align="right">
             <q-btn type="submit" :label="$t('button.save')" outline color="primary" icon="las la-save"/>
-            <q-btn v-if="model.id" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteModel"/>
+            <q-btn v-if="model.id && !model.publishTime" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteModel"/>
           </q-card-actions>
         </q-form>
       </q-card>
@@ -211,6 +212,7 @@ import {
   fetchModel,
   saveModel,
   sql,
+  publishModel
 } from 'src/service/bi/ModelService'
 import { fetchProjects } from 'src/service/base/ProjectService'
 import { fetchDatasourceList } from 'src/service/base/DatasourceService'
@@ -265,6 +267,8 @@ export default {
         status: null,
         projectId: null,
         datasourceId: null,
+        publish: false,
+        publishTime: null,
         metadataList: []
       },
       metadataColumns: [
@@ -400,6 +404,8 @@ export default {
           description: res.data.description,
           projectId: res.data.projectId,
           datasourceId: res.data.datasourceId,
+          publish: res.data.publish,
+          publishTime: res.data.publishTime,
           status: res.data.status,
           metadataList: res.data.metadataList || []
         })
@@ -409,6 +415,31 @@ export default {
           }
         })
         this.loadModelOptions()
+      })
+    },
+    publishModel (props) {
+      this.$q.dialog({
+        title: 'Confirm',
+        message: this.$t('message.confirm.publishAndCantDelete'),
+        cancel: {
+          textColor: 'primary',
+          outline: true
+        },
+        ok: {
+          textColor: 'negative',
+          outline: true
+        },
+        persistent: true
+      }).onOk(() => {
+        publishModel({id: props.key}).then(res => {
+          this.searchModels()
+          this.editModelDialog.state = false
+          this.$q.notify({
+            message: this.$t('response.success.publish'),
+            position: 'top',
+            color: 'teal'
+          })
+        })
       })
     },
     generateSql (props) {

@@ -189,7 +189,8 @@ export default {
       route: "点此进入{0}",
       recover: "确认回滚?",
       deploy: "确认部署?",
-      executeDdl: "确认执行DDL语句?"
+      executeDdl: "确认执行DDL语句?",
+      publishAndCantDelete: "确认发布?发布后将无法删除",
     },
     loading: {
       save: "正在保存"

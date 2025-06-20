@@ -23,3 +23,8 @@ export function fetchModel (pathVar) {
 export function sql (formData) {
   return axios.post('/model/sql', formData)
 }
+
+export function publishModel (formData) {
+  return axios.post('/model/publish', formData)
+}
+

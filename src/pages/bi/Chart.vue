@@ -34,7 +34,8 @@
             <q-separator color="primary" size="2px"/>
             <q-card-actions align="right">
               <q-btn outline dense color="primary" @click="loadChart(props)">{{ $t('button.modify') }}</q-btn>
-              <q-btn outline dense color="negative" @click="deleteChart(props)">{{ $t('button.delete') }}</q-btn>
+              <q-btn v-if="!props.row.publish" outline dense color="orange" @click="publishChart(props)">{{ $t('button.publish') }}</q-btn>
+              <q-btn v-if="!props.row.publishTime" outline dense color="negative" @click="deleteChart(props)">{{ $t('button.delete') }}</q-btn>
             </q-card-actions>
           </q-card>
         </div>
@@ -73,7 +74,7 @@
               <template v-slot:body="props">
                 <q-tr :props="props">
                   <q-td key="operate" :props="props">
-                    <q-btn size="xs" outline round color="negative" icon="remove" @click="deleteMetadata(props)"></q-btn>
+                    <q-btn v-if="!props.row.id || !chart.publishTime || props.row.createTime > chart.publishTime" size="xs" outline round color="negative" icon="remove" @click="deleteChartParams(props)"></q-btn>
                   </q-td>
                   <q-td key="field" :props="props">
                     {{ props.row.field }}
@@ -104,7 +105,7 @@
           <q-card-actions align="right">
             <q-btn type="submit" :label="$t('button.save')" outline color="primary" icon="las la-save"/>
             <q-btn v-if="chart.options && chart.data" :label="$t('button.effect')" outline color="positive" icon="visibility" @click="preview"/>
-            <q-btn v-if="chart.id" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteChart"/>
+            <q-btn v-if="chart.id && !chart.publishTime" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteChart"/>
           </q-card-actions>
         </q-form>
       </q-card>
@@ -130,7 +131,8 @@ import {
   paginationCharts,
   fetchChart,
   saveChart,
-  previewChart
+  previewChart,
+  publishChart
 } from 'src/service/bi/ChartService'
 import { fetchDictionaryItemList } from 'src/service/base/DictionaryService'
 import * as echarts from 'echarts'
@@ -185,6 +187,8 @@ export default {
         options: null,
         data: null,
         description: null,
+        publish: false,
+        publishTime: null,
         status: null,
         chartParamsList: []
       },
@@ -238,8 +242,35 @@ export default {
           options: res.data.options,
           data: res.data.data,
           description: res.data.description,
+          publish: res.data.publish,
+          publishTime: res.data.publishTime,
           status: res.data.status,
           chartParamsList: res.data.chartParamsList || []
+        })
+      })
+    },
+    publishChart (props) {
+      this.$q.dialog({
+        title: 'Confirm',
+        message: this.$t('message.confirm.publishAndCantDelete'),
+        cancel: {
+          textColor: 'primary',
+          outline: true
+        },
+        ok: {
+          textColor: 'negative',
+          outline: true
+        },
+        persistent: true
+      }).onOk(() => {
+        publishChart({id: props.key}).then(res => {
+          this.searchCharts()
+          this.editChartDialog.state = false
+          this.$q.notify({
+            message: this.$t('response.success.publish'),
+            position: 'top',
+            color: 'teal'
+          })
         })
       })
     },

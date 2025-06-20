@@ -23,3 +23,7 @@ export function fetchChart (pathVar) {
 export function previewChart (formData) {
   return axios.post('/chart/preview', formData)
 }
+
+export function publishChart (formData) {
+  return axios.post('/chart/publish', formData)
+}
