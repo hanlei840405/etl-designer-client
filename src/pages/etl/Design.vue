@@ -208,19 +208,6 @@ export default {
           }
           this.showPasteBtn = this.moveShells.length > 0 && !existed
         }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
           this.showPasteBtn = false
         })
       } else {
@@ -235,20 +222,6 @@ export default {
               }
           }
           this.showPasteBtn = this.moveShells.length > 0 && !existed
-        }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       }
     },
@@ -291,46 +264,12 @@ export default {
         this.editShellState = false
         Object.assign(this.shell, this.$options.data.call(this).shell)
         this.openShell(res.data)
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else if (err.status === 10006) {
-          this.$q.notify({
-            message: this.$t('response.error.10006', [form.name]),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     loadShell (id) {
       fetchShell(id).then(res => {
         this.editShellState = true
         this.shell = res.data
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     deleteShell (shell) {
@@ -358,20 +297,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -441,20 +366,6 @@ export default {
         })
         this.moveShells = []
         this.searchShells(this.showShellDialog.openShellId || 0, this.showShellDialog.openShellId || this.showShellDialog.projectId)
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     closeSubTab (e, id) {

@@ -241,20 +241,6 @@ export default {
           status: res.data.status,
           chartParamsList: res.data.chartParamsList || []
         })
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     newChart () {
@@ -270,20 +256,6 @@ export default {
           position: 'top',
           color: 'teal'
         })
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     deleteChart (props) {
@@ -308,20 +280,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -349,20 +307,6 @@ export default {
           this.chartDemo = echarts.init(this.$refs.chartDemo)
           this.chartDemo.setOption(res.data)
         })
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     }
   },

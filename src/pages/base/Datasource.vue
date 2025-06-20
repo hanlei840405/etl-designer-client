@@ -323,20 +323,6 @@ export default {
           color: 'teal'
         })
         this.searchDatasourceList()
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     testDatasource () {
@@ -354,25 +340,10 @@ export default {
         driver: this.datasource.driver
       }).then(res => {
         this.$q.loading.hide()
-        if (res.data) {
-          this.$q.notify({
-            message: this.$t('response.success.test'),
-            position: 'top',
-            color: 'teal'
-          })
-        } else {
-          this.$q.notify({
-            message: this.$t('response.error.test'),
-            position: 'top',
-            color: 'negative'
-          })
-        }
-      }).catch(err => {
-        this.$q.loading.hide()
         this.$q.notify({
-          message: err.data.error,
+          message: this.$t('response.success.test'),
           position: 'top',
-          color: 'negative'
+          color: 'teal'
         })
       })
     },
@@ -397,20 +368,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },

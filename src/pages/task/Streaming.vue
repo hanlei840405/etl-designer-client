@@ -195,21 +195,7 @@ export default {
           rowsNumber: res.data.total
         })
         this.table.publishes = res.data.items
-      }).catch(err => {
-      if (err.status === 10002) {
-        this.$q.notify({
-          message: this.$t('response.error.10002'),
-          position: 'top',
-          color: 'negative'
-        })
-      } else {
-        this.$q.notify({
-          message: err.data.error,
-          position: 'top',
-          color: 'negative'
-        })
-      }
-    })
+      })
     },
     dateFormat (value, format) {
       return date.formatDate(value, format || 'YYYY-MM-DD HH:mm:ss')
@@ -220,44 +206,10 @@ export default {
         if (res.data) {
           this.referenceContent = this.unzip(res.data)
         }
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
       fetchShellPublishReferences ({id: id}).then(res => {
         this.viewReferenceState = true
         this.references = res.data
-      }).catch(err => {
-        if (err.status === 10002) {
-          vm.$q.notify({
-            message: vm.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else if (err.status === 10009) {
-          vm.$q.notify({
-            message: vm.$t('response.error.10009'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     unzip (data) {
@@ -272,20 +224,6 @@ export default {
         if (res.data) {
           this.referenceContent = this.unzip(res.data)
         }
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     stop (id) {
@@ -296,20 +234,6 @@ export default {
           position: 'top',
           color: 'teal'
         })
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
   },

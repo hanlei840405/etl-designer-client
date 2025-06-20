@@ -464,20 +464,6 @@ export default {
         })
         this.selectedModel(res.data.modelId)
         this.selectedChart(res.data.chartId, true)
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     newReport () {
@@ -494,20 +480,6 @@ export default {
           position: 'top',
           color: 'teal'
         })
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     deleteReport (props) {
@@ -532,20 +504,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -559,20 +517,6 @@ export default {
           this.previewChartDemoDialog.chartDemo = echarts.init(this.$refs.chartDemo)
           this.previewChartDemoDialog.chartDemo.setOption(res.data)
         })
-      }).catch(err => {
-        if (err.status === 10002) {
-          this.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          this.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     filterModel (val, update) {
@@ -612,20 +556,6 @@ export default {
             status: res.data.status,
             metadataList: res.data.metadataList || []
           })
-        }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       }
     },
@@ -650,20 +580,6 @@ export default {
                 category: null,
                 script: null
               }
-            })
-          }
-        }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
             })
           }
         })
@@ -711,12 +627,6 @@ export default {
             this.previewDataDialog.data.push(Object.assign(ele, { index: index + 1 }))
           })
           this.previewDataDialog.loading = false
-        }).catch(() => {
-          this.$q.notify({
-            position: 'top',
-            message: this.$t('response.error.grammer'),
-            color: 'negative'
-          })
         })
       }
     },

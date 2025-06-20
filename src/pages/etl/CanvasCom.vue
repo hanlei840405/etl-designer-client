@@ -686,45 +686,15 @@ export default {
       this.logDialog.log = ''
       if (this.executing) {
         this.cancel(this.$t('message.kettle.cancelRunningEtl'))
+          this.executing = false
         stop({
           id: this.shell.id,
           payload: this.uuid
         }).then(res => {
-          this.executing = false
           this.logDialog.state = true
           this.logDialog.showProcessing = false
           this.logDialog.log = res.data.log
           this.logDialog.logData = res.data.steps
-        }).catch(err => {
-          this.executing = false
-          if (err.status === 10001) {
-            this.$q.dialog({
-              title: this.$t('message.error.default'),
-              ok: {
-                color: 'negative'
-              },
-              html: true,
-              message: this.$t('response.error.10001')
-            })
-          } else if (err.status === 10002) {
-            this.$q.dialog({
-              title: this.$t('message.error.default'),
-              ok: {
-                color: 'negative'
-              },
-              html: true,
-              message: this.$t('response.error.10002')
-            })
-          } else {
-            this.$q.dialog({
-              title: this.$t('message.error.default'),
-              ok: {
-                color: 'negative'
-              },
-              html: true,
-              message: err.data.error
-            })
-          }
         })
       } else {
         this.cancelToken = this.$axios.CancelToken
@@ -746,7 +716,7 @@ export default {
           cancelToken: new this.$axios.CancelToken(function executor (c) {
             vm.cancel = c
           })
-        }).then(res => {
+        }).then(() => {
           this.logDialog.logData = []
           this.stompClient.subscribe(this.uuid, (response) => {
             const body = JSON.parse(response.body)
@@ -762,23 +732,6 @@ export default {
         }).catch(err => {
           this.executing = false
           this.logDialog.showProcessing = false
-          let msg
-          if (err.status === 10009) {
-            this.logDialog.state = true
-            this.logDialog.log = err.data.log
-            this.logDialog.logData = err.data.steps
-          } else if (err.status === 10018) {
-            msg = this.$t('response.error.10018', [err.data])
-          } else if (err.status === 10017) {
-            msg = this.$t('response.error.10017')
-          } else {
-            msg = err.data.error
-          }
-          this.$q.notify({
-            message: msg,
-            position: 'top',
-            color: 'negative'
-          })
         })
       }
     },
@@ -845,19 +798,6 @@ export default {
           position: 'top',
           color: 'teal'
         })
-      }).catch(err => {
-        this.$q.loading.hide()
-        let msg
-        if (err.status === 10018) {
-          msg = this.$t('response.error.10018', [err.data])
-        } else {
-          msg = this.$t('response.error.10017')
-        }
-        this.$q.notify({
-          message: msg,
-          position: 'top',
-          color: 'negative'
-        })
       })
     },
     publish () {
@@ -881,20 +821,6 @@ export default {
             message: this.$t('response.success.publish'),
             position: 'top',
             color: 'teal'
-          })
-        }).catch(err => {
-          let msg
-          if (err.status === 10011) {
-            msg = this.$t('response.error.10011')
-          } else if (err.status === 10016) {
-            msg = this.$t('response.error.10016')
-          } else {
-            msg = err.data.message
-          }
-          this.$q.notify({
-            message: msg,
-            position: 'top',
-            color: 'negative'
           })
         })
       })
@@ -921,20 +847,6 @@ export default {
         fetchShellPublishContent(id).then(res => {
           if (res.data) {
             this.paint(this.unzip(res.data))
-          }
-        }).catch(err => {
-          if (err.status === 10002) {
-            this.$q.notify({
-              message: this.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            this.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
           }
         })
       })
@@ -1631,20 +1543,6 @@ export default {
     fetchShellContent(vm.shell.id).then(res => {
       if (res.data) {
         vm.paint(vm.unzip(res.data))
-      }
-    }).catch(err => {
-      if (err.status === 10002) {
-        vm.$q.notify({
-          message: vm.$t('response.error.10002'),
-          position: 'top',
-          color: 'negative'
-        })
-      } else {
-        vm.$q.notify({
-          message: err.data.error,
-          position: 'top',
-          color: 'negative'
-        })
       }
     })
   }

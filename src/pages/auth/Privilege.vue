@@ -171,20 +171,6 @@
             pageSize: 1000
           }).then((res) => {
               vm.addUserDialog.memberOption = res.data.items
-          }).catch(err => {
-            if (err.status === 10002) {
-              vm.$q.notify({
-                message: vm.$t('response.error.10002'),
-                position: 'top',
-                color: 'negative'
-              })
-            } else {
-              vm.$q.notify({
-                message: err.data.error,
-                position: 'top',
-                color: 'negative'
-              })
-            }
           })
         })
       },
@@ -224,20 +210,6 @@
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10002) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       },
       deleteUser (props) {
@@ -265,26 +237,6 @@
                 position: 'top',
                 color: 'teal'
               })
-            }).catch(err => {
-              if (err.status === 10002) {
-                vm.$q.notify({
-                  message: vm.$t('response.error.10003'),
-                  position: 'top',
-                  color: 'negative'
-                })
-              } else if (err.status === 10015) {
-                vm.$q.notify({
-                  message: this.$t('response.error.10015'),
-                  position: 'top',
-                  color: 'negative'
-                })
-              } else {
-                vm.$q.notify({
-                  message: err.data.error,
-                  position: 'top',
-                  color: 'negative'
-                })
-              }
             })
           })
         }
@@ -293,20 +245,6 @@
         const vm = this
         fetchGrantUsers(privilegeId).then((res) => {
           vm.users = res.data
-        }).catch(err => {
-          if (err.status === 10002) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10002'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       }
     },

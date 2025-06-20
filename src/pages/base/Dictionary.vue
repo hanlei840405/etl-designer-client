@@ -193,20 +193,6 @@ export default {
       fetchDictionary(props.key).then(res => {
         vm.editDictionaryDialog.state = true
         vm.dictionary = res.data
-      }).catch(err => {
-        if (err.status === 10002) {
-          vm.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     newDictionary () {
@@ -224,20 +210,6 @@ export default {
           position: 'top',
           color: 'teal'
         })
-      }).catch(err => {
-        if (err.status === 10002) {
-          vm.$q.notify({
-            message: vm.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     deleteDictionary (props) {
@@ -262,20 +234,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10003) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10003'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },

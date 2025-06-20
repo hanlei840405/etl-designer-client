@@ -207,20 +207,6 @@ export default {
       fetchUser(props.key).then(res => {
         vm.editUserDialog.state = true
         vm.user = res.data
-      }).catch(err => {
-        if (err.status === 10002) {
-          vm.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     newUser () {
@@ -237,21 +223,7 @@ export default {
           state: true,
           targetUrl: '/auth-privilege'
         }
-      }).catch(err => {
-          if (err.status === 10003) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10003'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
-        })
+      })
     },
     deleteUser (props) {
       const vm = this
@@ -275,20 +247,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10003) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10003'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -322,26 +280,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10002) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10003'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else if (err.status === 10015) {
-            vm.$q.notify({
-              message: this.$t('response.error.10015'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -350,12 +288,6 @@ export default {
       vm.resources = []
       fetchResources(userId).then(res => {
         vm.resources = res.data
-      }).catch(err => {
-        vm.$q.notify({
-          message: err.data.error,
-          position: 'top',
-          color: 'negative'
-        })
       })
     }
   },

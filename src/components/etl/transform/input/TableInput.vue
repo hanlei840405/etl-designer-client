@@ -228,12 +228,6 @@ export default {
           vm.previewDataDialog.data.push(Object.assign(ele, { index: index + 1 }))
         })
         vm.previewDataDialog.loading = false
-      }).catch(() => {
-        vm.$q.notify({
-          position: 'top',
-          message: vm.$t('response.error.grammer'),
-          color: 'negative'
-        })
       })
     },
     submitForm () {

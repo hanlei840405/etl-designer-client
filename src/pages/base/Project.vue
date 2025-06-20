@@ -246,20 +246,6 @@ export default {
       fetchProject(props.key).then(res => {
         vm.editProjectDialog.state = true
         vm.project = res.data
-      }).catch(err => {
-        if (err.status === 10002) {
-          vm.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     bindMember (props) {
@@ -286,20 +272,6 @@ export default {
         vm.successDialog = {
           state: true,
           targetUrl: '/basic-datasource?projectId=' + res.data.id
-        }
-      }).catch(err => {
-        if (err.status === 10002) {
-          vm.$q.notify({
-            message: vm.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
         }
       })
     },
@@ -329,20 +301,6 @@ export default {
           position: 'top',
           color: 'teal'
         })
-      }).catch(err => {
-        if (err.status === 10002) {
-          vm.$q.notify({
-            message: vm.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     deleteProject (props) {
@@ -367,20 +325,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10003) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10003'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -406,20 +350,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10003) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10003'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -433,20 +363,6 @@ export default {
           pageSize: 10
           }).then((res) => {
             vm.addMemberDialog.memberOption = res.data.items
-        }).catch(err => {
-          if (err.status === 10003) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10003'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -470,20 +386,6 @@ export default {
           color: 'teal'
         })
         vm.viewMembertDialog.state = false
-      }).catch(err => {
-        if (err.status === 10003) {
-          vm.$q.notify({
-            message: vm.$t('response.error.10003'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     deleteMember (props) {
@@ -508,26 +410,6 @@ export default {
             position: 'top',
             color: 'teal'
           })
-        }).catch(err => {
-          if (err.status === 10002) {
-            vm.$q.notify({
-              message: vm.$t('response.error.10003'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else if (err.status === 10015) {
-            vm.$q.notify({
-              message: this.$t('response.error.10015'),
-              position: 'top',
-              color: 'negative'
-            })
-          } else {
-            vm.$q.notify({
-              message: err.data.error,
-              position: 'top',
-              color: 'negative'
-            })
-          }
         })
       })
     },
@@ -535,20 +417,6 @@ export default {
       const vm = this
       fetchGrantUsersByResource('PROJECT', '2', id).then(res => {
         vm.members = res.data
-      }).catch(err => {
-        if (err.status === 10002) {
-          vm.$q.notify({
-            message: this.$t('response.error.10002'),
-            position: 'top',
-            color: 'negative'
-          })
-        } else {
-          vm.$q.notify({
-            message: err.data.error,
-            position: 'top',
-            color: 'negative'
-          })
-        }
       })
     },
     goProject () {
