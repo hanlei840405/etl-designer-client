@@ -9,7 +9,7 @@
           </template>
         </q-input>
         <q-btn outline :label="$t('button.create')" color="primary" @click="newProject"/>
-        <q-btn v-if="table.selected.length > 0" outline :label="$t('button.grant')" color="negative" @click="openGrant"/>
+        <q-btn v-if="table.selected.length > 0" outline color="accent" :label="$t('button.grant')" @click="openGrant"/>
       </template>
       <template v-slot:item="props">
         <div class="q-pa-xs col-xs-12 col-sm-6 col-md-3 grid-style-transition">
@@ -31,6 +31,7 @@
             <q-card-actions align="right" class="q-gutter-sm">
               <q-checkbox dense v-model="props.selected" />
               <q-btn outline dense color="primary" @click="loadProject(props)">{{ $t('button.modify') }}</q-btn>
+              <q-btn outline dense color="accent" @click="openGrant(props)" :label="$t('button.grant')"/>
               <q-btn outline dense color="positive" @click="bindMember(props)">{{ $t('button.member') }}</q-btn>
               <q-btn outline dense color="negative" @click="deleteProject(props)">{{ $t('button.delete') }}</q-btn>
               <q-btn outline dense color="warning" @click="quit(props)">{{ $t('button.quit') }}</q-btn>
@@ -231,21 +232,19 @@ export default {
   },
   methods: {
     searchProjects () {
-      const vm = this
-      vm.table.loading = true
+      this.table.loading = true
       const query = {
-        payload: vm.table.filter
+        payload: this.table.filter
       }
       fetchProjects(query).then(res => {
-        vm.table.data = res.data
+        this.table.data = res.data
         this.table.loading = false
       })
     },
     loadProject (props) {
-      const vm = this
       fetchProject(props.key).then(res => {
-        vm.editProjectDialog.state = true
-        vm.project = res.data
+        this.editProjectDialog.state = true
+        this.project = res.data
       })
     },
     bindMember (props) {
@@ -258,25 +257,28 @@ export default {
       this.editProjectDialog.state = true
       Object.assign(this.project, this.$options.data.call(this).project)
     },
-    openGrant () {
+    openGrant (props) {
+      if (props) {
+        this.table.selected = [props.row]
+      } else {
+        this.table.selected = []  
+      }
       this.addMemberDialog.state = true
       this.addMemberDialog.user = null
       this.members = []
     },
     submitForm () {
-      const vm = this
-      saveProject(vm.project).then(res => {
-        vm.searchProjects()
-        vm.editProjectDialog.state = false
-        Object.assign(this.project, vm.$options.data.call(this).project)
-        vm.successDialog = {
+      saveProject(this.project).then(res => {
+        this.searchProjects()
+        this.editProjectDialog.state = false
+        Object.assign(this.project, this.$options.data.call(this).project)
+        this.successDialog = {
           state: true,
           targetUrl: '/basic-datasource?projectId=' + res.data.id
         }
       })
     },
     grant () {
-      const vm = this
       const grantArray = []
       const userPrivileges = []
       this.members.forEach(item => {
@@ -285,7 +287,7 @@ export default {
           rw: item.rw
         })
       })
-      vm.table.selected.forEach(item => {
+      this.table.selected.forEach(item => {
         grantArray.push({
           resourceCode: item.id + '',
           resourceCategory: 'PROJECT',
@@ -295,8 +297,8 @@ export default {
       })
       grantByResource(grantArray).then(res => {
         this.members=[]
-        vm.addMemberDialog.state = false
-        vm.$q.notify({
+        this.addMemberDialog.state = false
+        this.$q.notify({
           message: this.$t('response.success.grant'),
           position: 'top',
           color: 'teal'
@@ -304,10 +306,9 @@ export default {
       })
     },
     deleteProject (props) {
-      const vm = this
-      vm.$q.dialog({
-        title: vm.$t('message.confirm.default'),
-        message: vm.$t('message.confirm.delete'),
+      this.$q.dialog({
+        title: this.$t('message.confirm.default'),
+        message: this.$t('message.confirm.delete'),
         cancel: {
           textColor: 'primary',
           outline: true
@@ -319,8 +320,8 @@ export default {
         persistent: true
       }).onOk(() => {
         deleteProject(props.key).then(() => {
-          vm.searchProjects()
-          vm.$q.notify({
+          this.searchProjects()
+          this.$q.notify({
             message: this.$t('response.success.delete'),
             position: 'top',
             color: 'teal'
@@ -329,10 +330,9 @@ export default {
       })
     },
     quit (props) {
-      const vm = this
-      vm.$q.dialog({
-        title: vm.$t('message.confirm.default'),
-        message: vm.$t('message.confirm.quit'),
+      this.$q.dialog({
+        title: this.$t('message.confirm.default'),
+        message: this.$t('message.confirm.quit'),
         cancel: {
           textColor: 'primary',
           outline: true
@@ -344,8 +344,8 @@ export default {
         persistent: true
       }).onOk(() => {
         quitProject(props.key).then(() => {
-          vm.searchProjects()
-          vm.$q.notify({
+          this.searchProjects()
+          this.$q.notify({
             message: this.$t('response.success.delete'),
             position: 'top',
             color: 'teal'
@@ -356,13 +356,12 @@ export default {
     filterManager (val, update) {
       update(() => {
         const needle = val.toLowerCase()
-        const vm = this
         fetchUsers({
           payload: needle,
           pageNo: 1,
           pageSize: 10
           }).then((res) => {
-            vm.addMemberDialog.memberOption = res.data.items
+            this.addMemberDialog.memberOption = res.data.items
         })
       })
     },
@@ -377,22 +376,20 @@ export default {
       }
     },
     assignManager (props) {
-      const vm = this
       transferProject(this.project.id, props.key).then(() => {
-        vm.searchProjects()
-        vm.$q.notify({
+        this.searchProjects()
+        this.$q.notify({
           message: this.$t('response.success.transfer'),
           position: 'top',
           color: 'teal'
         })
-        vm.viewMembertDialog.state = false
+        this.viewMemberDialog.state = false
       })
     },
     deleteMember (props) {
-      const vm = this
-      vm.$q.dialog({
-        title: vm.$t('message.confirm.default'),
-        message: vm.$t('message.confirm.delete'),
+      this.$q.dialog({
+        title: this.$t('message.confirm.default'),
+        message: this.$t('message.confirm.delete'),
         cancel: {
           textColor: 'primary',
           outline: true
@@ -403,10 +400,12 @@ export default {
         },
         persistent: true
       }).onOk(() => {
-        deleteGrantUsers('PROJECT', '2', vm.project.id, props.key).then(() => {
-          vm.fetchProjectMembers(vm.project.id)
-          vm.$q.notify({
-            message: vm.$t('response.success.delete'),
+        const userId = props.key.split('-')[0]
+        const rw = props.key.split('-')[1]
+        deleteGrantUsers('PROJECT', '2', this.project.id, userId, rw).then(() => {
+          this.fetchProjectMembers(this.project.id)
+          this.$q.notify({
+            message: this.$t('response.success.delete'),
             position: 'top',
             color: 'teal'
           })
@@ -414,9 +413,15 @@ export default {
       })
     },
     fetchProjectMembers (id) {
-      const vm = this
       fetchGrantUsersByResource('PROJECT', '2', id).then(res => {
-        vm.members = res.data
+        this.members = res.data.map(item => {
+          return {
+            id: item.id + '-' + item.rw,
+            name: item.name,
+            email: item.email,
+            rw: item.rw
+          }
+        })
       })
     },
     goProject () {
@@ -425,8 +430,7 @@ export default {
     },
   },
   mounted () {
-    const vm = this
-    vm.searchProjects()
+    this.searchProjects()
   }
 }
 </script>

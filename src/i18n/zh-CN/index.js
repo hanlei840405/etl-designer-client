@@ -43,7 +43,8 @@ export default {
     auth: {
       default: "系统管理",
       privilege: "权限管理",
-      user: "用户管理"
+      user: "用户管理",
+      apply: "权限申请",
     },
     etl: {
       default: "ETL管理",
@@ -152,7 +153,8 @@ export default {
     privilege: {
       name: "名称",
       category: "权限",
-      action: "操作"
+      description: "描述",
+      action: "操作",
     },
     resource: {
       code: "编码",

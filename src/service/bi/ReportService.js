@@ -12,6 +12,10 @@ export function saveReport (formData) {
   return axios.post('/report', formData)
 }
 
+export function publishReport (formData) {
+  return axios.post('/report/publish', formData)
+}
+
 export function deleteReport (pathVar) {
   return axios.delete('/report/' + pathVar)
 }

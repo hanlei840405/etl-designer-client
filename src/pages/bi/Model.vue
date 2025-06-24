@@ -183,7 +183,7 @@
           </q-card-section>
           <q-card-actions align="right">
             <q-btn type="submit" :label="$t('button.save')" outline color="primary" icon="las la-save"/>
-            <q-btn v-if="model.id && !model.publishTime" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteModel"/>
+            <q-btn v-if="model.id && !model.publish" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteModel"/>
           </q-card-actions>
         </q-form>
       </q-card>

@@ -105,7 +105,7 @@
           <q-card-actions align="right">
             <q-btn type="submit" :label="$t('button.save')" outline color="primary" icon="las la-save"/>
             <q-btn v-if="chart.options && chart.data" :label="$t('button.effect')" outline color="positive" icon="visibility" @click="preview"/>
-            <q-btn v-if="chart.id && !chart.publishTime" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteChart"/>
+            <q-btn v-if="chart.id && !chart.publish" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteChart"/>
           </q-card-actions>
         </q-form>
       </q-card>

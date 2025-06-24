@@ -28,8 +28,8 @@ export function fetchGrantUsers (privilegeId) {
   return axios.get('/grant/' + privilegeId)
 }
 
-export function deleteGrantUsers (pathVar1, pathVar2, pathVar3, pathVar4) {
-  return axios.delete('/grant/' + pathVar1 + '/' + pathVar2 + '/' + pathVar3 + '/' + pathVar4)
+export function deleteGrantUsers (pathVar1, pathVar2, pathVar3, pathVar4, pathVar5) {
+  return axios.delete('/grant/' + pathVar1 + '/' + pathVar2 + '/' + pathVar3 + '/' + pathVar4 + '/' + pathVar5)
 }
 
 export function deletePrivilege (pathVar1, pathVar2) {

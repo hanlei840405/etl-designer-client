@@ -56,8 +56,9 @@
             <q-separator color="primary" size="2px"/>
             <q-card-actions align="right">
               <q-btn outline dense color="primary" @click="loadReport(props)">{{ $t('button.modify') }}</q-btn>
-              <q-btn outline dense color="orange" @click="previewReportChartByGet(props)">{{ $t('button.preview') }}</q-btn>
-              <q-btn outline dense color="negative" @click="deleteReport(props)">{{ $t('button.delete') }}</q-btn>
+              <q-btn v-if="!props.row.publish" outline dense color="orange" @click="publishReport(props)">{{ $t('button.publish') }}</q-btn>
+              <q-btn outline dense color="positive" @click="previewReportChartByGet(props)">{{ $t('button.preview') }}</q-btn>
+              <q-btn v-if="!props.row.publishTime" outline dense color="negative" @click="deleteReport(props)">{{ $t('button.delete') }}</q-btn>
             </q-card-actions>
           </q-card>
         </div>
@@ -79,7 +80,7 @@
           <q-card-section class="row q-col-gutter-xs">
             <q-input class="col-12 col-md-6" outlined v-model="report.code" autofocus :label="$t('form.report.code')" hint="" :readonly="report.id !== null" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.code')]"/>
             <q-input class="col-12 col-md-6" outlined v-model="report.name" autofocus :label="$t('form.report.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.name')]"/>
-            <q-select class="col-12 col-md-6" v-model="report.modelId" autofocus outlined :options="modelOptionsCopy" use-input emit-value map-options @filter="filterModel" @input="selectedModel" :label="$t('form.report.model')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.report.model')]" hint="">
+            <q-select class="col-12 col-md-6" :readonly="report.publish" v-model="report.modelId" autofocus outlined :options="modelOptionsCopy" use-input emit-value map-options @filter="filterModel" @input="selectedModel" :label="$t('form.report.model')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.report.model')]" hint="">
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                   <q-item-section>
@@ -88,7 +89,7 @@
                 </q-item>
               </template>
             </q-select>
-            <q-select class="col-12 col-md-6" v-model="report.chartId" autofocus outlined :options="chartOptionsCopy" use-input emit-value map-options @filter="filterChart" @input="selectedChart" :label="$t('form.report.chart')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.report.chart')]" hint="">
+            <q-select class="col-12 col-md-6" :readonly="report.publish" v-model="report.chartId" autofocus outlined :options="chartOptionsCopy" use-input emit-value map-options @filter="filterChart" @input="selectedChart" :label="$t('form.report.chart')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.report.chart')]" hint="">
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                   <q-item-section>
@@ -159,8 +160,8 @@
           </q-card-section>
           <q-card-actions align="right">
             <q-btn type="submit" :label="$t('button.save')" outline color="primary" icon="las la-save"/>
-            <q-btn  v-if="report.reportChartParamsList.length > 0" :label="$t('button.preview')" outline color="orange" icon="visibility" @click="previewReportChartByPost"/>
-            <q-btn v-if="report.id" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteReport"/>
+            <q-btn v-if="report.reportChartParamsList.length > 0" :label="$t('button.preview')" outline color="positive" icon="visibility" @click="previewReportChartByPost"/>
+            <q-btn v-if="report.id && !report.publish" :label="$t('button.delete')" outline color="negative" icon="las la-trash" @click="deleteReport"/>
           </q-card-actions>
         </q-form>
       </q-card>
@@ -232,6 +233,7 @@ import {
   paginationReports,
   fetchReport,
   saveReport,
+  publishReport,
   paintReportByGet,
   paintReportByPost
 } from 'src/service/bi/ReportService'
@@ -284,11 +286,13 @@ export default {
         id: null,
         code: null,
         name: null,
-        description: null,
-        status: null,
         projectId: null,
         chartId: null,
         modelId: null,
+        publish: false,
+        publishTime: null,
+        description: null,
+        status: null,
         reportChartParamsList: []
       },
       previewChartDemoDialog: {
@@ -455,15 +459,42 @@ export default {
           id: res.data.id,
           code: res.data.code,
           name: res.data.name,
-          description: res.data.description,
           projectId: res.data.projectId,
           modelId: res.data.modelId,
           chartId: res.data.chartId,
+          publish: res.data.publish,
+          publishTime: res.data.publishTime,
+          description: res.data.description,
           status: res.data.status,
           reportChartParamsList: res.data.reportChartParamsList || []
         })
         this.selectedModel(res.data.modelId)
         this.selectedChart(res.data.chartId, true)
+      })
+    },
+    publishReport (props) {
+      this.$q.dialog({
+        title: 'Confirm',
+        message: this.$t('message.confirm.publishAndCantDelete'),
+        cancel: {
+          textColor: 'primary',
+          outline: true
+        },
+        ok: {
+          textColor: 'negative',
+          outline: true
+        },
+        persistent: true
+      }).onOk(() => {
+        publishReport({id: props.key}).then(res => {
+          this.searchReports()
+          this.editReportDialog.state = false
+          this.$q.notify({
+            message: this.$t('response.success.publish'),
+            position: 'top',
+            color: 'teal'
+          })
+        })
       })
     },
     newReport () {

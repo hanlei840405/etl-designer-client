@@ -1,6 +1,7 @@
 <template>
   <div>
-    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :no-data-label="$t('table.empty')" :rows-per-page-options="[0]">
+    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :filter="table.filter" @request="searchftpPage" 
+    :no-data-label="$t('table.empty')" :rows-per-page-options="[18,36,60]" :pagination.sync="table.pagination">
       <template v-slot:top-left>
         <q-select
           v-model="project"
@@ -109,7 +110,7 @@
 
 <script>
 import { fetchProjects } from 'src/service/base/ProjectService'
-import { fetchFtp, fetchFtpList, saveFtp, deleteFtp, testFtp } from 'src/service/base/FtpService'
+import { fetchFtp, paginationFtpList, saveFtp, deleteFtp, testFtp } from 'src/service/base/FtpService'
 import { fetchDictionaryItemList } from 'src/service/base/DictionaryService'
 
 export default {
@@ -192,21 +193,25 @@ export default {
     },
     selectedProject (val) {
       if (val) {
-        fetchFtpList({
-          projectId: val.id
-        }).then(res => {
-          this.table.data = res.data
-        })
+        this.searchftpPage()
       } else {
         this.table.data = []
       }
     },
-    searchftpList () {
-      fetchFtpList({
-        projectId: this.project.id
-      }).then(res => {
-        this.editFtpDialog.state = false
-        this.table.data = res.data
+    searchftpPage () {
+      this.table.loading = true
+      const query = {
+        projectId: this.project.id,
+        payload: this.table.filter,
+        pageNo: this.table.pagination.page,
+        pageSize: this.table.pagination.rowsPerPage
+      }
+      paginationFtpList(query).then(res => {
+        this.table.data = res.data.items
+        this.table.pagination = Object.assign(this.table.pagination, {
+          rowsNumber: res.data.total
+        })
+        this.table.loading = false
       })
     },
     loadFtp (props) {
@@ -241,12 +246,13 @@ export default {
         projectId: this.project.id
       })
       saveFtp(submitForm).then(res => {
+        this.searchftpPage()
+        this.editFtpDialog.state = false
         this.$q.notify({
           message: this.$t('response.success.save'),
           position: 'top',
           color: 'teal'
         })
-        this.searchftpList()
       })
     },
     testftp () {
@@ -290,7 +296,10 @@ export default {
         persistent: true
       }).onOk(() => {
         deleteFtp(props.key || this.ftp.id).then(() => {
-          this.searchftpList()
+          this.searchftpPage()
+          if (this.editFtpDialog.state) {
+            this.editFtpDialog.state = false
+          }
           this.$q.notify({
             message: this.$t('response.success.delete'),
             position: 'top',

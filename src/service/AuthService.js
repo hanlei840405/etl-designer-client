@@ -32,9 +32,6 @@ export function lockUser (id) {
 export function deleteUser (id) {
   return axios.delete('/user/' + id)
 }
-export function fetchAllPrivileges () {
-  return axios.get('/privileges')
-}
 export function fetchGrantedPrivileges (id) {
   return axios.get('/privileges/' + id)
 }

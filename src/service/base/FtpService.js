@@ -4,6 +4,10 @@ export function fetchFtpList (formData) {
   return axios.post('/ftpList', formData)
 }
 
+export function paginationFtpList (formData) {
+  return axios.post('/ftpPage', formData)
+}
+
 export function saveFtp (formData) {
   return axios.post('/ftp', formData)
 }

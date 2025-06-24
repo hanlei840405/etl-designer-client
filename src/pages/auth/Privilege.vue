@@ -108,8 +108,10 @@
               field: 'category',
               align: 'left'
             }, {
-              name: 'action',
-              label: this.$t('table.privilege.action')
+              name: 'description',
+              label: this.$t('table.privilege.description'),
+              field: 'description',
+              align: 'left'
             }
           ],
           selected: []

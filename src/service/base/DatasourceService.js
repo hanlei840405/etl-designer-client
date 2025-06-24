@@ -4,6 +4,10 @@ export function fetchDatasourceList (formData) {
   return axios.post('/datasourceList', formData)
 }
 
+export function paginationDatasourceList (formData) {
+  return axios.post('/datasourcePage', formData)
+}
+
 export function saveDatasource (formData) {
   return axios.post('/datasource', formData)
 }

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :no-data-label="$t('table.empty')" :rows-per-page-options="[0]">
+    <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :filter="table.filter" @request="searchDatasourceList" 
+    :no-data-label="$t('table.empty')" :rows-per-page-options="[18,36,60]" :pagination.sync="table.pagination">
       <template v-slot:top-left>
         <q-select
           v-model="project"
@@ -135,7 +136,7 @@
 
 <script>
 import { fetchProjects } from 'src/service/base/ProjectService'
-import { fetchDatasource, fetchDatasourceList, saveDatasource, deleteDatasource, testDatasource } from 'src/service/base/DatasourceService'
+import { fetchDatasource, paginationDatasourceList, saveDatasource, deleteDatasource, testDatasource } from 'src/service/base/DatasourceService'
 import { fetchDictionaryItemList } from 'src/service/base/DictionaryService'
 
 export default {
@@ -255,21 +256,25 @@ export default {
     },
     selectedProject (val) {
       if (val) {
-        fetchDatasourceList({
-          projectId: val.id
-        }).then(res => {
-          this.table.data = res.data
-        })
+        this.searchDatasourceList()
       } else {
         this.table.data = []
       }
     },
     searchDatasourceList () {
-      fetchDatasourceList({
-        projectId: this.project.id
-      }).then(res => {
-        this.editDatasourceDialog.state = false
-        this.table.data = res.data
+      this.table.loading = true
+      const query = {
+        projectId: this.project.id,
+        payload: this.table.filter,
+        pageNo: this.table.pagination.page,
+        pageSize: this.table.pagination.rowsPerPage
+      }
+      paginationDatasourceList(query).then(res => {
+        this.table.data = res.data.items
+        this.table.pagination = Object.assign(this.table.pagination, {
+          rowsNumber: res.data.total
+        })
+        this.table.loading = false
       })
     },
     loadDatasource (props) {
@@ -317,12 +322,13 @@ export default {
       })
       submitForm.parameter = JSON.stringify(this.datasource.parameter)
       saveDatasource(submitForm).then(res => {
+        this.searchDatasourceList()
+        this.editDatasourceDialog.state = false
         this.$q.notify({
           message: this.$t('response.success.save'),
           position: 'top',
           color: 'teal'
         })
-        this.searchDatasourceList()
       })
     },
     testDatasource () {
@@ -363,6 +369,9 @@ export default {
       }).onOk(() => {
         deleteDatasource(props.key || this.datasource.id).then(() => {
           this.searchDatasourceList()
+          if (this.editDatasourceDialog.state) {
+            this.editDatasourceDialog.state = false
+          }
           this.$q.notify({
             message: this.$t('response.success.delete'),
             position: 'top',

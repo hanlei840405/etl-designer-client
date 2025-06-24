@@ -245,6 +245,12 @@ export default {
         icon: 'lab la-centos',
         children: [
           {
+            id: 'auth-apply',
+            name: this.$t('menu.auth.apply'),
+            to: '/auth-apply',
+            icon: 'las la-key'
+          },
+          {
             id: 'auth-privilege',
             name: this.$t('menu.auth.privilege'),
             to: '/auth-privilege',
