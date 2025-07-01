@@ -20,6 +20,10 @@
           <q-chip clickable @click="$i18n.locale = 'zh-cn'" color="primary" text-color="white">{{ $t('global.zh') }}</q-chip>
         </div>
         <div>
+          <q-btn
+            flat
+            icon="las la-envelope"
+            aria-label="Notifications"><q-badge v-show="$q.sessionStorage.getItem('notice') || showNoticeBadge" rounded floating color="red"/></q-btn>
           <q-btn-dropdown auto-close stretch flat size="md" :label="me.name" no-caps>
           <q-list dense  separator>
             <q-item clickable v-ripple>
@@ -28,14 +32,6 @@
               </q-item-section>
               <q-item-section>
                 {{ $t('mainLayout.document') }}
-              </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-avatar icon="las la-envelope" />
-              </q-item-section>
-              <q-item-section>
-                {{ $t('mainLayout.notice') }}
               </q-item-section>
             </q-item>
             <q-item clickable v-ripple>
@@ -150,6 +146,9 @@
 </style>
 <script>
 import { me, changePwd } from 'src/service/auth/AuthService'
+import Vue from 'vue'
+import SockJS from 'sockjs-client'
+import Stomp from 'stompjs'
 
 export default {
   name: 'MainLayout',
@@ -163,6 +162,8 @@ export default {
         username: ''
       },
       tabs: [],
+      timer: null,
+      showNoticeBadge: false
     }
   },
   methods: {
@@ -201,7 +202,42 @@ export default {
         })
       })
       this.addTabsAndRoute(null, id, config.url, label)
-    }
+    },
+    connectSocketServer () {
+      const fn = () => {
+        if (!this.$stompClient) {
+          Vue.prototype.$stompClient = Stomp.over(new SockJS(process.env.API + '/socket'))
+        }
+        if (!this.$stompClient.connected) {
+          if (this.timer) {
+            this.$q.notify({
+              message: this.$t('message.reconnectServer'),
+              position: 'top',
+              color: 'negative'
+            })
+          }
+          const _this = this
+          this.$stompClient.connect({}, () => {
+            _this.$q.notify({
+              message: _this.$t('message.connectedMessageServer'),
+              position: 'top',
+              color: 'teal'
+            })
+            _this.$stompClient.subscribe('/user/' + _this.me.username + '/message', (response) => {
+              const body = JSON.parse(response.body)
+              const type = response.headers['type']
+              const noticeStorage = _this.$q.sessionStorage.getItem('notice') || {}
+              const typeNoticeStorage = noticeStorage[type] || []
+              typeNoticeStorage.push(body)
+              _this.$q.sessionStorage.set('notice', noticeStorage)
+              _this.showNoticeBadge = true
+            })
+          })
+        }
+      }
+      fn()
+      this.timer = setInterval(() => fn(), 5000)
+    },
   },
   mounted () {
     this.$i18n.locale = this.$q.lang.getLocale()
@@ -349,6 +385,8 @@ export default {
         tenant: '',
         username: ''
       }, res.data)
+      // 监听后台推送的消息通知
+      this.connectSocketServer()
     })
     let id = ''
     let label = ''

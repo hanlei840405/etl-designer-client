@@ -232,8 +232,6 @@ import { fetchShellContent, saveShellContent, publishShell, fetchShellPublishes,
 import { execute, stop } from 'src/service/kettle/DesignService'
 import { date, uid } from 'quasar'
 import pako from 'pako'
-import SockJS from 'sockjs-client'
-import Stomp from 'stompjs'
 const hasErrorPortCompArray = ['TableOutputMeta', 'InsertUpdateMeta', 'UpdateMeta', 'DeleteMeta', 'DatabaseLookupMeta', 'DatabaseJoinMeta', 'JsonInputMeta', 'ElasticSearchBulkMeta', 'JavaScriptMeta', 'UserDefinedJavaClassMeta', 'ExecSQLMeta', 'RestMeta', 'MailMeta', 'FieldSplitterMeta', 'StringCutMeta', 'ReplaceStringMeta', 'SetValueFieldMeta']
 // const hasCaseCompArray = ['SwitchCaseMeta']
 const hasCaseCompArray = []
@@ -324,8 +322,6 @@ export default {
   },
   data () {
     return {
-      socket: null,
-      stompClient: null,
       graph: null,
       clickFn: null,
       removeFn: null,
@@ -467,7 +463,6 @@ export default {
       },
       uuid: null,
       cancel: null,
-      timer: null,
     }
   },
   methods: {
@@ -718,7 +713,7 @@ export default {
           })
         }).then(() => {
           this.logDialog.logData = []
-          this.stompClient.subscribe(this.uuid, (response) => {
+          this.$stompClient.subscribe(this.uuid, (response) => {
             const body = JSON.parse(response.body)
             if (body.running) {
               this.logDialog.log += body.log + "\n"
@@ -729,7 +724,7 @@ export default {
               this.logDialog.showProcessing = false
             }
           })
-        }).catch(err => {
+        }).catch(() => {
           this.executing = false
           this.logDialog.showProcessing = false
         })
@@ -914,31 +909,6 @@ export default {
     },
     zip (text) {
       return btoa(pako.gzip(text, { to: 'string' }))
-    },
-    connectSocketServer () {
-      const vm = this
-      const fn = () => {
-        if (!vm.stompClient || !vm.stompClient.connected) {
-          if (vm.timer) {
-            vm.$q.notify({
-              message: this.$t('message.reconnectServer'),
-              position: 'top',
-              color: 'negative'
-            })
-          }
-          vm.socket = new SockJS(process.env.API + '/socket')
-          vm.stompClient = Stomp.over(vm.socket)
-          vm.stompClient.connect({}, () => {
-            vm.$q.notify({
-              message: this.$t('message.connectedServer'),
-              position: 'top',
-              color: 'teal'
-            })
-          })
-        }
-      }
-      fn()
-      vm.timer = setInterval(() => fn(), 5000)
     },
     dateFormat (value) {
       return date.formatDate(value, 'YYYY-MM-DD HH:mm:ss')
@@ -1539,7 +1509,6 @@ export default {
     rubberband.setEnabled(true)
     const MxUndoManager = mxgraph.mxUndoManager
     this.undoMng = new MxUndoManager()
-    vm.connectSocketServer()
     fetchShellContent(vm.shell.id).then(res => {
       if (res.data) {
         vm.paint(vm.unzip(res.data))

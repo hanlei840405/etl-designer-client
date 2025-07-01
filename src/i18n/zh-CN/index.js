@@ -226,6 +226,7 @@ export default {
     noProject: "请先创建工程数据后再编辑脚本",
     noDatasourceSelected: "请先选择数据源",
     connectedServer: "与服务器建立连接",
+    connectedMessageServer: "与后台消息服务器建立连接",
     reconnectServer: "尝试与服务器重新建立连接",
     noComponentSelected: "未选择任何组件"
   },

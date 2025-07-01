@@ -15,6 +15,7 @@ Vue.use(VueRouter)
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
+
 const originalPush = VueRouter.prototype.push
 const originalReplace = VueRouter.prototype.replace
 VueRouter.prototype.push = function push(location, onResolve, onReject) {

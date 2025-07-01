@@ -25,7 +25,6 @@ function (error) {
   if (Loading.isActive) {
     Loading.hide()
   }
-  debugger
   if (error.response) {
     if (error.response.status === 401) {
       Notify.create({
