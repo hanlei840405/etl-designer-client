@@ -33,7 +33,10 @@ export function deleteUser (id) {
   return axios.delete('/user/' + id)
 }
 export function fetchGrantedPrivileges (id) {
-  return axios.get('/privileges/' + id)
+  return axios.get('/privileges/user/' + id)
+}
+export function fetchPrivilegesByResourceId (id) {
+  return axios.get('/privileges/resource/' + id)
 }
 export function grantPrivileges (form) {
   return axios.post('/grant', form)

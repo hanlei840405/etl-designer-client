@@ -149,7 +149,7 @@
   font-size: 13px
 </style>
 <script>
-import { me, changePwd } from '../service/AuthService'
+import { me, changePwd } from 'src/service/auth/AuthService'
 
 export default {
   name: 'MainLayout',
@@ -245,9 +245,9 @@ export default {
         icon: 'lab la-centos',
         children: [
           {
-            id: 'auth-apply',
-            name: this.$t('menu.auth.apply'),
-            to: '/auth-apply',
+            id: 'auth-application',
+            name: this.$t('menu.auth.application'),
+            to: '/auth-application',
             icon: 'las la-key'
           },
           {

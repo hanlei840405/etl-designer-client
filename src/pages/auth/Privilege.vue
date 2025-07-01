@@ -2,14 +2,12 @@
     <div>
       <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" :filter="table.filter" @request="searchPrivileges"
                :no-data-label="$t('table.empty')" :rows-per-page-options="[18,36,60]" :pagination.sync="table.pagination" selection="multiple" :selected.sync="table.selected">
-        <template v-slot:top-left>
+        <template v-slot:top-right>
           <q-input borderless debounce="300" v-model="table.filter" placeholder="Search">
             <template v-slot:append>
               <q-icon name="las la-search" color="primary"/>
             </template>
           </q-input>
-        </template>
-        <template v-slot:top-right>
           <q-btn v-if="table.selected.length > 0" outline :label="$t('button.grant')" color="negative" @click="(e) => openGrantDialog(e, false)"/>
         </template>
         <template v-slot:item="props">

@@ -40,10 +40,9 @@ const routes = [
         }
       },
       {
-        path: '/auth-apply',
-        component: () => import('pages/auth/Privilege.vue'),
+        path: '/auth-application',
+        component: () => import('pages/auth/Application.vue'),
         meta: {
-          authorities: ['APPLY', 'ROOT']
         }
       },
       {

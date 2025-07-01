@@ -150,6 +150,12 @@ function (error) {
         position: 'top',
         color: 'negative'
       })
+    } else if (error.response.status === 10019) {
+      Notify.create({
+        message: i18n.t('response.error.10019'),
+        position: 'top',
+        color: 'negative'
+      })
     } else if (error.response.data) {
       Notify.create({
         message: error.response.data.error,

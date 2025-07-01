@@ -57,7 +57,7 @@
 
 <script>
 import { Cookies } from 'quasar'
-import { login } from '../service/AuthService'
+import { login } from 'src/service/auth/AuthService'
 export default {
   name: 'Login',
   data () {

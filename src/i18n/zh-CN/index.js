@@ -1,8 +1,5 @@
 // This is just an example,
 // so you can safely delete all default props below
-
-import { server } from "websocket";
-
 export default {
   failed: "操作失败",
   success: "操作成功",
@@ -44,7 +41,7 @@ export default {
       default: "系统管理",
       privilege: "权限管理",
       user: "用户管理",
-      apply: "权限申请",
+      application: "权限申请",
     },
     etl: {
       default: "ETL管理",
@@ -115,7 +112,10 @@ export default {
     toolTipCloseDisableAfterSave: "初次打开页面时，需要点击保存按钮关闭页面",
     generateSql: "生成SQL",
     effect: "效果",
-    showOptions: "查看/收起配置"
+    showOptions: "查看/收起配置",
+    apply: "申请",
+    audit: "审核",
+    reject: "拒绝",
   },
   table: {
     empty: "无数据",
@@ -181,6 +181,13 @@ export default {
       code: "编码",
       description: "描述"
     },
+    application: {
+      privilegeName: "权限名称",
+      privilegeCategory: "权限类型",
+      reason: "申请原因",
+      expireDate: "到期时间",
+      operate: "操作",
+    }
   },
   message: {
     confirm: {
@@ -193,6 +200,8 @@ export default {
       deploy: "确认部署?",
       executeDdl: "确认执行DDL语句?",
       publishAndCantDelete: "确认发布?发布后将无法删除",
+      audit: "确认通过申请?",
+      reject: "确认驳回申请?",
     },
     loading: {
       save: "正在保存"
@@ -1820,6 +1829,16 @@ export default {
       columnName: "字典项键",
       columnValue: "字典项值",
       columnDescription: "描述",
+    },
+    application: {
+      default: "应用",
+      tabApply: "申请",
+      tabAudit: "审核",
+      resource: "资源",
+      expireDate: "失效日期",
+      privilege: "权限",
+      reason: "申请理由",
+      apply: "申请",
     }
   },
   response: {
@@ -1832,11 +1851,11 @@ export default {
       10003: "删除前请指定该数据的拥有者",
       10004: "您的账号被禁用",
       10005: "您的登录信息无效",
-      10006: "该【{0}】已被使用",
+      10006: "该【{0}】数据已经存在，请勿重复创建",
       10007: "数据库连接测试失败,请检查连接信息",
       10008: "SQL语法错误或存在特殊字符等,请仔细检查",
       10009: "任务脚本语法异常,请检查脚本",
-      10010: "数据异常,请检查脚本",
+      10010: "数据异常,请检查表单数据是否按照要求全部填写",
       10011: "该版本所依赖的脚本有未发布的，请将依赖的脚本全部发布",
       10012: "添加调度异常，请联系管理员",
       10013: "连接失败",
@@ -1845,6 +1864,7 @@ export default {
       10016: "脚本发布失败，文件服务器未发现需要发布的脚本文件，请先点击保存后再尝试发布",
       10017: "脚本解析失败,请检查参数是否正确",
       10018: "解析【{0}】组件时出现异常，请检查组件配置",
+      10019: "脚本已发布，禁止删除",
     },
     success: {
       save: "保存成功",
@@ -1862,6 +1882,8 @@ export default {
       copy: "复制成功",
       connect: "连接成功，集群名称: {0}，分片数量：{1}",
       stop: "下线成功",
+      audit: "审核完成",
+      reject: "驳回申请",
     }
   },
   etl: {

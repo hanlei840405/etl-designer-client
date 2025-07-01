@@ -1,5 +1,9 @@
 import axios from 'axios'
 
+export function fetchResources (formData) {
+  return axios.post('/resources', formData)
+}
+
 export function fetchPrivileges (formData) {
   return axios.post('/privileges', formData)
 }
