@@ -40,21 +40,28 @@
       </q-tab-panel>
     </q-tab-panels>
     <q-dialog v-model="applicationDialog.state">
-      <q-card style="width: 800px; max-width: 80vw;">
+      <q-card style="width: 500px; max-width: 50vw;">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">{{ $t('form.application.apply') }}</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-form @submit="submitForm">
-          <q-table :data="applicationDialog.privilegeTable.data" :loading="applicationDialog.privilegeTable.loading" :columns="applicationDialog.privilegeTable.columns" row-key="id" :no-data-label="$t('table.empty')" hide-bottom :rows-per-page-options="[0]" selection="single" :selected.sync="applicationDialog.privilegeTable.selected">
-            <template v-slot:top>
-              <q-select style="width: 100%;" v-model="applicationDialog.resourceId" autofocus outlined clearable :options="applicationDialog.resourceOptionsCopy" use-input emit-value map-options @filter="filterResource" @input="selectedResource" @clear="deleteSelectedResource" :label="$t('form.application.resource')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.application.resource')]" hint="">
-              </q-select>
-            </template>
-          </q-table>
-          <q-card-section class="q-col-gutter-xs">
-            <q-input outlined v-model="applicationDialog.application.expireDate" :label="$t('form.application.expireDate')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.application.expireDate')]">
+          <q-card-section class="row q-col-gutter-xs">
+            <q-select class="col-12" v-model="applicationDialog.resourceId" autofocus outlined clearable :options="applicationDialog.resourceOptionsCopy" use-input emit-value map-options @filter="filterResource" @input="selectedResource" @clear="deleteSelectedResource" :label="$t('form.application.resource')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.application.resource')]" hint=""/>
+            <q-select class="col-12" v-model="applicationDialog.application.privilegeId" autofocus outlined clearable :options="applicationDialog.privilegeOptions" use-input emit-value map-options :label="$t('form.application.privilege')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.application.privilege')]" hint="">
+              <template v-slot:option="scope">
+                <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.label }}</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-badge :label="scope.opt.rw" />
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-input class="col-12" outlined v-model="applicationDialog.application.expireDate" :label="$t('form.application.expireDate')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.application.expireDate')]">
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
@@ -67,7 +74,7 @@
                 </q-icon>
               </template>
             </q-input>
-            <q-input type="textarea" outlined v-model="applicationDialog.application.reason" :label="$t('form.application.reason')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.application.reason')]"/>
+            <q-input class="col-12" type="textarea" outlined v-model="applicationDialog.application.reason" :label="$t('form.application.reason')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.application.reason')]"/>
           </q-card-section>
           <q-card-actions align="right">
             <q-btn type="submit" :label="$t('button.apply')" outline color="primary" icon="las la-save"/>
@@ -166,6 +173,7 @@ import { date } from 'quasar'
           resourceId: null,
           resourceOptions: [],
           resourceOptionsCopy: [],
+          privilegeOptions: [],
           application: {
             privilegeId: null,
             reason: null,
@@ -231,14 +239,8 @@ import { date } from 'quasar'
         return text
       },
       newApplication () {
+        Object.assign(this.applicationDialog, this.$options.data.call(this).applicationDialog)
         this.applicationDialog.state = true
-        this.applicationDialog.resourceId = null
-        this.applicationDialog.resourceOptions = []
-        this.applicationDialog.resourceOptionsCopy = []
-        this.applicationDialog.application.reason = null
-        this.applicationDialog.application.expireDate = null
-        this.applicationDialog.privilegeTable.data = []
-        this.applicationDialog.privilegeTable.selected = []
       },
       deleteApplication (id) {
         this.$q.dialog({
@@ -339,28 +341,25 @@ import { date } from 'quasar'
       selectedResource (val) {
         if (val) {
           fetchPrivilegesByResourceId(val).then(res => {
-            this.applicationDialog.privilegeTable.data = res.data
+            this.applicationDialog.privilegeOptions = res.data.map(item => {
+              return {
+                label: item.name,
+                rw: item.category,
+                value: item.id
+              }
+            })
           })
         }
       },
       deleteSelectedResource () {
-        this.applicationDialog.privilegeTable.data = []
+        this.applicationDialog.privilegeOptions = []
+        this.applicationDialog.application.privilegeId = null
       },
       submitForm () {
-        if (!this.applicationDialog.privilegeTable.selected || this.applicationDialog.privilegeTable.selected.length === 0) {
-          this.$q.notify({
-            message: this.$t('validation.notEmpty') + this.$t('form.application.privilege'),
-            position: 'top',
-            color: 'negative'
-          })
-          return
-        }
-        const formData = Object.assign({}, {
-          privilegeId: this.applicationDialog.privilegeTable.selected[0].id,
-          reason: this.applicationDialog.application.reason,
+        this.applicationDialog.application = Object.assign({}, this.applicationDialog.application, {
           expireDate: new Date(this.applicationDialog.application.expireDate)
         })
-        apply(formData).then(() => {
+        apply(this.applicationDialog.application).then(() => {
           this.searchApplications()
           this.applicationDialog.state = false
           this.$q.notify({

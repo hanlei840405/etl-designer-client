@@ -268,7 +268,6 @@ export default {
     }
   },
   mounted () {
-    debugger
     const vm = this
     const previousSteps = vm.$store.getters['etl/getPreNodes']
     vm.sourceFields = []

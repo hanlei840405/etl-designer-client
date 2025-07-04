@@ -162,7 +162,6 @@ export default {
       })
     },
     appendKey() {
-      debugger
       const copyFields = [...this.fields]
       this.form.keys.forEach(item => {
         copyFields.splice(copyFields.findIndex(i => i === item.field), 1)

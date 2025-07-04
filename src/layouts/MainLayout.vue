@@ -20,10 +20,11 @@
           <q-chip clickable @click="$i18n.locale = 'zh-cn'" color="primary" text-color="white">{{ $t('global.zh') }}</q-chip>
         </div>
         <div>
-          <q-btn
-            flat
-            icon="las la-envelope"
-            aria-label="Notifications"><q-badge v-show="$q.sessionStorage.getItem('notice') || showNoticeBadge" rounded floating color="red"/></q-btn>
+          <q-btn flat aria-label="Notifications" @click="showNoticeDialog">
+            <q-icon name="las la-bell" size="20px">
+              <q-badge v-show="Object.keys($q.sessionStorage.getItem('notice')).length > 0 || showNoticeBadge" rounded floating color="red"/>
+            </q-icon>
+          </q-btn>
           <q-btn-dropdown auto-close stretch flat size="md" :label="me.name" no-caps>
           <q-list dense  separator>
             <q-item clickable v-ripple>
@@ -129,10 +130,75 @@
       </keep-alive>
       <!-- <router-view/> -->
     </q-page-container>
+    
+    <q-dialog v-model="noticeDialog.state">
+      <q-card style="width: 550px; max-width: 40vw;">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ $t('home.notice') }}</div>
+          <q-space/>
+          <q-btn icon="close" flat round dense v-close-popup/>
+        </q-card-section>
+        <q-card-section>
+          <q-tabs v-model="noticeDialog.tab" active-color="primary" align="left" narrow-indicator>
+            <q-tab name="audit" :label="$t('home.tabAudit')"/>
+            <q-tab name="taskCompleted" :label="$t('home.tabTaskCompleted')"/>
+            <q-tab name="taskFailure" :label="$t('home.tabTaskFailure')"/>
+          </q-tabs>
+            <q-tab-panels v-model="noticeDialog.tab" animated>
+              <q-tab-panel name="audit">
+                <q-table class="home-notice-virtscroll-table" :data="noticeDialog.applyTable.data.slice().reverse()" :loading="noticeDialog.applyTable.loading" :columns="noticeDialog.applyTable.columns" row-key="id"
+                  :no-data-label="$t('table.empty')" :rows-per-page-options="[0]" virtual-scroll :virtual-scroll-sticky-size-start="5">
+                  <template v-slot:body="props">
+                    <q-tr :props="props" :key="props.row.key">
+                      <q-td><a href="#" @click="removeSessionStorage(props.row.key)">{{ props.row.creator }}</a></q-td>
+                      <q-td>{{ dateFormat(props.row.createTime) }}</q-td>
+                    </q-tr>
+                  </template>
+                </q-table>
+              </q-tab-panel>
+              <q-tab-panel name="taskCompleted">
+                <q-table class="home-notice-virtscroll-table" :data="noticeDialog.taskComplatedTable.data.slice().reverse()" :loading="noticeDialog.taskComplatedTable.loading" :columns="noticeDialog.taskComplatedTable.columns" row-key="taskHistoryId"
+                  :no-data-label="$t('table.empty')" :rows-per-page-options="[0]" virtual-scroll :virtual-scroll-sticky-size-start="5">
+                </q-table>
+                <q-btn class="q-mt-md" color="primary" :label="$t('button.clearRead')" @click="removeTaskComplateSessionStorage"/>
+              </q-tab-panel>
+              <q-tab-panel name="taskFailure">
+                <q-table class="home-notice-virtscroll-table" :data="noticeDialog.taskFailureTable.data.slice().reverse()" :loading="noticeDialog.taskFailureTable.loading" :columns="noticeDialog.taskFailureTable.columns" row-key="taskHistoryId"
+                  :no-data-label="$t('table.empty')" :rows-per-page-options="[0]" virtual-scroll :virtual-scroll-sticky-size-start="5">
+                </q-table>
+                <q-btn class="q-mt-md" color="primary" :label="$t('button.clearRead')" @click="removeTaskFailureSessionStorage"/>
+              </q-tab-panel>
+            </q-tab-panels>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
 <style lang="sass">
+.home-notice-virtscroll-table
+  /* height or max-height is important */
+  height: 410px
+
+  .q-table__top,
+  .q-table__bottom,
+  thead tr:first-child th /* bg color is important for th; just specify one */
+    background-color: #fff
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  /* this will be the loading indicator */
+  thead tr:last-child th
+    /* height of all previous header rows */
+    top: 48px
+  thead tr:first-child th
+    top: 0
+
+  /* prevent scrolling behind sticky top row on focus */
+  tbody
+    /* height of all previous header rows */
+    scroll-margin-top: 48px
 .menu-link
   border-radius: 0 10px 10px 0
   font-size: 13px
@@ -149,6 +215,7 @@ import { me, changePwd } from 'src/service/auth/AuthService'
 import Vue from 'vue'
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
+import { date } from 'quasar'
 
 export default {
   name: 'MainLayout',
@@ -163,10 +230,44 @@ export default {
       },
       tabs: [],
       timer: null,
-      showNoticeBadge: false
+      showNoticeBadge: false,
+      noticeDialog: {
+        state: false,
+        tab: 'audit',
+        applyTable: {
+          loading: false,
+          data: [],
+          columns: [
+            { name: 'creator', label: this.$t('home.table.application.creator'), align: 'left', field: 'creator' },
+            { name: 'createTime', label: this.$t('home.table.application.createTime'), align: 'left', field: 'createTime' }
+          ]
+        },
+        taskComplatedTable: {
+          loading: false,
+          data: [],
+          columns: [
+            { name: 'name', label: this.$t('home.table.complete.name'), align: 'left', field: 'name' },
+            { name: 'fireTime', label: this.$t('home.table.complete.fireTime'), align: 'left', field: 'fireTime' }
+          ]
+        },
+        taskFailureTable: {
+          loading: false,
+          data: [],
+          columns: [
+            { name: 'name', label: this.$t('home.table.failure.name'), align: 'left', field: 'name' },
+            { name: 'fireTime', label: this.$t('home.table.failure.fireTime'), align: 'left', field: 'fireTime' }
+          ]
+        }
+      }
     }
   },
   methods: {
+    addTabs (id, url, label) {
+      const index = this.tabs.findIndex((item) =>item.id === id)
+      if (index < 0) {
+        this.tabs.push({id: id, url: url, label: label})
+      }
+    },
     addTabsAndRoute (evt, id, url, label) {
       const index = this.tabs.findIndex((item) =>item.id === id)
       if (index < 0) {
@@ -229,6 +330,7 @@ export default {
               const noticeStorage = _this.$q.sessionStorage.getItem('notice') || {}
               const typeNoticeStorage = noticeStorage[type] || []
               typeNoticeStorage.push(body)
+              noticeStorage[type] = typeNoticeStorage
               _this.$q.sessionStorage.set('notice', noticeStorage)
               _this.showNoticeBadge = true
             })
@@ -237,6 +339,55 @@ export default {
       }
       fn()
       this.timer = setInterval(() => fn(), 5000)
+    },
+    showNoticeDialog () {
+      this.noticeDialog.state = true
+      const noticeMap = this.$q.sessionStorage.getItem('notice') || {}
+      this.noticeDialog.applyTable.data = noticeMap['application_apply'] || []
+      this.noticeDialog.taskComplatedTable.data = noticeMap['task_completed'] || []
+      this.noticeDialog.taskFailureTable.data = noticeMap['task_failure'] || []
+    },
+    removeSessionStorage (id) {
+      const noticeMap = this.$q.sessionStorage.getItem('notice') || {}
+      const applyData = noticeMap['application_apply']
+      if (applyData) {
+        const index = applyData.findIndex(item => item.key === id)
+        if (index >= 0) {
+          applyData.splice(index, 1)
+          noticeMap['application_apply'] = applyData
+          this.noticeDialog.applyTable.data = applyData
+          if (applyData.length === 0) {
+            delete noticeMap['application_apply']
+            this.showNoticeBadge = false
+          }
+          this.$q.sessionStorage.set('notice', noticeMap)
+          this.noticeDialog.state = false
+          this.addTabs('auth-application', '/auth-application',  this.$t('menu.auth.application'))
+          this.$router.push({path: '/auth-application'})
+        }
+      }
+    },
+    removeTaskComplateSessionStorage () {
+      const noticeMap = this.$q.sessionStorage.getItem('notice') || {}
+      delete noticeMap['task_completed']
+      this.$q.sessionStorage.set('notice', noticeMap)
+      this.noticeDialog.taskComplatedTable.data = []
+      if (Object.keys(this.$q.sessionStorage.getItem('notice')).length === 0) {
+        this.showNoticeBadge = false
+      }
+    },
+    removeTaskFailureSessionStorage () {
+      const noticeMap = this.$q.sessionStorage.getItem('notice') || {}
+      delete noticeMap['task_failure']
+      this.$q.sessionStorage.set('notice', noticeMap)
+      this.noticeDialog.taskFailureTable.data = []
+      if (Object.keys(this.$q.sessionStorage.getItem('notice')).length === 0) {
+        this.showNoticeBadge = false
+      }
+    },
+    dateFormat (value, format) {
+      const text = date.formatDate(value, format || 'YYYY-MM-DD HH:mm:ss')
+      return text
     },
   },
   mounted () {
@@ -399,6 +550,9 @@ export default {
         }
       })
     })
+    if (id !== 'home') {
+      this.addTabs('home', '/',  this.$t('menu.home'))
+    }
     this.addTabsAndRoute(null, id, this.$route.path, label)
   }
 }

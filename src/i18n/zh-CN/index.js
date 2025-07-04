@@ -26,7 +26,27 @@ export default {
     notice: "消息通知",
     modifyPassword: "修改密码",
     contact: "联系我们",
-    logout: "退出系统"
+    logout: "退出系统",
+  },
+  home: {
+    notice: "消息通知",
+    tabAudit: "权限申请",
+    tabTaskCompleted: "任务完成",
+    tabTaskFailure: "任务失败",
+    table: {
+      application: { 
+        creator: "申请人",
+        createTime: "创建时间",
+      },
+      complete: {
+        name: "任务名称",
+        fireTime: "执行时间",
+      },
+      failure: {
+        name: "任务名称",
+        fireTime: "执行时间",
+      }
+    }
   },
   menu: {
     home: "首页",
@@ -116,6 +136,7 @@ export default {
     apply: "申请",
     audit: "审核",
     reject: "拒绝",
+    clearRead: "清除已读",
   },
   table: {
     empty: "无数据",
