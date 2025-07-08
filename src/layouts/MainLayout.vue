@@ -316,6 +316,7 @@ export default {
               position: 'top',
               color: 'negative'
             })
+            this.$stompClient = Stomp.over(new SockJS(process.env.API + '/socket'))
           }
           const _this = this
           this.$stompClient.connect({}, () => {
