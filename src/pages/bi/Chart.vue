@@ -2,6 +2,9 @@
   <div>
     <q-table grid :data="table.data" :loading="table.loading" :columns="table.columns" row-key="id" hide-header :filter="table.filter" @request="searchCharts" 
     :no-data-label="$t('table.empty')" :rows-per-page-options="[18,36,60]" :pagination.sync="table.pagination">
+      <template v-slot:top-left>
+        <q-chip icon="bookmark" square clickable class="q-mr-sm" color="primary" text-color="white" :label="$t('form.chart.tip')" @click="openEchartWebsite"/>
+      </template>
       <template v-slot:top-right>
         <q-input dense v-model="table.filter">
           <template v-slot:append>
@@ -339,6 +342,9 @@ export default {
           this.chartDemo.setOption(res.data)
         })
       })
+    },
+    openEchartWebsite () {
+      window.open('https://echarts.apache.org', '_blank')
     }
   },
   mounted () {

@@ -241,7 +241,7 @@ import { fetchModel, fetchModels } from 'src/service/bi/ModelService'
 import { fetchChart, fetchCharts, previewChart } from 'src/service/bi/ChartService'
 import { fetchProjects } from 'src/service/base/ProjectService'
 import * as echarts from 'echarts'
-import { preview, query } from 'src/service/kettle/PreviewService'
+import { preview } from 'src/service/kettle/PreviewService'
 
 export default {
   data () {

@@ -22,7 +22,7 @@
         <div>
           <q-btn flat aria-label="Notifications" @click="showNoticeDialog">
             <q-icon name="las la-bell" size="20px">
-              <q-badge v-show="Object.keys($q.sessionStorage.getItem('notice')).length > 0 || showNoticeBadge" rounded floating color="red"/>
+              <q-badge v-show="($q.sessionStorage.getItem('notice') && Object.keys($q.sessionStorage.getItem('notice')).length > 0) || showNoticeBadge" rounded floating color="red"/>
             </q-icon>
           </q-btn>
           <q-btn-dropdown auto-close stretch flat size="md" :label="me.name" no-caps>

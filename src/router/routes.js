@@ -114,6 +114,13 @@ const routes = [
           authorities: ['REPORT', 'ROOT']
         },
         component: () => import('pages/bi/Report.vue')
+      },
+      {
+        path: '/bi-layout',
+        meta: {
+          authorities: ['LAYOUT', 'ROOT']
+        },
+        component: () => import('pages/bi/Layout.vue')
       }
     ]
   },

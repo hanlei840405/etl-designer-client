@@ -137,6 +137,7 @@ export default {
     audit: "审核",
     reject: "拒绝",
     clearRead: "清除已读",
+    dropAndRemove: "将组件拖入此处删除",
   },
   table: {
     empty: "无数据",
@@ -1785,10 +1786,11 @@ export default {
     },
     chart: {
       default: "报表图形",
+      tip: "本系统使用https://echarts.apache.org作为图形组件,您可以在官网上查看图形样式和配置说明.",
       code: "自定义编码",
       name: "名称",
       category: "类型",
-      options: "参数配置模板",
+      options: "参数配置模板(搭配freemarker脚本渲染echarts变量数据)",
       data: "样例数据",
       description: "描述",
       parameters: "参数配置",
@@ -1861,6 +1863,16 @@ export default {
       privilege: "权限",
       reason: "申请理由",
       apply: "申请",
+    },
+    layout: {
+      default: "布局",
+      name: "名称",
+      authenticate: "是否需要认证",
+      schedule: "调度",
+      frequency: "频率",
+      description: "描述",
+      report: "报表",
+      useScedule: "使用调度",
     }
   },
   response: {
