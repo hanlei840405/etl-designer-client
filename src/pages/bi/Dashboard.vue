@@ -5,7 +5,7 @@
 
 <script>
 import {
-  fetchLayout
+  viewLayout
 } from 'src/service/bi/LayoutService'
 import 'gridstack/dist/gridstack.min.css'
 import { GridStack } from 'gridstack'
@@ -20,7 +20,7 @@ export default {
     }
   },
   mounted () {
-    fetchLayout(this.$route.params.id).then(res => {
+    viewLayout(this.$route.params.id).then(res => {
       const layoutReportList = res.data.layoutReportList || []
       this.$nextTick(() => {
         this.layoutGrid = GridStack.init({

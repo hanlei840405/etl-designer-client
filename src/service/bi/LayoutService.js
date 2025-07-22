@@ -15,3 +15,7 @@ export function deleteLayout (pathVar) {
 export function fetchLayout (pathVar) {
   return axios.get('/layout/' + pathVar)
 }
+
+export function viewLayout (pathVar) {
+  return axios.get('/layout/view/' + pathVar)
+}
