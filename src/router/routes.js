@@ -121,8 +121,12 @@ const routes = [
           authorities: ['LAYOUT', 'ROOT']
         },
         component: () => import('pages/bi/Layout.vue')
-      }
+      },
     ]
+  },
+  {
+    path: '/dashboard/:id',
+    component: () => import('pages/bi/Dashboard.vue')
   },
   {
     path: '/login',
