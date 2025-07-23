@@ -50,16 +50,6 @@
           <q-card-section class="row q-col-gutter-xs">
             <q-select class="col-12" v-model="applicationDialog.resourceId" autofocus outlined clearable :options="applicationDialog.resourceOptionsCopy" use-input emit-value map-options @filter="filterResource" @input="selectedResource" @clear="deleteSelectedResource" :label="$t('form.application.resource')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.application.resource')]" hint=""/>
             <q-select class="col-12" v-model="applicationDialog.application.privilegeId" autofocus outlined clearable :options="applicationDialog.privilegeOptions" use-input emit-value map-options :label="$t('form.application.privilege')" :rules="[ val => validate(val) || $t('validation.notEmpty') + $t('form.application.privilege')]" hint="">
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.label }}</q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                    <q-badge :label="scope.opt.rw" />
-                  </q-item-section>
-                </q-item>
-              </template>
             </q-select>
             <q-input class="col-12" outlined v-model="applicationDialog.application.expireDate" :label="$t('form.application.expireDate')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.application.expireDate')]">
               <template v-slot:append>
@@ -106,7 +96,7 @@ import { date } from 'quasar'
           columns: [
             {
               name: 'privilegeName',
-              label: this.$t('table.application.privilegeName'),
+              label: this.$t('table.application.resourceName'),
               field: 'privilegeName',
               align: 'left'
             }, {
@@ -145,7 +135,7 @@ import { date } from 'quasar'
           columns: [
             {
               name: 'privilegeName',
-              label: this.$t('table.application.privilegeName'),
+              label: this.$t('table.application.resourceName'),
               field: 'privilegeName',
               align: 'left'
             }, {
@@ -343,8 +333,7 @@ import { date } from 'quasar'
           fetchPrivilegesByResourceId(val).then(res => {
             this.applicationDialog.privilegeOptions = res.data.map(item => {
               return {
-                label: item.name,
-                rw: item.category,
+                label: item.category,
                 value: item.id
               }
             })

@@ -555,6 +555,9 @@ export default {
       this.addTabs('home', '/',  this.$t('menu.home'))
     }
     this.addTabsAndRoute(null, id, this.$route.path, label)
+  },
+  beforeDestroy() {
+    clearTimeout(this.timer)
   }
 }
 </script>

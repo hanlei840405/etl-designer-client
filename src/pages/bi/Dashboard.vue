@@ -16,7 +16,9 @@ export default {
   data () {
     return {
       layoutGrid: null,
-      reports: []
+      reports: [],
+      chart: {},
+      timer: {}
     }
   },
   mounted () {
@@ -33,7 +35,6 @@ export default {
           dragInOptions: { revert: 'invalid', scroll: false, appendTo: '#layoutGrid', helper: 'clone' },
         }, '#layoutGrid')
         this.layoutGrid.on('resize', function(event, element) {
-        debugger
           const node = element.gridstackNode
           const parser = new DOMParser()
           const content = parser.parseFromString(node.content, 'text/html')
@@ -51,11 +52,18 @@ export default {
             frequency: item.frequency,
             content: '<div class="bg-white" id="reportChart_' + item.reportId + '" style="width: 100%; height: ' + (item.h * window.innerHeight / 8 - 10) + 'px;"></div>'
           })
-          paintReportByGet(item.reportId).then(res => {
-            const reportChart = echarts.init(document.getElementById('reportChart_' + item.reportId));
-            reportChart.setOption(res.data)
+          if (item.frequency > 0) {
+            this.timer[item.reportId] = setInterval(() => { 
+               paintReportByGet(item.reportId).then(res1 => {
+                 this.chart[item.reportId].setOption(res1.data)
+               })
+             }, item.frequency * 1000)
+          }
+          paintReportByGet(item.reportId).then(res1 => {
+            this.chart[item.reportId] = echarts.init(document.getElementById('reportChart_' + item.reportId));
+            this.chart[item.reportId].setOption(res1.data)
             window.addEventListener('resize', function() {
-              reportChart.resize();
+              this.chart[item.reportId].resize();
             })
           })
         })
@@ -70,11 +78,13 @@ export default {
         if (!reportChartDom) return;
         reportChartDom.style.height = (report.h * window.innerHeight / 8 - 10) + 'px';
         reportChartDom.style.width = '100%';
-        const reportChart = echarts.getInstanceByDom(reportChartDom)
-        if (reportChart) {
-          reportChart.resize();
-        }
+        this.chart[report.reportId].resize();
       })
+    }
+  },
+  beforeDestroy() {
+    for (const reportId in this.timer) {
+      clearInterval(this.timer[reportId])
     }
   }
 }

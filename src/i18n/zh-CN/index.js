@@ -138,6 +138,8 @@ export default {
     reject: "拒绝",
     clearRead: "清除已读",
     dropAndRemove: "将组件拖入此处删除",
+    generateUrl: "生成URL",
+    close: "关闭",
   },
   table: {
     empty: "无数据",
@@ -204,7 +206,7 @@ export default {
       description: "描述"
     },
     application: {
-      privilegeName: "权限名称",
+      resourceName: "资源名称",
       privilegeCategory: "权限类型",
       reason: "申请原因",
       expireDate: "到期时间",

@@ -33,6 +33,7 @@
             </q-card-section>
             <q-separator color="primary" size="2px"/>
             <q-card-actions align="right">
+              <q-btn outline dense color="positive" @click="generateUrl(props)">{{ $t('button.generateUrl') }}</q-btn>
               <q-btn outline dense color="primary" @click="loadLayout(props)">{{ $t('button.modify') }}</q-btn>
               <q-btn outline dense color="negative" @click="deleteLayout(props)">{{ $t('button.delete') }}</q-btn>
             </q-card-actions>
@@ -52,7 +53,7 @@
           <q-card-section class="row q-col-gutter-xs">
             <q-input class="col-12 col-md-5" autofocus outlined v-model="layout.name" :label="$t('form.layout.name')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.layout.name')]"/>
             <q-select class="col-12 col-md-5" v-model="editLayoutDialog.reportId" autofocus outlined clearable :options="editLayoutDialog.reportOptionsCopy" use-input emit-value map-options @filter="filterReports" @input="selectReport" :label="$t('form.layout.report')" hint=""/>
-            <q-checkbox class="col-12 col-md-2" outlined v-model="layout.authenticate" :label="$t('form.layout.authenticate')"/>
+            <q-checkbox :disable="layout.id !== null" class="col-12 col-md-2" outlined v-model="layout.authenticate" :label="$t('form.layout.authenticate')"/>
             <q-input class="col-12 col-md-10" type="textarea" rows="3" autofocus outlined v-model="layout.description" :label="$t('form.layout.description')" hint=""/>
             <div id="trash" class="col-12 col-md-2 bg-red-1 trash text-center" style="display: grid; place-items: center; height: 95px;">
               {{ $t('button.dropAndRemove') }}
@@ -361,6 +362,20 @@ export default {
       Object.assign(this.reportFrequencyDialog, this.$options.data.call(this).reportFrequencyDialog)
       this.reportFrequencyDialog.state = true
       this.reportFrequencyDialog.reportId = id
+    },
+    generateUrl (props) {
+      const layoutId = props.key || this.layout.id
+      const url = `${window.location.origin}/#/dashboard/${layoutId}`
+      this.$q.dialog({
+        title: 'URL',
+        message: '<b>' + url + '</b>',
+        html: true,
+        ok: {
+          label: this.$t('button.close'),
+          color: 'primary',
+          flat: true
+        }
+      })
     }
   },
   mounted () {
