@@ -8,7 +8,6 @@
               <img src="/logo.png">
             </q-avatar>
             {{ $t('global.app') }}</div>
-          <div class="text-subtitle1 text-right">{{ $t('global.author') }}</div>
         </q-card-section>
         <q-card-section>
           <q-form @submit="onSubmit" class="q-px-sm q-pt-xl q-pb-lg">

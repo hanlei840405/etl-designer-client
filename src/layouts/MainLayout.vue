@@ -416,7 +416,7 @@ export default {
             id: 'basic-ftp',
             name: this.$t('menu.basic.ftp'),
             to: '/basic-ftp',
-            icon: 'las la-folder'
+            icon: 'las la-hdd'
           },
           {
             id: 'basic-dictionary',

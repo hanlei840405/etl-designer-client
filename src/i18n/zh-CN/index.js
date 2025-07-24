@@ -5,8 +5,8 @@ export default {
   success: "操作成功",
   global: {
     not_authorized: "您未经过系统授权操作本页面",
-    app: "河狸小子",
-    author: "新恩数造",
+    app: "Nxin Data Integration",
+    author: "jesse.han",
     language: "选择语言",
     en: "English",
     zh: "中文"
@@ -1814,7 +1814,7 @@ export default {
       name: "名称",
       datasource: "数据源",
       description: "描述",
-      tableField: "字段",
+      tableField: "元数据",
       columnOperate: "操作",
       columnCode: "字段编码",
       columnName: "字段名称",
