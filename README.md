@@ -41,7 +41,7 @@ See [Configuring quasar.conf.js](https://v1.quasar.dev/quasar-cli/quasar-conf-js
 ## 工程结构
 
 * **interface:**
-  提供web-server与worker集群通信所以来的数据结构
+  提供web-server与worker集群通信所依赖的数据结构
 * **kettle-export:**
   依赖Pentaho Data Integration的jar包及数据库驱动包
 * **web-server:**
