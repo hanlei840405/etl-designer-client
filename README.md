@@ -246,6 +246,12 @@ $ quasar dev
 
 用户可自由缩放、拖拽报表大小及位置，最终组合成完成的数据看板
 
+####  数据看板
+
+访问由布局管理模块生成的看板URL，可实时查看报表数据
+
+<img src="pic/数据看板.png" width="400" height="240">
+
 ##  技术架构图
 
 ![system.jpg](pic/system.jpg)
