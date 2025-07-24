@@ -30,7 +30,6 @@ quasar build
 ### Customize the configuration
 See [Configuring quasar.conf.js](https://v1.quasar.dev/quasar-cli/quasar-conf-js).
 
-# Quasar App (etl-designer-client)
 # Nxin Data Integration # 
 
 基于Pentaho Data Integration产品(kettle)二次开发，将图形化设计由C/S架构升级为B/S架构，重写50余种常用组件
@@ -96,25 +95,25 @@ $ quasar dev
 
 同时工程模块可绑定使用者，用户经绑定后可以看到同模块下的数据源、服务器信息、ETL脚本数据及数据看板信息
 
-<img src="pic\工程.png" width="400" height="240">
+<img src="pic/工程.png" width="400" height="240">
 
 ####  数据源管理
 
 所有ETL运行时依赖的数据库、数据看板依赖的数据库均在本模块下维护，系统自带支持MySql，Oracle，PostgreSql，支持用户扩展其他数据库产品
 
-<img src="pic\数据库.png" width="400" height="240">
+<img src="pic/数据库.png" width="400" height="240">
 
 ####  FTP服务器管理
 
 所有ETL运行时依赖的FTP服务器，均在本模块下维护，例如导出的excel、csv数据等
 
-<img src="pic\FTP.png" width="400" height="240">
+<img src="pic/FTP.png" width="400" height="240">
 
 ####  字典管理
 
 系统运行时依赖的配置数据
 
-<img src="pic\字典.png" width="400" height="240">
+<img src="pic/字典.png" width="400" height="240">
 
 ###  系统管理
 
@@ -122,19 +121,19 @@ $ quasar dev
 
 用户通过权限申请功能，可加入其他工程模块，访问工程下的敏感资源（包含数据源、服务器、报表等，注：任何工程下的敏感资源，需再次申请资源的操作权限），权限申请有过期限制，超期后，权限会自动回收
 
-<img src="pic\申请.png" width="400" height="240">
+<img src="pic/申请.png" width="400" height="240">
 
 ####  权限管理
 
 资源所有者可主动添加资源的访问者及访问级别（读/读写）
 
-<img src="pic\授权.png" width="400" height="240">
+<img src="pic/授权.png" width="400" height="240">
 
 ####  用户管理
 
 新增及维护用户
 
-<img src="pic\用户.png" width="400" height="240">
+<img src="pic/用户.png" width="400" height="240">
 
 ###  ETL管理
 
@@ -146,7 +145,7 @@ $ quasar dev
 
 通过创建目录，将同意业务的多个脚本文件聚合在一起
 
-<img src="pic\ETL在线设计1.png" width="400" height="240">
+<img src="pic/ETL在线设计1.png" width="400" height="240">
 
 #####  Trans(转换)设计
 
@@ -154,7 +153,7 @@ $ quasar dev
 
 是ETL工具的核心功能模块，通过定义多个步骤（Step）实现复杂的数据处理流程
 
-<img src="pic\ETL在线设计2.png" width="400" height="240">
+<img src="pic/ETL在线设计2.png" width="400" height="240">
 
 #####  Job(任务)设计
 
@@ -162,19 +161,19 @@ $ quasar dev
 
 通过图形化界面整合多个转换步骤（Transformation），支持定时执行、日志监控等功能，实现复杂的数据处理流程自动化
 
-<img src="pic\ETL在线设计3.png" width="400" height="240">
+<img src="pic/ETL在线设计3.png" width="400" height="240">
 
 ####  脚本调试
 
 通过调试日志，可以发现并处理设计过程中的缺陷，为数据处理提供质量保障
 
-<img src="pic\ETL在线设计4.png" width="400" height="240">
+<img src="pic/ETL在线设计4.png" width="400" height="240">
 
 ####  脚本发布
 
 用户通过该模块，可将“可发布“状态的脚本完成发布操作，发布动作完成后，【worker】工程会根据设定的执行频率定时执行ETL过程
 
-<img src="pic\脚本发布.png" width="400" height="240">
+<img src="pic/脚本发布.png" width="400" height="240">
 
 ###  任务管理
 
@@ -184,22 +183,22 @@ $ quasar dev
 
 任务被【worker】工程调度执行后，用户可在该模块查看任务的执行情况，包括执行日志，调度时间等信息，并可在该模块对任务操作暂停、下线等
 
-<img src="pic\批处理管理1.png" width="400" height="240">
+<img src="pic/批处理管理1.png" width="400" height="240">
 <br/>
 <br/>
-<img src="pic\批处理管理2.png" width="400" height="240">
+<img src="pic/批处理管理2.png" width="400" height="240">
 
 ####  流处理任务管理
 
 该模块功能与【批处理任务管理】相同，唯一区别为该模块管理的为实时数据处理，即任务进程为阻塞式执行，实时等待处理通过消息队列传输的数据
 
-<img src="pic\流处理管理.png" width="400" height="240">
+<img src="pic/流处理管理.png" width="400" height="240">
 
 ####  任务子进程管理
 
 任务执行出现CPU或内存异常，需要终止任务时，可在该模块进行操作，该操作仅终止正在执行的当次任务，不影响后续任务的调度
 
-<img src="pic\任务子进程管理.png" width="400" height="240">
+<img src="pic/任务子进程管理.png" width="400" height="240">
 
 ###  BI分析
 
@@ -211,39 +210,39 @@ $ quasar dev
 
 使用freemarker脚本语言，生成echarts图形所必须的配置项
 
-<img src="pic\报表图形1.png" width="400" height="240">
+<img src="pic/报表图形1.png" width="400" height="240">
 
 ####  预览
 
 在样例数据处填入演示数据，完成图形预览操作，方便报表设计套用时，直观的展示图形
 
-<img src="pic\报表图形2.png" width="400" height="240">
+<img src="pic/报表图形2.png" width="400" height="240">
 
 ####  模型管理
 
 提供模型元数据维护及模型转成数据库表的功能，通过规范的元数据设计，降低用户进行数据统计分析时的难度
 
-<img src="pic\模型管理1.png" width="400" height="240">
+<img src="pic/模型管理1.png" width="400" height="240">
 
 模型转换为数据库表，生成DDL：
 
-<img src="pic\模型管理2.png" width="400" height="240">
+<img src="pic/模型管理2.png" width="400" height="240">
 
 ####  报表设计
 
 通过该模块，用户可将统计模型通过合适的图形模板展现出来，并可在线预览
 
-<img src="pic\报表1.png" width="400" height="240">
+<img src="pic/报表1.png" width="400" height="240">
 
 在线预览:
 
-<img src="pic\报表2.png" width="400" height="240">
+<img src="pic/报表2.png" width="400" height="240">
 
 ####  布局管理
 
 通过该模块，用户可任意选择多个报表自由组合拼装成数据看板页面，并通过生成的URL在线阅览
 
-<img src="pic\布局管理.png" width="400" height="240">
+<img src="pic/布局管理.png" width="400" height="240">
 
 用户可自由缩放、拖拽报表大小及位置，最终组合成完成的数据看板
 
@@ -288,10 +287,10 @@ $ quasar dev
 
 - 微信 
 
-  <img src="pic\身份二维码.jpg" width="200" height="200">
+  <img src="pic/身份二维码.jpg" width="200" height="200">
 
-## 登录演示账号
+## 初始登录演示账号
 
 用户名: jesse.18@163.com
 
-密码: 123456 (请勿修改)
+密码: 123456
