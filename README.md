@@ -28,7 +28,9 @@ quasar build
 ```
 
 ### Customize the configuration
-See [Configuring quasar.conf.js](https://v1.quasar.dev/quasar-cli/quasar-conf-js).# Nxin Data Integration # 
+See [Configuring quasar.conf.js](https://v1.quasar.dev/quasar-cli/quasar-conf-js).
+
+# Nxin Data Integration # 
 
 基于Pentaho Data Integration产品(kettle)二次开发，将图形化设计由C/S架构升级为B/S架构，重写50余种常用组件
 
