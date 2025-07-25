@@ -64,7 +64,6 @@ Java工程使用Maven命令构建
 ## 环境要求
 * Maven, version 3+
 * Java JDK 8
-* Nodejs v10+（除11，13）
 
 ## 编译
 
@@ -74,7 +73,9 @@ Java工程使用Maven命令构建
 $ mvn clean install -DskipTests
 ```
 
-前端基于Nodejs的工程结构，使用quasar V1( https://quasar.dev ) 命令编译
+前端基于Nodejs的工程结构，使用quasar(https://quasar.dev)命令编译
+
+配置【client】工程quasar.conf.js文件中build.env.API,设置开发环境及正式环境后端域名
 
 ```
 $ quasar build
@@ -85,6 +86,19 @@ $ quasar build
 ```
 $ quasar dev
 ```
+
+## 部署
+
+修改【web-server】工程属性文件application.yml中worker的地址，替换为正式环境集群地址
+
+* worker.schedule-create-job-uri 创建批处理调度任务
+* worker.schedule-find-all-cron-trigger-uri 查询所有批处理调度任务
+* worker.schedule-pause-uri 暂停批处理调度任务
+* worker.schedule-stop-uri 下线【批/流】处理任务
+* worker.schedule-resume-uri 恢复批处理调度任务
+* worker.schedule-modify-uri 修改批处理任务配置
+* worker.schedule-create-streaming-uri 创建流处理任务
+
 
 ## 功能简介
 
@@ -262,13 +276,13 @@ $ quasar dev
 
 #### 开发依赖
 
-* redis
+- redis
 
   缓存找回密码的动态验证码
 
   为web-server与worker通信提供管道服务
 
-* ftp服务
+- ftp服务
 
   需连接ftp服务器，用于存放etl运行的脚本，worker执行脚本时，会从ftp服务器拉取最新文件
 
@@ -278,26 +292,26 @@ $ quasar dev
 
 ####  数据库支持
 
-* 在字典管理中，找到数据源字典项，将需要支持的数据源在此进行维护
-* 在kettle-export工程引入驱动包
+- 在字典管理中，找到数据源字典项，将需要支持的数据源在此进行维护
+- 在kettle-export工程引入驱动包
 
 通过以上两步即可完成新增数据源的支持
 
 ####  KETTLE组件
 
-* web-server工程，在com.nxin.framework.converter.kettle包下，根据新增组件的类型，选择job或transform目录添加新的插件责任链，并在TransformConvertFactory.java或JobConvertFactory.java类中进行注册
-* client工程，在component\etl目录下，根据新增组件的类型，选择job或transform目录添加新的插件表单vue文件，并在pages\etl\CanvasCom.vue文件中引入该vue文件，并在components集合中注册该插件
+- web-server工程，在com.nxin.framework.converter.kettle包下，根据新增组件的类型，选择job或transform目录添加新的插件责任链，并在TransformConvertFactory.java或JobConvertFactory.java类中进行注册
+- client工程，在component\etl目录下，根据新增组件的类型，选择job或transform目录添加新的插件表单vue文件，并在pages\etl\CanvasCom.vue文件中引入该vue文件，并在components集合中注册该插件
 
 ##  联系方式
-* 邮箱 
+- 邮箱 
 
   jesse.18@163.com
 
-* 微信 
+- 微信 
 
   <img src="pic/身份二维码.jpg" width="200" height="200">
 
-## ROOT账号及密码
+## 初始登录演示账号
 
 用户名: jesse.18@163.com
 
