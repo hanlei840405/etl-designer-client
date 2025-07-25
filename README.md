@@ -49,7 +49,7 @@ See [Configuring quasar.conf.js](https://v1.quasar.dev/quasar-cli/quasar-conf-js
 * **worker:**
   任务调度集群，实现ETL执行及其他定时任务
 * **client:**
-  前端客户端页面，前端工程地址：https://gitee.com/team-designer/etl-designer-client
+  前端客户端页面，前端工程地址：https://github.com/hanlei840405/etl-designer-client.git
 
 构建及部署
 --------------
