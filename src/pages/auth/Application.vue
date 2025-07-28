@@ -11,7 +11,7 @@
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="apply">
         <q-table :data="applyTable.data" :loading="applyTable.loading" :columns="applyTable.columns" row-key="id" @request="searchApplications"
-               :no-data-label="$t('table.empty')" :rows-per-page-options="[10, 50, 100]" :pagination.sync="applyTable.pagination" selection="multiple">
+               :no-data-label="$t('table.empty')" :rows-per-page-options="[10, 50, 100]" :pagination.sync="applyTable.pagination">
           <template v-slot:top-right>
             <q-btn outline :label="$t('button.apply')" color="primary" @click="newApplication"/>
           </template>
