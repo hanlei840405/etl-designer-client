@@ -32,11 +32,23 @@ See [Configuring quasar.conf.js](https://v1.quasar.dev/quasar-cli/quasar-conf-js
 
 # Nxin Data Integration # 
 
-基于Pentaho Data Integration产品(kettle)二次开发，将图形化设计由C/S架构升级为B/S架构，重写50余种常用组件
+数据集成专业软件，包含ETL数据处理、数据看板；
 
-支持关系型数据库、NoSQL数据库、网络服务、文件操作等，可视化设计实现数据或流的提取、转换、加载全流程化处理
+ETL数据处理模块基于Kettle二次开发，重写50余种常用组件，
 
-支持数据看板全生命周期管理，看板模型元数据在线设计、报表图形模板在线设计、报表数据实时更新、报表布局自由排版
+支持关系型数据库、NoSQL数据库、网络服务、文件操作等，
+
+可视化设计实现数据或流的提取、转换、加载全流程化处理。
+
+数据看板模块支持模型元数据定义、报表在线设计及在线排版布局，可为不同业务提供丰富的数据统计分析。
+
+## 体验地址
+
+    http://132.232.194.157
+  * 用户名：jesse.18@163.com
+  * 密码：123456
+
+**请勿修改密码**
 
 ## 工程结构
 
@@ -64,6 +76,25 @@ Java工程使用Maven命令构建
 ## 环境要求
 * Maven, version 3+
 * Java JDK 8
+* Nodejs v10+（除11，13）
+
+## 开发
+
+系统强依赖的中间件，在application.yml文件中需要根据实际情况设置
+* 数据源
+
+  * web-server与worker共用同一个数据源(spring.datasource)
+  * etl执行日志可与web-server/worker使用同一个数据库，也可单独配置独立数据源(etl.log.datasource)
+* redis
+
+  * 存储找回密码的验证码
+  * web-server与worker间推送控制指令的通道，可使用其他消息中间件替代(ActiveMQ，RabbitMQ等)
+* mail
+
+  * 发送密码找回邮件
+* sftp
+
+  * etl脚本创建后，web-server服务会将脚本推送至sftp服务器，用户需提供一个可用的sftp服务，将地址/用户名/密码设置在vfs信息描述中
 
 ## 编译
 
@@ -73,7 +104,9 @@ Java工程使用Maven命令构建
 $ mvn clean install -DskipTests
 ```
 
-前端基于Nodejs的工程结构，使用quasar(https://quasar.dev)命令编译
+前端基于Nodejs的工程结构，使用quasar V1( https://quasar.dev ) 命令编译
+
+配置【client】工程quasar.conf.js文件中build.env.API,设置开发环境及正式环境后端域名
 
 ```
 $ quasar build
@@ -84,6 +117,19 @@ $ quasar build
 ```
 $ quasar dev
 ```
+
+## 部署
+
+修改【web-server】工程属性文件application.yml中worker的地址，替换为正式环境集群地址
+
+* worker.schedule-create-job-uri 创建批处理调度任务
+* worker.schedule-find-all-cron-trigger-uri 查询所有批处理调度任务
+* worker.schedule-pause-uri 暂停批处理调度任务
+* worker.schedule-stop-uri 下线【批/流】处理任务
+* worker.schedule-resume-uri 恢复批处理调度任务
+* worker.schedule-modify-uri 修改批处理任务配置
+* worker.schedule-create-streaming-uri 创建流处理任务
+
 
 ## 功能简介
 
@@ -212,7 +258,64 @@ $ quasar dev
 
 <img src="pic/报表图形1.png" width="400" height="240">
 
-####  预览
+###### 配置说明
+  * 模板编辑
+    ```
+    {
+      "legend": {},
+      "tooltip": {},
+      "title": {
+      "text": "${title['text']}",
+      "left": "${title['left']}",
+      "top": "${title['top']}"
+      },
+      "dataset": {
+      "dimensions": [<#list dimensions as dim>"${dim}"<#if dim_has_next>,</#if></#list>],
+      "source": [<#list source as row>{<#list row?keys as key>"${key}": "${row[key]}"<#if key_has_next>,</#if></#list>}<#if row_has_next>,</#if></#list>]
+      },
+      "xAxis": {"type": "category"},
+      "yAxis": {},
+      "series": [<#list dimensions as dim><#if dim_index gt 0>{ "type": "bar" }<#if dim_has_next>,</#if></#if></#list>]
+    }
+    ```
+  * 经过模板转移后生成echarts标准模板
+    ```
+    {
+      "legend": {},
+      "tooltip": {},
+      "title": {
+      "text": "2015到2017年产品销售报表",
+      "left": "center",
+      "top": "bottom"
+      },
+      "dataset": {
+      "dimensions": ["product","2015","2016","2017"],
+      "source": [{"product": "Matcha Latte","2017": "93.7","2016": "85.8","2015": "43.3"},{"product": "Milk Tea","2017": "55.1","2016": "73.4","2015": "83.1"},{"product": "Cheese Cocoa","2017": "82.5","2016": "65.2","2015": "86.4"},{"product": "Walnut Brownie","2017": "39.1","2016": "53.9","2015": "72.4"}]
+      },
+      "xAxis": {"type": "category"},
+      "yAxis": {},
+      "series": [{ "type": "bar" },{ "type": "bar" },{ "type": "bar" }]
+    }
+    ```
+  * 模板参数赋值
+    ```
+    {
+      "title": {
+        "text": "2015到2017年产品销售报表",
+        "left": "center",
+        "top": "bottom"
+      },
+      "dimensions": ["product", "2015", "2016", "2017"],
+      "source": [
+        { "product": "Matcha Latte", "2015": 43.3, "2016": 85.8, "2017": 93.7 },
+        { "product": "Milk Tea", "2015": 83.1, "2016": 73.4, "2017": 55.1 },
+        { "product": "Cheese Cocoa", "2015": 86.4, "2016": 65.2, "2017": 82.5 },
+        { "product": "Walnut Brownie", "2015": 72.4, "2016": 53.9, "2017": 39.1 }
+      ]
+    }
+    ```
+  * 其他图形配置请直接访问 http://132.232.194.157/#/bi-chart
+######  预览
 
 在样例数据处填入演示数据，完成图形预览操作，方便报表设计套用时，直观的展示图形
 
@@ -252,6 +355,7 @@ $ quasar dev
 
 <img src="pic/数据看板.png" width="400" height="240">
 
+
 ##  技术架构图
 
 ![system.jpg](pic/system.jpg)
@@ -260,13 +364,13 @@ $ quasar dev
 
 #### 开发依赖
 
-- redis
+* redis
 
   缓存找回密码的动态验证码
 
   为web-server与worker通信提供管道服务
 
-- ftp服务
+* ftp服务
 
   需连接ftp服务器，用于存放etl运行的脚本，worker执行脚本时，会从ftp服务器拉取最新文件
 
@@ -276,26 +380,26 @@ $ quasar dev
 
 ####  数据库支持
 
-- 在字典管理中，找到数据源字典项，将需要支持的数据源在此进行维护
-- 在kettle-export工程引入驱动包
+* 在字典管理中，找到数据源字典项，将需要支持的数据源在此进行维护
+* 在kettle-export工程引入驱动包
 
 通过以上两步即可完成新增数据源的支持
 
 ####  KETTLE组件
 
-- web-server工程，在com.nxin.framework.converter.kettle包下，根据新增组件的类型，选择job或transform目录添加新的插件责任链，并在TransformConvertFactory.java或JobConvertFactory.java类中进行注册
-- client工程，在component\etl目录下，根据新增组件的类型，选择job或transform目录添加新的插件表单vue文件，并在pages\etl\CanvasCom.vue文件中引入该vue文件，并在components集合中注册该插件
+* web-server工程，在com.nxin.framework.converter.kettle包下，根据新增组件的类型，选择job或transform目录添加新的插件责任链，并在TransformConvertFactory.java或JobConvertFactory.java类中进行注册
+* client工程，在component\etl目录下，根据新增组件的类型，选择job或transform目录添加新的插件表单vue文件，并在pages\etl\CanvasCom.vue文件中引入该vue文件，并在components集合中注册该插件
 
 ##  联系方式
-- 邮箱 
+* 邮箱 
 
   jesse.18@163.com
 
-- 微信 
+* 微信 
 
   <img src="pic/身份二维码.jpg" width="200" height="200">
 
-## 初始登录演示账号
+## ROOT账号及密码
 
 用户名: jesse.18@163.com
 
