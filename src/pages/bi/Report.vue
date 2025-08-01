@@ -151,6 +151,7 @@
                   {{ props.row.script }}
                     <q-popup-edit v-model="props.row.script" :auto-save="true">
                       <q-input autofocus outlined v-model="props.row.script" :type="props.row.category === 'sql' ? 'textarea' : 'input'"/>
+                      <div v-if="props.row.category === 'sql' ? 'textarea' : 'input'" style="width: 100%;" class="text-right"><q-btn dense flat color="primary" @click.stop label="AI" @click="openAI"/></div>
                     </q-popup-edit>
                 </q-td>
                 </q-tr>
@@ -186,32 +187,32 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="previewDataDialog.mode">
-        <q-card>
-          <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6">{{ $t('form.tableInput.preview') }}</div>
-            <q-space />
-            <q-btn icon="close" flat round dense v-close-popup />
-          </q-card-section>
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ $t('form.tableInput.preview') }}</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
 
-          <q-card-section>
-            <q-chip square text-color="primary" icon="bookmark" style="width: 100%; margin: 0px;">
-              {{ $t('form.tableInput.limit', [20]) }}
-            </q-chip>
-            <q-table
-              flat
-              dense
-              bordered
-              :data="previewDataDialog.data"
-              :columns="previewDataDialog.columns"
-              row-key="index"
-              :loading="previewDataDialog.loading"
-              separator="cell"
-              :rows-per-page-options="[0]"
-              hide-bottom
-            />
-          </q-card-section>
-        </q-card>
-      </q-dialog>
+        <q-card-section>
+          <q-chip square text-color="primary" icon="bookmark" style="width: 100%; margin: 0px;">
+            {{ $t('form.tableInput.limit', [20]) }}
+          </q-chip>
+          <q-table
+            flat
+            dense
+            bordered
+            :data="previewDataDialog.data"
+            :columns="previewDataDialog.columns"
+            row-key="index"
+            :loading="previewDataDialog.loading"
+            separator="cell"
+            :rows-per-page-options="[0]"
+            hide-bottom
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
     <q-dialog v-model="previewReportDialog.state">
       <q-card style="width: 50%; max-width: 80vw;">
         <q-card-section class="row items-center q-pb-none">
@@ -224,6 +225,26 @@
       </q-card-section>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="aiDialog.state" position="right" fullHeight>
+        <q-card style="width: 600px; max-width: 80vw;">
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6">AI</div>
+            <q-space/>
+            <q-space/>
+            <q-btn icon="close" flat round dense v-close-popup/>
+          </q-card-section>
+          <q-separator />
+          <q-card-section>
+            <q-input outlined v-model="aiDialog.content" type="textarea" rows="5" autofocus :label="$t('form.report.content')" hint="" :rules="[ val => val && val.length > 0 || $t('validation.notEmpty') + $t('form.report.content')]"/>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn :disable="!aiDialog.content" :label="$t('button.send')" color="primary" @click="requestAi"/>
+          </q-card-actions>
+          <q-card-section>
+            <div v-html="aiDialog.message" class="text-left"></div>
+          </q-card-section>
+        </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -235,7 +256,8 @@ import {
   saveReport,
   publishReport,
   paintReportByGet,
-  paintReportByPost
+  paintReportByPost,
+  ai
 } from 'src/service/bi/ReportService'
 import { fetchModel, fetchModels } from 'src/service/bi/ModelService'
 import { fetchChart, fetchCharts, previewChart } from 'src/service/bi/ChartService'
@@ -378,6 +400,11 @@ export default {
       previewReportDialog: {
         state: false,
         reportChart: null
+      },
+      aiDialog: {
+        state: false,
+        content: null,
+        message: null
       }
     }
   },
@@ -685,6 +712,20 @@ export default {
         })
       })
     },
+    openAI () {
+      this.aiDialog.state = true
+      this.aiDialog.content = null
+      this.aiDialog.message = null
+    },
+    requestAi () {
+      this.$q.loading.show({
+        message: this.$t('message.loading')
+      })
+      ai({ modelId: this.report.modelId, payload: this.aiDialog.content }).then(res => {
+        this.aiDialog.message = res.data
+        this.$q.loading.hide()
+      })
+    }
   },
   mounted () {
     this.fetchProjects()
