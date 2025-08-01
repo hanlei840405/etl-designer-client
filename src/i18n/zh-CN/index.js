@@ -140,6 +140,7 @@ export default {
     dropAndRemove: "将组件拖入此处删除",
     generateUrl: "生成URL",
     close: "关闭",
+    send: "发送",
   },
   table: {
     empty: "无数据",
@@ -1843,7 +1844,8 @@ export default {
       reportChartParams: {
         category: "类型",
         script: "脚本",
-      }
+      },
+      content: "内容",
     },
     dictionary: {
       default: "字典",
