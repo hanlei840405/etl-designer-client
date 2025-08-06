@@ -202,6 +202,10 @@ const ETL_TOOLBAR = {
       img: '/images/etl/FLT.svg',
       name: i18n.t('etl.transform.stepProcess.FilterRowsMeta'),
       type: 'FilterRowsMeta'
+    }, {
+      img: '/images/etl/WFS.svg',
+      name: i18n.t('etl.transform.stepProcess.BlockUntilStepsFinishMeta'),
+      type: 'BlockUntilStepsFinishMeta'
     }],
     stepScript: [{
       img: '/images/etl/janino.svg',
