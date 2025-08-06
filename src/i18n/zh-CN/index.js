@@ -1,4 +1,7 @@
 // This is just an example,
+
+import { mdiMonitor } from "@quasar/extras/mdi-v5";
+
 // so you can safely delete all default props below
 export default {
   failed: "操作失败",
@@ -1787,6 +1790,16 @@ export default {
       columnSourceField: "流里的字段",
       columnUpdateType: "更新方式"
     },
+    blockUntilStepsFinish: {
+      name: "名称",
+      tabBasic: "基本",
+      tabRunningConfig: "运行参数",
+      monitor: "监视下面的步骤",
+      stepName: "步骤名称",
+      copyNr: "复制次数(某一步骤的副本数,从0开始,即0代表1个副本, 1代表2个副本)",
+      parallel: "允许并行执行",
+      columnOperate: "操作",
+    },
     chart: {
       default: "报表图形",
       tip: "本系统使用https://echarts.apache.org作为图形组件,您可以在官网上查看图形样式和配置说明.",
@@ -2000,7 +2013,8 @@ export default {
         DetectEmptyStreamMeta: "检测空流",
         DetectLastRowMeta: "识别流的最后一行",
         WriteToLogMeta: "写日志",
-        FilterRowsMeta: "过滤记录"
+        FilterRowsMeta: "过滤记录",
+        BlockUntilStepsFinishMeta: "阻塞数据直到步骤都完成",
       },
       stepWarehouse: {
         default: "数据仓库",
