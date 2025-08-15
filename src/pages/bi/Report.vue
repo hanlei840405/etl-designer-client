@@ -138,9 +138,6 @@
                 <q-td key="fieldCategory" :props="props">
                   {{ props.row.fieldCategory }}
                 </q-td>
-                <q-td key="description" :props="props">
-                  {{ props.row.description }}
-                </q-td>
                 <q-td key="category" :props="props">
                   {{ props.row.category }}
                   <q-popup-edit v-model="props.row.category" :auto-save="true">
@@ -151,8 +148,11 @@
                   {{ props.row.script }}
                     <q-popup-edit v-model="props.row.script" :auto-save="true">
                       <q-input autofocus outlined v-model="props.row.script" :type="props.row.category === 'sql' ? 'textarea' : 'input'"/>
-                      <div v-if="props.row.category === 'sql' ? 'textarea' : 'input'" style="width: 100%;" class="text-right"><q-btn dense flat color="primary" @click.stop label="AI" @click="openAI"/></div>
+                      <div v-if="props.row.category === 'sql' ? 'textarea' : 'input'" style="width: 100%;" class="text-right"><q-btn  v-if="props.row.category === 'sql'" dense flat color="primary" @click.stop label="AI" @click="openAI"/></div>
                     </q-popup-edit>
+                </q-td>
+                <q-td key="description" :props="props">
+                  {{ props.row.description }}
                 </q-td>
                 </q-tr>
               </template>
@@ -368,9 +368,9 @@ export default {
         { name: 'operate', label: this.$t('form.report.columnOperate'), field: 'operate', align: 'right', headerStyle: 'width: 20px'},
         { name: 'field', label: this.$t('form.report.columnField'), align: 'left', field: 'field' },
         { name: 'fieldCategory', label: this.$t('form.report.columnCategory'), align: 'left', field: 'fieldCategory' },
-        { name: 'description', label: this.$t('form.report.columnDescription'), align: 'left', field: 'description' },
         { name: 'category', label: this.$t('form.report.reportChartParams.category'), align: 'left', field: 'category' },
-        { name: 'script', label: this.$t('form.report.reportChartParams.script'), align: 'left', field: 'script' }
+        { name: 'script', label: this.$t('form.report.reportChartParams.script'), align: 'left', field: 'script' },
+        { name: 'description', label: this.$t('form.report.columnDescription'), align: 'left', field: 'description' }
       ],
       model: {
         id: null,
